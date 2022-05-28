@@ -41,9 +41,11 @@ public class UnidadTransporteService {
                                 int capacidad = Integer.parseInt(parts[1]);
                                 String ciudad = parts[2];
                                 int ubigeo = obtenerUbigeoCiudad(ciudad);
-
+                                // X,Y
+                                double abscisa = -7.5555;
+                                double ordenada = 8.9999;
                                 //Agrega vehículos
-                                UnidadTransporteModel vehiculo = new UnidadTransporteModel(id++, codigo, capacidad, EstadoUnidadTransporte.DISPONIBLE, ubigeo);
+                                UnidadTransporteModel vehiculo = new UnidadTransporteModel(id++, codigo, capacidad, EstadoUnidadTransporte.DISPONIBLE, ubigeo, abscisa, ordenada);
                                 vehiculos.add(vehiculo);
                         }
                 } catch (Exception e) {

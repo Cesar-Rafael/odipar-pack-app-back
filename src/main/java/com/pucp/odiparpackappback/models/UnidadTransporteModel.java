@@ -4,20 +4,22 @@ public class UnidadTransporteModel {
     private int id;
     private String codigo;
     private int capacidadTotal;
-    private int oficinaActual = -1;
-    private EstadoUnidadTransporte estado;
     private int capacidadDisponible;
-    private boolean asignado;
+    private EstadoUnidadTransporte estado;
+    private int oficinaActual = -1;
+    private double abscisa;
+    private double ordenada;
     private int idRuta = -1;
 
-    public UnidadTransporteModel(int id, String codigo, int capacidadTotal, EstadoUnidadTransporte estado, int oficinaActual) {
+    public UnidadTransporteModel(int id, String codigo, int capacidadTotal, EstadoUnidadTransporte estado, int oficinaActual, double abscisa, double ordenada) {
         this.id = id;
         this.codigo = codigo;
         this.capacidadTotal = capacidadTotal;
+        this.capacidadDisponible = capacidadTotal;
         this.estado = estado;
         this.oficinaActual = oficinaActual;
-        this.capacidadDisponible = capacidadTotal;
-        this.asignado = false;
+        this.abscisa = abscisa;
+        this.ordenada = ordenada;
     }
 
     public void disminuirCapacidad(int cantPaquetes) {
@@ -35,14 +37,6 @@ public class UnidadTransporteModel {
                 ", capacidadDisponible=" + capacidadDisponible +
                 ", idRuta=" + idRuta +
                 '}';
-    }
-
-    public boolean isAsignado() {
-        return asignado;
-    }
-
-    public void setAsignado(boolean asignado) {
-        this.asignado = asignado;
     }
 
     public int getId() {
