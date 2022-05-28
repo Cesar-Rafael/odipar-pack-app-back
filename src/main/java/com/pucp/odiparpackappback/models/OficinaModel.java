@@ -1,26 +1,26 @@
 package com.pucp.odiparpackappback.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table
 public class OficinaModel {
-    private int id;
+    private @Id @GeneratedValue Long id;
     private int ubigeo;
+    private Region region;
     private String departamento;
     private String provincia;
     private double latitud;
     private double longitud;
-    private Region region;
     private boolean esPrincipal;
-    private Long fechaCreacion;
-    private Long fechaModificacion;
-    private boolean activo;
 
-    //Coordenadas
+    public OficinaModel() {
 
-    public OficinaModel(int id, int ubigeo) {
-        this.id = id;
-        this.ubigeo = ubigeo;
     }
-
-    public OficinaModel(int id, int ubigeo, String departamento, String provincia, double latitud, double longitud, Region region, boolean esPrincipal) {
+    public OficinaModel(Long id, int ubigeo, String departamento, String provincia, double latitud, double longitud, Region region, boolean esPrincipal) {
         this.id = id;
         this.ubigeo = ubigeo;
         this.departamento = departamento;
@@ -31,42 +31,44 @@ public class OficinaModel {
         this.esPrincipal = esPrincipal;
     }
 
-    @Override
-    public String toString() {
-        return "Ciudad{" +
-                "id=" + id +
-                ", fechaCreacion=" + fechaCreacion +
-                ", fechaModificacion=" + fechaModificacion +
-                ", ubigeo='" + ubigeo + '\'' +
-                ", departamento='" + departamento + '\'' +
-                ", provincia='" + provincia + '\'' +
-                ", latitud=" + latitud +
-                ", longitud=" + longitud +
-                ", region='" + region + '\'' +
-                ", activo=" + activo +
-                '}';
-    }
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
-
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public int getUbigeo() {
         return ubigeo;
     }
-
     public void setUbigeo(int ubigeo) {
         this.ubigeo = ubigeo;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+    public void setRegion(Region region) {
+        this.region = region;
+    }
+
+    public String getDepartamento() {
+        return departamento;
+    }
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
     }
 
     public double getLatitud() {
         return latitud;
     }
-
     public void setLatitud(double latitud) {
         this.latitud = latitud;
     }
@@ -74,24 +76,14 @@ public class OficinaModel {
     public double getLongitud() {
         return longitud;
     }
-
     public void setLongitud(double longitud) {
         this.longitud = longitud;
     }
 
-    public Region getRegion() {
-        return region;
+    public boolean isEsPrincipal() {
+        return esPrincipal;
     }
-
-    public void setRegion(Region region) {
-        this.region = region;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
+    public void setEsPrincipal(boolean esPrincipal) {
+        this.esPrincipal = esPrincipal;
     }
 }

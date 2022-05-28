@@ -71,27 +71,4 @@ public class PedidoModel {
     public void setEstado(EstadoPedido estado) {
         this.estado = estado;
     }
-
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "idPedido=" + idPedido +
-                ", cantPaquetes=" + cantPaquetes +
-                ", cantPaquetesNoAsignado=" + cantPaquetesNoAsignado +
-                ", idCiudadDestino=" + idCiudadDestino +
-                ", estado=" + estado +
-                '}';
-    }
-
-    @Override
-    public PedidoModel clone() {
-        PedidoModel pedido = null;
-        try {
-            pedido = (PedidoModel) super.clone();
-            pedido.setEstado(this.estado);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return pedido;
-    }
 }

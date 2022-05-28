@@ -32,7 +32,7 @@ public class OficinaService {
 
             //Lectura de fichero
             String linea;
-            int id = 1;
+            Long id = Long.valueOf(0);
             while ((linea = br.readLine()) != null) {
 
                 //Obtengo atributos
