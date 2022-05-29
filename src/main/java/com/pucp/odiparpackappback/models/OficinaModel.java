@@ -8,8 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class OficinaModel {
-    private @Id @GeneratedValue Long id;
-    private int ubigeo;
+    private @Id int ubigeo;
     private Region region;
     private String departamento;
     private String provincia;
@@ -20,8 +19,7 @@ public class OficinaModel {
     public OficinaModel() {
 
     }
-    public OficinaModel(Long id, int ubigeo, String departamento, String provincia, double latitud, double longitud, Region region, boolean esPrincipal) {
-        this.id = id;
+    public OficinaModel(int ubigeo, String departamento, String provincia, double latitud, double longitud, Region region, boolean esPrincipal) {
         this.ubigeo = ubigeo;
         this.departamento = departamento;
         this.provincia = provincia;
@@ -29,13 +27,6 @@ public class OficinaModel {
         this.longitud = longitud;
         this.region = region;
         this.esPrincipal = esPrincipal;
-    }
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public int getUbigeo() {

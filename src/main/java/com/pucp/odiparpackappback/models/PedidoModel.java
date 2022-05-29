@@ -1,16 +1,28 @@
 package com.pucp.odiparpackappback.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
+
+@Entity
+@Table
 public class PedidoModel {
-    private int idPedido;
-    private String cliente;
+    private @Id @GeneratedValue Long id;
+    private Long idCliente;
     private int cantPaquetes;
     private int cantPaquetesNoAsignado;
     private int idCiudadDestino;
-    private Long fechaHoraCreacion;
+    private Date fechaHoraCreacion;
     private EstadoPedido estado;
 
-    public PedidoModel(int idPedido, int cantPaquetes, int idCiudadDestino, Long fechaHoraCreacion) {
-        this.idPedido = idPedido;
+    public PedidoModel() {
+
+    }
+    public PedidoModel(Long id, Long idCliente, int cantPaquetes, int idCiudadDestino, Date fechaHoraCreacion) {
+        this.id = id;
+        this.idCliente = idCliente;
         this.cantPaquetes = cantPaquetes;
         this.cantPaquetesNoAsignado = cantPaquetes;
         this.idCiudadDestino = idCiudadDestino;
@@ -25,18 +37,25 @@ public class PedidoModel {
         }
     }
 
-    public int getIdPedido(){
-        return idPedido;
+    public Long getId() {
+        return id;
     }
-    public void setIdPedido(int idPedido){
-        this.idPedido = idPedido;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getCliente() {
-        return cliente;
+    public Long getIdCliente() {
+        return idCliente;
     }
-    public void setCliente(String cliente) {
-        this.cliente = cliente;
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public Date getFechaHoraCreacion() {
+        return fechaHoraCreacion;
+    }
+    public void setFechaHoraCreacion(Date fechaHoraCreacion) {
+        this.fechaHoraCreacion = fechaHoraCreacion;
     }
 
     public int getCantPaquetes() {
@@ -56,13 +75,6 @@ public class PedidoModel {
     }
     public void setIdCiudadDestino(int idCiudadDestino) {
         this.idCiudadDestino = idCiudadDestino;
-    }
-
-    public Long getFechaHoraCreacion() {
-        return fechaHoraCreacion;
-    }
-    public void setFechaHoraCreacion(Long fechaHoraCreacion) {
-        this.fechaHoraCreacion = fechaHoraCreacion;
     }
 
     public EstadoPedido getEstado() {
