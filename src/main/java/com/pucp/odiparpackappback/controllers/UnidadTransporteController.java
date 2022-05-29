@@ -1,6 +1,6 @@
 package com.pucp.odiparpackappback.controllers;
 
-import com.pucp.odiparpackappback.Repository.UnidadTransporteRepository;
+import com.pucp.odiparpackappback.Repositories.UnidadTransporteRepository;
 import com.pucp.odiparpackappback.models.UnidadTransporteModel;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,6 @@ import java.util.Objects;
 class UnidadTransporteController {
 
     private final UnidadTransporteRepository unidadTransporteRepository;
-
     UnidadTransporteController(UnidadTransporteRepository unidadTransporteRepository) {
         this.unidadTransporteRepository = unidadTransporteRepository;
     }

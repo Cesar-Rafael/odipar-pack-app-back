@@ -1,4 +1,4 @@
-package com.pucp.odiparpackappback.Repository;
+package com.pucp.odiparpackappback.Repositories;
 
 import com.pucp.odiparpackappback.models.UnidadTransporteModel;
 import org.springframework.data.repository.CrudRepository;
