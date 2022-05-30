@@ -13,7 +13,7 @@ public class UnidadTransporteModel {
     private int oficinaActual = -1;
     private double abscisa;
     private double ordenada;
-    private int idRuta = -1;
+    private Long idRuta = Long.valueOf(-1);
 
     public UnidadTransporteModel() {
 
@@ -85,10 +85,10 @@ public class UnidadTransporteModel {
         this.ordenada = ordenada;
     }
 
-    public int getIdRuta() {
+    public Long getIdRuta() {
         return idRuta;
     }
-    public void setIdRuta(int idRuta) {
+    public void setIdRuta(Long idRuta) {
         this.idRuta = idRuta;
     }
 
