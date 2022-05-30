@@ -11,21 +11,28 @@ import java.util.Date;
 public class PedidoModel {
     private @Id @GeneratedValue Long id;
     private Long idCliente;
+    private String nombreCompletoCliente;
+    private String correoCliente;
     private int cantPaquetes;
     private int cantPaquetesNoAsignado;
     private int idCiudadDestino;
+    private String ciudadDestino;
     private Date fechaHoraCreacion;
     private EstadoPedido estado;
 
     public PedidoModel() {
 
     }
-    public PedidoModel(Long id, Long idCliente, int cantPaquetes, int idCiudadDestino, Date fechaHoraCreacion) {
+
+    public PedidoModel(Long id, Long idCliente, String nombreCompletoCliente, String correoCliente, int cantPaquetes, int idCiudadDestino, String ciudadDestino, Date fechaHoraCreacion) {
         this.id = id;
         this.idCliente = idCliente;
+        this.nombreCompletoCliente = nombreCompletoCliente;
+        this.correoCliente = correoCliente;
         this.cantPaquetes = cantPaquetes;
         this.cantPaquetesNoAsignado = cantPaquetes;
         this.idCiudadDestino = idCiudadDestino;
+        this.ciudadDestino = ciudadDestino;
         this.fechaHoraCreacion = fechaHoraCreacion;
         this.estado = EstadoPedido.NO_ASIGNADO;
     }
@@ -82,5 +89,26 @@ public class PedidoModel {
     }
     public void setEstado(EstadoPedido estado) {
         this.estado = estado;
+    }
+
+    public String getCiudadDestino() {
+        return ciudadDestino;
+    }
+    public void setCiudadDestino(String ciudadDestino) {
+        this.ciudadDestino = ciudadDestino;
+    }
+
+    public String getNombreCompletoCliente() {
+        return nombreCompletoCliente;
+    }
+    public void setNombreCompletoCliente(String nombreCompletoCliente) {
+        this.nombreCompletoCliente = nombreCompletoCliente;
+    }
+
+    public String getCorreoCliente() {
+        return correoCliente;
+    }
+    public void setCorreoCliente(String correoCliente) {
+        this.correoCliente = correoCliente;
     }
 }
