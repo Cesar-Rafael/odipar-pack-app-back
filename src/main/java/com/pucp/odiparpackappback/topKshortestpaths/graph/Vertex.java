@@ -30,7 +30,7 @@
  */
 package com.pucp.odiparpackappback.topKshortestpaths.graph;
 
-import com.spring.odiparpackapp.topKshortestpaths.graph.abstraction.BaseVertex;
+import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 
 /**
  * The class defines a vertex in the graph

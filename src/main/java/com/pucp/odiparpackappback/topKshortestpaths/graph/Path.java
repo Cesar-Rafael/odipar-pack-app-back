@@ -31,8 +31,7 @@
 package com.pucp.odiparpackappback.topKshortestpaths.graph;
 
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseElementWithWeight;
-import com.spring.odiparpackapp.topKshortestpaths.graph.abstraction.BaseElementWithWeight;
-import com.spring.odiparpackapp.topKshortestpaths.graph.abstraction.BaseVertex;
+import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 
 import java.util.List;
 import java.util.Vector;
@@ -42,7 +41,7 @@ import java.util.Vector;
  * 
  * @author yqi
  */
-public class Path implements BaseElementWithWeight, Comparable<Path>, BaseElementWithWeight {
+public class Path implements BaseElementWithWeight, Comparable<Path> {
 	
 	private List<BaseVertex> vertexList = new Vector<BaseVertex>();
 	private double weight = -1;
