@@ -1,7 +1,7 @@
 package com.pucp.odiparpackappback.controllers;
 
 import com.pucp.odiparpackappback.Repositories.PedidoRepository;
-import com.pucp.odiparpackappback.models.OficinaModel;
+import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +41,12 @@ public class PedidoController {
     @GetMapping("/ABC/")
     boolean ejecutarABC(){
         ABC abc = new ABC();
+
+        Mapa.cargarPedidos();
+        Mapa.cargarOficinas();
+        Mapa.cargarTramos();
+        Mapa.cargarVehiculos();
+
         abc.algoritmoAbejasVPRTW(10, 10, 10);
         return true;
     }
