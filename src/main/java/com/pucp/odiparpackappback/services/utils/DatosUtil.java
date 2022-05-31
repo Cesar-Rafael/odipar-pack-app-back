@@ -214,15 +214,14 @@ public class DatosUtil {
         return tramos;
     }
 
-    public static Object[] calcularTiempoViajeEntreTramos(int ubigeoI, int ubigeoJ) {
-        Object[] tiempos = {0.0, 0L};
+    public static double calcularTiempoViajeEntreTramos(int ubigeoI, int ubigeoJ) {
+        double tiempo = 0.0;
         for (TramoModel t : Mapa.tramos) {
             if (t.getIdCiudadI() == ubigeoI && t.getIdCiudadJ() == ubigeoJ) {
-                tiempos[0] = t.getTiempoDeViaje();
-                tiempos[1] = t.getTiempoDeViaje();
+                tiempo = t.getTiempoDeViaje();
                 break;
             }
         }
-        return tiempos;
+        return tiempo;
     }
 }

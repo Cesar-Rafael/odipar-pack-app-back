@@ -110,7 +110,7 @@ public class ABC {
                     // Asignación
                     ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                     for(int a = 0; a < tramos.size(); a++){
-                        tramos.get(a).setTiempoDeViaje(Long.valueOf(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())[0].toString())*3600);
+                        tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())*3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta,seguimiento,pedidosParciales,fitness,idUnidadTransporte, tramos);
                     Mapa.rutas.add(auxRuta);
@@ -132,7 +132,7 @@ public class ABC {
                     // Asignación
                     ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                     for(int a = 0; a < tramos.size(); a++){
-                        tramos.get(a).setTiempoDeViaje(Long.valueOf(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())[0].toString())*3600);
+                        tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())*3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta,seguimiento,pedidosParciales,fitness,idUnidadTransporte, tramos);
                     Mapa.rutas.add(auxRuta);
