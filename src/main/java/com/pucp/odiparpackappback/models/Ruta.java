@@ -54,7 +54,6 @@ public class Ruta {
     public static void setId(Long id) {
         Ruta.id = id;
     }
-
     public Long getIdRuta() {
         return idRuta;
     }

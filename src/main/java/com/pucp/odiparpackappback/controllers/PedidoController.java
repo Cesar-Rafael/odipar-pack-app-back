@@ -4,6 +4,9 @@ import com.pucp.odiparpackappback.Repositories.PedidoRepository;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+//@EnableScheduling
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
@@ -48,6 +52,30 @@ public class PedidoController {
         Mapa.cargarVehiculos();
 
         abc.algoritmoAbejasVPRTW(10, 10, 10);
+
+        // BD RutaModel
+        System.out.println("REPORTE:");
+        for(int i=0; i < Mapa.rutas.size(); i++){
+            System.out.println("IdRuta:");
+            System.out.println(Mapa.rutas.get(i).getIdRuta());
+            System.out.println("IdUnidadTransporte:");
+            System.out.println(Mapa.rutas.get(i).getIdUnidadTransporte());
+            System.out.println("Seguimiento:");
+            System.out.println(Mapa.rutas.get(i).getSeguimiento());
+            System.out.println("Tramos:");
+            for(int j=0; j < Mapa.rutas.get(i).getTramos().size(); j++){
+                System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadI());
+                System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ());
+            }
+            System.out.println();
+        }
+
         return true;
+    }
+
+    @Scheduled(fixedRate = 5000)
+    @GetMapping(value="/hello/")
+    public void greeting() {
+        System.out.println("Hello!!!");
     }
 }
