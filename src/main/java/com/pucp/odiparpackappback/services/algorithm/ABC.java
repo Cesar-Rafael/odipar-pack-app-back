@@ -89,7 +89,7 @@ public class ABC {
         // Parámetros
         Long idRuta = Long.valueOf(Mapa.rutas.size());
         String seguimiento = rutasPath.get(k).getVertexList().toString();
-        ArrayList<PedidoParcial> pedidosParciales = new ArrayList<>();
+        ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
         double fitness = rutasPath.get(k).getWeight();
         // Asignación Vehículo
         for (int i = 0; i < Mapa.vehiculos.size(); i++){
@@ -103,14 +103,14 @@ public class ABC {
                     Mapa.vehiculos.get(i).setCapacidadDisponible(Mapa.vehiculos.get(i).getCapacidadDisponible()-pedido.getCantPaquetesNoAsignado());
                     // Asignación Ruta
                     Long idUnidadTransporte = Mapa.vehiculos.get(i).getId();
-                    PedidoParcial pedidoParcial = new PedidoParcial(pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), 0L, idRuta); pedidosParciales.add(pedidoParcial);
+                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), 0L, idRuta); pedidosParciales.add(pedidoParcial);
                     // Actualización en Pedido
                     pedido.setCantPaquetesNoAsignado(0);
                     pedido.setEstado(EstadoPedido.EN_PROCESO);
                     // Asignación
-                    ArrayList<Tramo> tramos = Mapa.listarTramos(seguimiento);
+                    ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                     for(int a = 0; a < tramos.size(); a++){
-                        tramos.get(a).setFitness(Double.valueOf(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())[0].toString()));
+                        tramos.get(a).setTiempoDeViaje(Long.valueOf(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())[0].toString())*3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta,seguimiento,pedidosParciales,fitness,idUnidadTransporte, tramos);
                     Mapa.rutas.add(auxRuta);
@@ -124,15 +124,15 @@ public class ABC {
                     Mapa.vehiculos.get(i).setIdRuta(idRuta);
                     // Asignación Ruta
                     Long idUnidadTransporte = Mapa.vehiculos.get(i).getId();
-                    PedidoParcial pedidoParcial = new PedidoParcial(pedido.getId(), -1, Mapa.vehiculos.get(i).getCapacidadDisponible(), 0L, idRuta); pedidosParciales.add(pedidoParcial);
+                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(pedido.getId(), -1, Mapa.vehiculos.get(i).getCapacidadDisponible(), 0L, idRuta); pedidosParciales.add(pedidoParcial);
                     // Pedido
                     Mapa.vehiculos.get(i).setCapacidadDisponible(0);
                     pedido.setCantPaquetesNoAsignado(faltante);
                     pedido.setEstado(EstadoPedido.EN_PROCESO);
                     // Asignación
-                    ArrayList<Tramo> tramos = Mapa.listarTramos(seguimiento);
+                    ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                     for(int a = 0; a < tramos.size(); a++){
-                        tramos.get(a).setFitness(Double.valueOf(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())[0].toString()));
+                        tramos.get(a).setTiempoDeViaje(Long.valueOf(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ())[0].toString())*3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta,seguimiento,pedidosParciales,fitness,idUnidadTransporte, tramos);
                     Mapa.rutas.add(auxRuta);
@@ -160,8 +160,8 @@ public class ABC {
             // Se verifica si hay capacidad disponible suficiente en el vehículo asignado a esa ruta
             if (Mapa.vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) {
                 // Hay capacidad suficiente, se asigna el pedido a la ruta...
-                ArrayList<PedidoParcial> pedidosParciales = ruta.getPedidosParciales();
-                PedidoParcial pedidoParcial = new PedidoParcial(pedido.getId(), -1,pedido.getCantPaquetesNoAsignado(), 0L, ruta.getIdRuta());
+                ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
+                PedidoParcialModel pedidoParcial = new PedidoParcialModel(pedido.getId(), -1,pedido.getCantPaquetesNoAsignado(), 0L, ruta.getIdRuta());
                 pedidosParciales.add(pedidoParcial);
                 ruta.setPedidosParciales(pedidosParciales);
                 // Se actualiza la capacidad disponible en el vehículo
@@ -174,8 +174,8 @@ public class ABC {
                 // No hay capacidad suficiente, se asigna el pedido a la ruta y luego se busca otra para completar el pedido
                 int faltante = pedido.getCantPaquetesNoAsignado() - Mapa.vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible();
                 // Asignación parcial
-                ArrayList<PedidoParcial> pedidosParciales = ruta.getPedidosParciales();
-                PedidoParcial pedidoParcial = new PedidoParcial(pedido.getId(), -1,pedido.getCantPaquetes()-faltante, 0L, ruta.getIdRuta());
+                ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
+                PedidoParcialModel pedidoParcial = new PedidoParcialModel(pedido.getId(), -1,pedido.getCantPaquetes()-faltante, 0L, ruta.getIdRuta());
                 pedidosParciales.add(pedidoParcial);
                 ruta.setPedidosParciales(pedidosParciales);
                 // Se actualiza la capacidad disponible en el vehículo, o sea cero

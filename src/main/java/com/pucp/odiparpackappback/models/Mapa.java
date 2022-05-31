@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Mapa {
     public static ArrayList<OficinaModel> oficinasPrincipales = new ArrayList<>();
     public static ArrayList<OficinaModel> oficinas;
-    public static ArrayList<Tramo> tramos;
+    public static ArrayList<TramoModel> tramos;
     public static ArrayList<UnidadTransporteModel> vehiculos;
     public static DicTramos dicTramos;
     public static ArrayList<PedidoModel> pedidos;
@@ -40,7 +40,7 @@ public class Mapa {
         pedidos = DatosUtil.leerArchivoPedidos(nombreArchivo);
     }
 
-    public static ArrayList<Tramo> listarTramos(String tramos){
+    public static ArrayList<TramoModel> listarTramos(String tramos){
         return DatosUtil.listarTramos(tramos);
     }
 

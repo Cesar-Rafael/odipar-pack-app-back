@@ -6,10 +6,10 @@ public class Ruta {
     private static Long id = Long.valueOf(0);
     private Long idRuta;
     private OficinaModel ciudadActual;
-    private ArrayList<Tramo> tramos;// [tramo1 (ciudadI, ciudadJ), tramo2(ciudadJ, ciudadK)]
+    private ArrayList<TramoModel> tramos;// [tramo1 (ciudadI, ciudadJ), tramo2(ciudadJ, ciudadK)]
     private ArrayList<Double> tiemposTramos; // [hora1, hora2]
     private ArrayList<Integer> ubigeoOficinas;
-    private ArrayList<PedidoParcial> pedidosParciales;
+    private ArrayList<PedidoParcialModel> pedidosParciales;
     private Long horaInicio;
     private ArrayList<Long> horasDeLlegada;
     private String seguimiento;
@@ -17,7 +17,7 @@ public class Ruta {
     private UnidadTransporteModel vehiculo;
     private double fitness;
 
-    public Ruta(Long idRuta, String seguimiento, ArrayList<PedidoParcial> pedidosParciales, double fitness, Long idUnidadTransporte, ArrayList<Tramo> tramos) {
+    public Ruta(Long idRuta, String seguimiento, ArrayList<PedidoParcialModel> pedidosParciales, double fitness, Long idUnidadTransporte, ArrayList<TramoModel> tramos) {
         this.idRuta = idRuta;                               // 3
         this.seguimiento = seguimiento;                     // "[150101, 150201, 21801, 130701, 140301]"
         this.pedidosParciales = pedidosParciales;           // [3, 15, 21, 130]
@@ -26,7 +26,7 @@ public class Ruta {
         this.tramos = tramos;
     }
 
-    public Ruta(ArrayList<Integer> ubigeoOficinas, UnidadTransporteModel vehiculo, ArrayList<Double> tiemposTramos, double fitness, ArrayList<Tramo> tramos) {
+    public Ruta(ArrayList<Integer> ubigeoOficinas, UnidadTransporteModel vehiculo, ArrayList<Double> tiemposTramos, double fitness, ArrayList<TramoModel> tramos) {
         this.idRuta = id++;
         this.ubigeoOficinas = ubigeoOficinas;
         this.pedidosParciales = new ArrayList<>();
@@ -44,7 +44,7 @@ public class Ruta {
             horasDeLlegada.add(tiempoTramo);
         }
     }
-    public void agregarPedidoParcial(PedidoParcial pedidoParcial) {
+    public void agregarPedidoParcial(PedidoParcialModel pedidoParcial) {
         pedidosParciales.add(pedidoParcial);
     }
 
@@ -67,10 +67,10 @@ public class Ruta {
     public void setCiudadActual(OficinaModel ciudadActual) {
         this.ciudadActual = ciudadActual;
     }
-    public ArrayList<Tramo> getTramos() {
+    public ArrayList<TramoModel> getTramos() {
         return tramos;
     }
-    public void setTramos(ArrayList<Tramo> tramos) {
+    public void setTramos(ArrayList<TramoModel> tramos) {
         this.tramos = tramos;
     }
     public ArrayList<Double> getTiemposTramos() {
@@ -85,10 +85,10 @@ public class Ruta {
     public void setUbigeoOficinas(ArrayList<Integer> ubigeoOficinas) {
         this.ubigeoOficinas = ubigeoOficinas;
     }
-    public ArrayList<PedidoParcial> getPedidosParciales() {
+    public ArrayList<PedidoParcialModel> getPedidosParciales() {
         return pedidosParciales;
     }
-    public void setPedidosParciales(ArrayList<PedidoParcial> pedidosParciales) {
+    public void setPedidosParciales(ArrayList<PedidoParcialModel> pedidosParciales) {
         this.pedidosParciales = pedidosParciales;
     }
     public Long getHoraInicio() {

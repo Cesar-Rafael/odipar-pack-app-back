@@ -3,11 +3,8 @@ package com.pucp.odiparpackappback.services.utils;
 import com.pucp.odiparpackappback.models.*;
 
 import java.io.*;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.Map;
 
 public class DatosUtil {
@@ -15,16 +12,16 @@ public class DatosUtil {
     private static final double[][] velocidades = {{70.0, 50.0, 0.0}, {50.0, 60.0, 55.0}, {0.0, 55.0, 65.0}}; // COSTA, SIERRA, SELVA - COSTA, SIERRA, SELVA
     private static final double RADIO_TIERRA = 6371; // km
 
-    public static ArrayList<Tramo> listarTramos(String tramos) {
-        ArrayList<Tramo> listaTramos = new ArrayList<>();
+    public static ArrayList<TramoModel> listarTramos(String tramos) {
+        ArrayList<TramoModel> listaTramos = new ArrayList<>();
         //[170582, 896574, 014536]
         String[] parts = tramos.split(",");
         int ciudadIni = Integer.parseInt(parts[0].substring(1));
         int ciudadFin;
-        int id = 0;
+        Long id = Long.valueOf(0);
         for (int i = 1; i < parts.length; i++) {
             ciudadFin = Integer.parseInt(parts[i].replaceAll("[^0-9]", ""));
-            Tramo tramo = new Tramo(id, ciudadIni, ciudadFin, 0);
+            TramoModel tramo = new TramoModel(id, ciudadIni, ciudadFin, 0, false);
             listaTramos.add(tramo);
 
             ciudadIni = ciudadFin;
@@ -60,15 +57,15 @@ public class DatosUtil {
     }
 
     public static DicTramos crearMapa() {
-        ArrayList<Tramo> tramos = Mapa.tramos;
+        ArrayList<TramoModel> tramos = Mapa.tramos;
         //agregar a dic
         DicTramos dicTramos = new DicTramos();
         Map<Integer, Integer[]> miMapa = dicTramos.getMap();
-        tramos.sort(Comparator.comparing(Tramo::getIdCiudadI));
+        tramos.sort(Comparator.comparing(TramoModel::getIdCiudadI));
         int id = 0;
         ArrayList<Integer> aux = new ArrayList<>();
         Integer[] a;
-        for (Tramo t : tramos) {
+        for (TramoModel t : tramos) {
             if (id == t.getIdCiudadI()) {
                 aux.add(t.getIdCiudadJ());
             } else {
@@ -127,8 +124,8 @@ public class DatosUtil {
     }
 
 
-    public static ArrayList<Tramo> leerArchivoTramos(String archivoTramo, String archivoVelocidades) {
-        ArrayList<Tramo> tramos = new ArrayList<>();
+    public static ArrayList<TramoModel> leerArchivoTramos(String archivoTramo, String archivoVelocidades) {
+        ArrayList<TramoModel> tramos = new ArrayList<>();
         int[][] velocidades = new int[5][3];
         //archivo tramos
         File archivoRutas;
@@ -179,7 +176,7 @@ public class DatosUtil {
 
             }
             //Lectura de Tramos
-            int id = 1;
+            Long id = Long.valueOf(1);
             while ((linea = br.readLine()) != null) {
 
                 //Obtengo atributos
@@ -193,7 +190,7 @@ public class DatosUtil {
                 double tiempoDeViaje = calcularTiempoDeViaje(oficina1, oficina2, velocidades);
 
                 //Agrega tramo
-                Tramo tramo = new Tramo(id, ciudad1, ciudad2, tiempoDeViaje);
+                TramoModel tramo = new TramoModel(id, ciudad1, ciudad2, tiempoDeViaje, false);
                 tramos.add(tramo);
                 id++;
 
@@ -219,61 +216,13 @@ public class DatosUtil {
 
     public static Object[] calcularTiempoViajeEntreTramos(int ubigeoI, int ubigeoJ) {
         Object[] tiempos = {0.0, 0L};
-        for (Tramo t : Mapa.tramos) {
+        for (TramoModel t : Mapa.tramos) {
             if (t.getIdCiudadI() == ubigeoI && t.getIdCiudadJ() == ubigeoJ) {
-                tiempos[0] = t.getFitness();
+                tiempos[0] = t.getTiempoDeViaje();
                 tiempos[1] = t.getTiempoDeViaje();
                 break;
             }
         }
         return tiempos;
     }
-
-    public static double[] reporte() {
-        int ped = 0;
-        int pedAsig = 0;
-        double fit = 0;
-        double[] res = new double[2];
-        for (int i = 0; i < Mapa.pedidos.size(); i++) {
-            System.out.println("-------------------------------------------------------------");
-            System.out.println("id: " + Mapa.pedidos.get(i).getId());
-            System.out.println("Cantidad de paquetes: " + Mapa.pedidos.get(i).getCantPaquetes());
-            System.out.println("Cantidad paquetes no asignados: " + (Mapa.pedidos.get(i).getCantPaquetesNoAsignado()));
-            System.out.println("Estado: " + Mapa.pedidos.get(i).getEstado() + "\n");
-            boolean asignado = false;
-            //recorrer rutas
-            for (int j = 0; j < Mapa.rutas.size(); j++) {
-                //esta el pedido en la ruta?
-                for (int k = 0; k < Mapa.rutas.get(j).getPedidosParciales().size(); k++) {
-                    if (Mapa.rutas.get(j).getPedidosParciales().get(k).getIdPedido() == Mapa.pedidos.get(i).getId()) {
-                        if (!asignado) {
-                            asignado = true;
-                            System.out.println("Asignacion \n");
-                        } else {
-                            System.out.println("\n");
-                        }
-
-                        System.out.println("idRuta: " + Mapa.rutas.get(j).getIdRuta());
-                        System.out.println("Seguimiento: " + Mapa.rutas.get(j).getSeguimiento());
-                        System.out.println("Paquetes: " + Mapa.rutas.get(j).getPedidosParciales().get(k).getCantPaquetes());
-                    }
-
-                }
-                if(i==0)
-                    fit += Mapa.rutas.get(j).getFitness();
-            }
-
-            pedAsig += Mapa.pedidos.get(i).getCantPaquetesNoAsignado() == 0 ? 1 : 0;
-            ped++;
-        }
-        System.out.println("-------------------------------------------------------------");
-        System.out.println("Resumen");
-        System.out.println("Pedidos: " + ped);
-        System.out.println("Pedidos Asignados: " + pedAsig);
-        System.out.println("fitness: " + fit);
-        res[0] = (double) pedAsig / ped;
-        res[1] = fit;
-        return res;
-    }
-
 }

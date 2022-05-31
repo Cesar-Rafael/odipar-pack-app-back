@@ -32,7 +32,7 @@
 package com.pucp.odiparpackappback.topKshortestpaths.graph;
 
 import com.pucp.odiparpackappback.models.OficinaModel;
-import com.pucp.odiparpackappback.models.Tramo;
+import com.pucp.odiparpackappback.models.TramoModel;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.DijkstraShortestPathAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
@@ -64,7 +64,7 @@ public class VariableGraph extends Graph {
         super(dataFileName);
     }
 
-    public VariableGraph(ArrayList<OficinaModel> oficinas, ArrayList<Tramo> tramos) {
+    public VariableGraph(ArrayList<OficinaModel> oficinas, ArrayList<TramoModel> tramos) {
         super(oficinas, tramos);
     }
 

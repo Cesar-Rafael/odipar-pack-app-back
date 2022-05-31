@@ -1,16 +1,25 @@
 package com.pucp.odiparpackappback.models;
 
-public class PedidoParcial {
-    private static Long id = Long.valueOf(0);
-    private Long idPedidoParcial;        // correlativo
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table
+public class PedidoParcialModel {
+    private @Id @GeneratedValue Long id; // correlativo
     private Long idPedido;               // relación con Pedido
     private int idCiudadOrigen;
     private int cantPaquetes;           // puede ser igual a la cantPaquetes del Pedido
     private Long fechaHoraEntrega;
     private Long idRuta;
 
-    public PedidoParcial(Long idPedido, int idCiudadOrigen, int cantPaquetes, Long fechaHoraEntrega, Long idRuta){
-        this.idPedidoParcial = id++;
+    public PedidoParcialModel() {
+
+    }
+    public PedidoParcialModel(Long id, int idCiudadOrigen, int cantPaquetes, Long fechaHoraEntrega, Long idRuta){
+        this.id = id;
         this.idPedido = idPedido;
         this.idCiudadOrigen = idCiudadOrigen;
         this.cantPaquetes = cantPaquetes;
@@ -18,17 +27,11 @@ public class PedidoParcial {
         this.idRuta = idRuta;
     }
 
-    public static Long getId() {
+    public Long getId() {
         return id;
     }
-    public static void setId(Long id) {
-        PedidoParcial.id = id;
-    }
-    public Long getIdPedidoParcial() {
-        return idPedidoParcial;
-    }
-    public void setIdPedidoParcial(Long idPedidoParcial) {
-        this.idPedidoParcial = idPedidoParcial;
+    public void setId(Long id) {
+        this.id = id;
     }
     public Long getIdPedido() {
         return idPedido;

@@ -32,7 +32,7 @@
 package com.pucp.odiparpackappback.topKshortestpaths.graph;
 
 import com.pucp.odiparpackappback.models.OficinaModel;
-import com.pucp.odiparpackappback.models.Tramo;
+import com.pucp.odiparpackappback.models.TramoModel;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseGraph;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
@@ -85,7 +85,7 @@ public class Graph implements BaseGraph {
         importFromFile(dataFileName);
     }
 
-    public Graph(ArrayList<OficinaModel> oficinas, ArrayList<Tramo> tramos) {
+    public Graph(ArrayList<OficinaModel> oficinas, ArrayList<TramoModel> tramos) {
         vertexNum = oficinas.size();
 
         for (OficinaModel o : oficinas) {
@@ -95,10 +95,10 @@ public class Graph implements BaseGraph {
             idVertexIndex.put(vertex.getId(), vertex);
         }
 
-        for (Tramo t : tramos) {
+        for (TramoModel t : tramos) {
             int startVertexId = t.getIdCiudadI();
             int endVertexId = t.getIdCiudadJ();
-            double weight = t.getFitness();
+            double weight = t.getTiempoDeViaje();
             addEdge(startVertexId, endVertexId, weight);
         }
     }
