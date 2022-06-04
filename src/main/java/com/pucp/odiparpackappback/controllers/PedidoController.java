@@ -39,27 +39,18 @@ public class PedidoController {
         return pedidos;
     }
 
-    @PutMapping("/Pedido/Put/{id}")
-    PedidoModel InsertarPedido(@RequestBody PedidoModel pedidoModel, @PathVariable Long id){
-        return pedidoRepository.findById(id)
-                .map(pedido -> {
-                    pedido.setIdCliente(pedidoModel.getIdCliente());
-                    pedido.setNombreCompletoCliente(pedidoModel.getNombreCompletoCliente());
-                    pedido.setCorreoCliente(pedidoModel.getCorreoCliente());
-                    pedido.setCantPaquetes(pedidoModel.getCantPaquetes());
-                    pedido.setCantPaquetesNoAsignado(pedidoModel.getCantPaquetesNoAsignado());
-                    pedido.setIdCiudadDestino(pedidoModel.getIdCiudadDestino());
-                    pedido.setCiudadDestino(pedidoModel.getCiudadDestino());
-                    pedido.setFechaHoraCreacion(pedidoModel.getFechaHoraCreacion());
-                    pedido.setEstado(pedidoModel.getEstado());
-                    return pedidoRepository.save(pedido);
-                })
-                .orElseGet(() -> {
-                    pedidoModel.setId(id);
-                    return pedidoRepository.save(pedidoModel);
-                });
+    @PostMapping("/Pedido/PostPedido")
+    PedidoModel InsertarPedido(@RequestBody PedidoModel pedidoModel){
+        return pedidoRepository.save(pedidoModel);
     }
 
+    @PostMapping("/Pedido/PostPedidos")
+    boolean InsertarListaPedidos(@RequestBody List<PedidoModel> pedidosModel){
+        for(int i = 0; i < pedidosModel.size(); i++){
+            pedidoRepository.save(pedidosModel.get(i));
+        }
+        return true;
+    }
 
     @GetMapping("/ABC/")
     boolean ejecutarABC(){
