@@ -10,9 +10,7 @@ import java.util.Date;
 @Table
 public class PedidoModel {
     private @Id @GeneratedValue Long id;
-    private Long idCliente;
-    private String nombreCompletoCliente;
-    private String correoCliente;
+    private Long rucCliente;
     private int cantPaquetes;
     private int cantPaquetesNoAsignado;
     private int idCiudadDestino;
@@ -24,11 +22,9 @@ public class PedidoModel {
 
     }
 
-    public PedidoModel(Long id, Long idCliente, String nombreCompletoCliente, String correoCliente, int cantPaquetes, int idCiudadDestino, String ciudadDestino, Date fechaHoraCreacion) {
+    public PedidoModel(Long id, Long rucCliente, int cantPaquetes, int idCiudadDestino, String ciudadDestino, Date fechaHoraCreacion) {
         this.id = id;
-        this.idCliente = idCliente;
-        this.nombreCompletoCliente = nombreCompletoCliente;
-        this.correoCliente = correoCliente;
+        this.rucCliente = rucCliente;
         this.cantPaquetes = cantPaquetes;
         this.cantPaquetesNoAsignado = cantPaquetes;
         this.idCiudadDestino = idCiudadDestino;
@@ -49,13 +45,6 @@ public class PedidoModel {
     }
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getIdCliente() {
-        return idCliente;
-    }
-    public void setIdCliente(Long idCliente) {
-        this.idCliente = idCliente;
     }
 
     public Date getFechaHoraCreacion() {
@@ -98,17 +87,10 @@ public class PedidoModel {
         this.ciudadDestino = ciudadDestino;
     }
 
-    public String getNombreCompletoCliente() {
-        return nombreCompletoCliente;
+    public Long getRucCliente() {
+        return rucCliente;
     }
-    public void setNombreCompletoCliente(String nombreCompletoCliente) {
-        this.nombreCompletoCliente = nombreCompletoCliente;
-    }
-
-    public String getCorreoCliente() {
-        return correoCliente;
-    }
-    public void setCorreoCliente(String correoCliente) {
-        this.correoCliente = correoCliente;
+    public void setRucCliente(Long rucCliente) {
+        this.rucCliente = rucCliente;
     }
 }

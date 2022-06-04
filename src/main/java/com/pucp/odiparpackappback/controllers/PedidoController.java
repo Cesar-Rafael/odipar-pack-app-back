@@ -78,14 +78,18 @@ public class PedidoController {
                 System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ());
             }
             System.out.println();
+
+            ejecutarABC2(abc);
         }
 
         return true;
     }
 
-    @Scheduled(fixedRate = 5000)
-    @GetMapping(value="/hello/")
-    public void greeting() {
-        System.out.println("Hello!!!");
+    @Scheduled(fixedRate = 150000, initialDelay = 150000)
+    @GetMapping("/ABC2/")
+    boolean ejecutarABC2(ABC abc){
+        abc.algoritmoAbejasVPRTW(10, 10, 10);
+        System.out.println("Me he ejecutado :)");
+        return true;
     }
 }
