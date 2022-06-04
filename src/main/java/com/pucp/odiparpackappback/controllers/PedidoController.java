@@ -7,10 +7,7 @@ import com.pucp.odiparpackappback.services.algorithm.ABC;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +38,28 @@ public class PedidoController {
         }
         return pedidos;
     }
+
+    @PutMapping("/Pedido/Put/{id}")
+    PedidoModel InsertarPedido(@RequestBody PedidoModel pedidoModel, @PathVariable Long id){
+        return pedidoRepository.findById(id)
+                .map(pedido -> {
+                    pedido.setIdCliente(pedidoModel.getIdCliente());
+                    pedido.setNombreCompletoCliente(pedidoModel.getNombreCompletoCliente());
+                    pedido.setCorreoCliente(pedidoModel.getCorreoCliente());
+                    pedido.setCantPaquetes(pedidoModel.getCantPaquetes());
+                    pedido.setCantPaquetesNoAsignado(pedidoModel.getCantPaquetesNoAsignado());
+                    pedido.setIdCiudadDestino(pedidoModel.getIdCiudadDestino());
+                    pedido.setCiudadDestino(pedidoModel.getCiudadDestino());
+                    pedido.setFechaHoraCreacion(pedidoModel.getFechaHoraCreacion());
+                    pedido.setEstado(pedidoModel.getEstado());
+                    return pedidoRepository.save(pedido);
+                })
+                .orElseGet(() -> {
+                    pedidoModel.setId(id);
+                    return pedidoRepository.save(pedidoModel);
+                });
+    }
+
 
     @GetMapping("/ABC/")
     boolean ejecutarABC(){
