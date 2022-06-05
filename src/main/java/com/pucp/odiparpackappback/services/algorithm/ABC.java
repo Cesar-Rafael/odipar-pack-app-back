@@ -10,6 +10,11 @@ import java.util.Random;
 
 public class ABC {
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
+        Mapa.cargarPedidos();
+
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
+        Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
+
         int contador = 0;
         // Etapa: Generación de la Población Inicial
         while (true) {

@@ -56,7 +56,7 @@ public class PedidoController {
     boolean ejecutarABC(){
         ABC abc = new ABC();
 
-        Mapa.cargarPedidos();
+        //Mapa.cargarPedidos();
         Mapa.cargarOficinas();
         Mapa.cargarTramos();
         Mapa.cargarVehiculos();

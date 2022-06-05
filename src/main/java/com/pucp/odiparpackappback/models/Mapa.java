@@ -7,7 +7,9 @@ import com.pucp.odiparpackappback.Repositories.UnidadTransporteRepository;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 @RestController
 public class Mapa {
@@ -20,8 +22,8 @@ public class Mapa {
     public static ArrayList<Ruta> rutas = new ArrayList<>();
     public static boolean flag = true;
 
-
-
+    public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 51, 0);
+    public static LocalDateTime finSimulacion = LocalDateTime.of(2022, 1, 1, 0, 51, 0);
 
     public static double getFitnessSolucion() {
         return fitnessSolucion;
