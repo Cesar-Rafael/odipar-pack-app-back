@@ -9,11 +9,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-//@EnableScheduling
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
@@ -84,12 +82,18 @@ public class PedidoController {
             System.out.println();
         }
 
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override public void run() {
+                ejecutarABC2();}
+        }, 300000, 300000);
+
         return true;
     }
 
-    @Scheduled(fixedRate = 150000, initialDelay = 150000)
     @GetMapping("/ABC2/")
-    boolean ejecutarABC2(ABC abc){
+    boolean ejecutarABC2(){
+        ABC abc = new ABC();
         abc.algoritmoAbejasVPRTW(10, 10, 10);
         System.out.println("Me he ejecutado :)");
         return true;
