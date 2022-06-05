@@ -5,15 +5,17 @@ import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.services.utils.ShortestPathRouting;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 
+import java.sql.Date;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class ABC {
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
-        Mapa.cargarPedidos();
-
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
         Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
+
+        Mapa.cargarPedidos(Date.from(Mapa.inicioSimulacion.atZone(ZoneId.systemDefault()).toInstant()), Date.from(Mapa.finSimulacion.atZone(ZoneId.systemDefault()).toInstant()) );
 
         int contador = 0;
         // Etapa: Generación de la Población Inicial
