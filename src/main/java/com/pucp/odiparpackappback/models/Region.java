@@ -17,9 +17,9 @@ public enum Region {
             lookup.put(w.getCode(), w);
     }
 
-    private int code;
+    private final int code;
 
-    private Region(int code) {
+    Region(int code) {
         this.code = code;
     }
 

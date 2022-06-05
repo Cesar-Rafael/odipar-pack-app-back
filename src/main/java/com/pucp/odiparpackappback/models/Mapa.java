@@ -42,10 +42,10 @@ public class Mapa {
     private static UnidadTransporteRepository unidadTransporteRepository;
 
     public Mapa(PedidoRepository pedidoRepository, OficinaRepository oficinaRepository, TramoRepository tramoRepository, UnidadTransporteRepository unidadTransporteRepository) {
-        this.pedidoRepository = pedidoRepository;
-        this.oficinaRepository = oficinaRepository;
-        this.tramoRepository = tramoRepository;
-        this.unidadTransporteRepository = unidadTransporteRepository;
+        Mapa.pedidoRepository = pedidoRepository;
+        Mapa.oficinaRepository = oficinaRepository;
+        Mapa.tramoRepository = tramoRepository;
+        Mapa.unidadTransporteRepository = unidadTransporteRepository;
     }
 
 

@@ -41,7 +41,7 @@ import java.util.List;
  * @param <E> the type of the element in the queue
  */
 public class QYPriorityQueue<E extends BaseElementWithWeight> {
-	private List<E> elementWeightPairList = new LinkedList<E>();
+	private final List<E> elementWeightPairList = new LinkedList<E>();
 	private int limitSize = -1;
 	private boolean isIncremental = false; 
 	

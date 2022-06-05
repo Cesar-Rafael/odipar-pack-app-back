@@ -38,6 +38,6 @@ package com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction;
  */
 public interface BaseElementWithWeight {
 	
-	public double getWeight();
+	double getWeight();
 	
 }

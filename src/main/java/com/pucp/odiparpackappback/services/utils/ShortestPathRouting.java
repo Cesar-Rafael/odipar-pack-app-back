@@ -11,7 +11,7 @@ import java.util.Collections;
 
 public class ShortestPathRouting {
     private static final Graph grafo = new VariableGraph(Mapa.oficinas, Mapa.tramos);
-    private static final YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(grafo);;
+    private static final YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(grafo);
 
     public static ArrayList<Path> getKShortestPaths(int k, int ubigeoDestino) {
         yenAlg.setTargetVertex(grafo.getVertex(ubigeoDestino));

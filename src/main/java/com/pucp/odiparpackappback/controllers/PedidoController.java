@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@EnableScheduling
+//@EnableScheduling
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
@@ -65,6 +65,8 @@ public class PedidoController {
 
         // BD RutaModel
         System.out.println("REPORTE:");
+        System.out.println("Cantidad Pedidos:");
+        System.out.println(Mapa.pedidos.size());
         for(int i=0; i < Mapa.rutas.size(); i++){
             System.out.println("IdRuta:");
             System.out.println(Mapa.rutas.get(i).getIdRuta());
@@ -74,12 +76,12 @@ public class PedidoController {
             System.out.println(Mapa.rutas.get(i).getSeguimiento());
             System.out.println("Tramos:");
             for(int j=0; j < Mapa.rutas.get(i).getTramos().size(); j++){
+                System.out.println("Ciudad i:");
                 System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadI());
+                System.out.println("Ciudad j:");
                 System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ());
             }
             System.out.println();
-
-            ejecutarABC2(abc);
         }
 
         return true;

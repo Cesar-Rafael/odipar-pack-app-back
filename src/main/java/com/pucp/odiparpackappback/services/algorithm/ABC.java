@@ -45,11 +45,11 @@ public class ABC {
                 // Abeja Observadora
                 for (int c = 0; b < numAbejasObs; b++) {
                     // Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                    Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1);
+                    //Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1);
                     // Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
-                    if (auxRuta.getFitness() > Mapa.rutas.get(i).getFitness()) {
-                        Mapa.rutas.set(i, auxRuta);
-                    }
+                    //if (auxRuta.getFitness() > Mapa.rutas.get(i).getFitness()) {
+                    //    Mapa.rutas.set(i, auxRuta);
+                    //}
                 }
             }
         }

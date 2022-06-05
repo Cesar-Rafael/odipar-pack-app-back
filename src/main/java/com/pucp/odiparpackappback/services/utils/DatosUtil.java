@@ -23,7 +23,6 @@ public class DatosUtil {
             ciudadFin = Integer.parseInt(parts[i].replaceAll("[^0-9]", ""));
             TramoModel tramo = new TramoModel(id, ciudadIni, ciudadFin, 0, false);
             listaTramos.add(tramo);
-
             ciudadIni = ciudadFin;
             id++;
             //System.out.println(tramo.toString());

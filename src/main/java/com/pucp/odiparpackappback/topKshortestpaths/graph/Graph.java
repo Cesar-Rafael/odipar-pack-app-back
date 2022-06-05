@@ -89,7 +89,7 @@ public class Graph implements BaseGraph {
         vertexNum = oficinas.size();
 
         for (OficinaModel o : oficinas) {
-            BaseVertex vertex = (BaseVertex) new Vertex();
+            BaseVertex vertex = new Vertex();
             vertex.setId(o.getUbigeo());
             vertexList.add(vertex);
             idVertexIndex.put(vertex.getId(), vertex);
@@ -172,7 +172,7 @@ public class Graph implements BaseGraph {
                     isFirstLine = false;
                     vertexNum = Integer.parseInt(line.trim());
                     for (int i = 0; i < vertexNum; ++i) {
-                        BaseVertex vertex = (BaseVertex) new Vertex();
+                        BaseVertex vertex = new Vertex();
                         vertexList.add(vertex);
                         idVertexIndex.put(vertex.getId(), vertex);
                     }
