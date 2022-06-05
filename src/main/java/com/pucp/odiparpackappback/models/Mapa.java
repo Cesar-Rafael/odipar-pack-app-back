@@ -23,7 +23,7 @@ public class Mapa {
     public static boolean flag = true;
 
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 51, 0);
-    public static LocalDateTime finSimulacion = LocalDateTime.of(2022, 1, 1, 0, 51, 0);
+    public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);
 
     public static double getFitnessSolucion() {
         return fitnessSolucion;

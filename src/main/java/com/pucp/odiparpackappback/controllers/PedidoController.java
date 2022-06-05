@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-//@EnableScheduling
+@EnableScheduling
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
