@@ -4,20 +4,18 @@ import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.services.utils.ShortestPathRouting;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
-import com.pucp.odiparpackappback.topKshortestpaths.graph.Vertex;
-import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 
-import java.time.LocalDateTime;
+import java.sql.Date;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class ABC {
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
-        Mapa.cargarPedidos();
-
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
         Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
+
+        Mapa.cargarPedidos(Date.from(Mapa.inicioSimulacion.atZone(ZoneId.systemDefault()).toInstant()), Date.from(Mapa.finSimulacion.atZone(ZoneId.systemDefault()).toInstant()) );
 
         int contador = 0;
         // Etapa: Generación de la Población Inicial
@@ -84,21 +82,6 @@ public class ABC {
         int ubigeoDestino = rutaOriginal.getTramos().get(rutaOriginal.getTramos().size()-1).getIdCiudadJ();
         // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
         ArrayList<Path> rutasPath = ShortestPathRouting.getKShortestPaths(k, ubigeoDestino);
-
-        /*
-        List<BaseVertex> vertices = rutasPath.get(k).getVertexList();
-        ArrayList<LocalDateTime> horasDePartida = new ArrayList<>();
-
-        for (int i = 0; i < vertices.size(); i++) {
-            if (i == 0) {
-                horasDePartida.add(Mapa.inicioSimulacion);
-            } else {
-                int horas = (int) Math.floor(rutasPath.get(i).getWeight());
-                int minutos = (int) (rutasPath.get(i).getWeight())
-                horasDePartida.add(horasDePartida.get(i - 1).plusHours());
-            }
-        }*/
-
         // String seguimiento
         String seguimiento = rutasPath.get(k).getVertexList().toString();
         // double fitness

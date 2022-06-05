@@ -70,8 +70,8 @@ public class Mapa {
     public static void cargarVehiculos() {
         vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
     }
-    public static void cargarPedidos(){
-        pedidos = (ArrayList<PedidoModel>) pedidoRepository.findAll();
+    public static void cargarPedidos(Date fechaInicio, Date fechaFin){
+        pedidos = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
     }
 
     public static ArrayList<TramoModel> listarTramos(String tramos){
