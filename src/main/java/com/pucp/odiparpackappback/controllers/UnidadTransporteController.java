@@ -1,6 +1,7 @@
 package com.pucp.odiparpackappback.controllers;
 
 import com.pucp.odiparpackappback.Repositories.UnidadTransporteRepository;
+import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.UnidadTransporteModel;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +46,49 @@ class UnidadTransporteController {
             }
         }
         return unidadesTransporte;
+    }
+
+    @GetMapping("/UnidadTransporte/coordenadas")
+    UnidadTransporteModel actualizarCoordenadas(@RequestBody UnidadTransporteModel vehiculo,@RequestBody long tiempoTranscurido){
+        //Buscar ruta
+        for(int i = 0; i< Mapa.rutas.size(); i++){
+            if(Mapa.rutas.get(i).getIdRuta().equals(vehiculo.getIdRuta()) ){
+                //Buscar hora llegada
+                for(int j=0; j<Mapa.rutas.get(i).getHorasDeLlegada().size(); j++){
+                    if(Mapa.rutas.get(i).getHorasDeLlegada().get(j)>Mapa.rutas.get(i).getHoraInicio()+tiempoTranscurido){
+                        long tiempo = Mapa.rutas.get(i).getHoraInicio() + tiempoTranscurido - Mapa.rutas.get(i).getHorasDeLlegada().get(j-1);
+                        double latUltimaOficina = vehiculo.getOrdenada();
+                        double lonUltimaOficina = vehiculo.getAbscisa();
+                        boolean f1 = false;
+                        boolean f2 = false;
+                        double latNuevaOficina = -1000;
+                        double lonNuevaOficina = -1000;
+                        //buscar coordenadas oficinas
+                        for(int k=0; k<Mapa.oficinas.size(); k++){
+                            if(Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ()){
+                                latNuevaOficina = Mapa.oficinas.get(k).getLatitud();
+                                lonNuevaOficina = Mapa.oficinas.get(k).getLongitud();
+                                f1 = true;
+                            }
+                            //si se pasó la primera oficina encontrar en qué oficina está
+                            if(j!=0 && Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j-1).getIdCiudadJ()){
+                                latUltimaOficina = Mapa.oficinas.get(k).getLatitud();
+                                lonUltimaOficina = Mapa.oficinas.get(k).getLongitud();
+                                f2 = true;
+                            }
+                            if(f1 == true && (f2 == true || j!=0)) break;
+                        }
+                        //hallar distancias
+                        double lat = latNuevaOficina-latUltimaOficina;
+                        double lon = lonNuevaOficina-lonUltimaOficina;
+                        //regla de 3 para hallar coordenadas
+                        vehiculo.setAbscisa(tiempo*lon/(Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
+                        vehiculo.setOrdenada(tiempo*lat/(Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
+                        return vehiculo;
+                    }
+                }
+            }
+        }
+        return null;
     }
 }
