@@ -192,4 +192,13 @@ public class ABC {
             }
         }
     }
+
+    double findTiempoViaje(int id_ciudadi, int id_ciudadj){
+        for(int i = 0; i < Mapa.tramos.size(); i++){
+            if((Mapa.tramos.get(i).getIdCiudadI() == id_ciudadi && Mapa.tramos.get(i).getIdCiudadJ() == id_ciudadj) || (Mapa.tramos.get(i).getIdCiudadI() == id_ciudadj && Mapa.tramos.get(i).getIdCiudadJ() == id_ciudadi)){
+                return Mapa.tramos.get(i).getTiempoDeViaje();
+            }
+        }
+        return -1;
+    }
 }
