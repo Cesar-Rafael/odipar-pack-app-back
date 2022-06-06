@@ -1,15 +1,12 @@
 package com.pucp.odiparpackappback.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table
 public class BloqueoModel {
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private int ubigeoInicio;
     private int ubigeoFin;
     private Date fechaInicio;
