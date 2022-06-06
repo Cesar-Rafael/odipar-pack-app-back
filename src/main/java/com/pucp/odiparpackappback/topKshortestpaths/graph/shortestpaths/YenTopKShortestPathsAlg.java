@@ -31,10 +31,9 @@
 
 package com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths;
 
-import com.pucp.odiparpackappback.topKshortestpaths.graph.Graph;
+import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.VariableGraph;
-import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseGraph;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.QYPriorityQueue;
@@ -47,36 +46,36 @@ import java.util.*;
  * @latest $Id: YenTopKShortestPathsAlg.java 783 2009-06-19 19:19:27Z qyan $
  */
 public class YenTopKShortestPathsAlg {
-    private VariableGraph graph = null;
+    public static VariableGraph graph = new VariableGraph(Mapa.oficinas, Mapa.tramos);
 
     // intermediate variables
-    private final List<Path> resultList = new Vector<Path>();
-    private final Map<Path, BaseVertex> pathDerivationVertexIndex = new HashMap<Path, BaseVertex>();
-    private QYPriorityQueue<Path> pathCandidates = new QYPriorityQueue<Path>();
+    public static List<Path> resultList = new Vector<Path>();
+    public static Map<Path, BaseVertex> pathDerivationVertexIndex = new HashMap<Path, BaseVertex>();
+    public static QYPriorityQueue<Path> pathCandidates = new QYPriorityQueue<Path>();
 
     // the ending vertices of the paths
-    private BaseVertex sourceVertex = null;
-    private BaseVertex targetVertex = null;
+    public static BaseVertex sourceVertex = null;
+    public static BaseVertex targetVertex = null;
+    // variables for debugging and testing
+    public static int generatedPathNum = 0;
 
-    public BaseVertex getSourceVertex() {
+    public static BaseVertex getSourceVertex() {
         return sourceVertex;
     }
 
-    public void setSourceVertex(BaseVertex sourceVertex) {
-        this.sourceVertex = sourceVertex;
+    public static void setSourceVertex(BaseVertex sourceV) {
+        //this.sourceVertex = sourceVertex;
+        sourceVertex = sourceV;
         init();
     }
 
-    public BaseVertex getTargetVertex() {
+    public static BaseVertex getTargetVertex() {
         return targetVertex;
     }
 
-    public void setTargetVertex(BaseVertex targetVertex) {
-        this.targetVertex = targetVertex;
+    public static void setTargetVertex(BaseVertex targetV) {
+        targetVertex = targetV;
     }
-
-    // variables for debugging and testing
-    private int generatedPathNum = 0;
 
     /**
      * Default constructor.
@@ -84,9 +83,9 @@ public class YenTopKShortestPathsAlg {
      * @param graph
      * @param k
      */
-    public YenTopKShortestPathsAlg(BaseGraph graph) {
-        this(graph, null, null);
-    }
+//    public YenTopKShortestPathsAlg(BaseGraph graph) {
+//        this(graph, null, null);
+//    }
 
     /**
      * Constructor 2
@@ -95,20 +94,20 @@ public class YenTopKShortestPathsAlg {
      * @param sourceVertex
      * @param targetVertex
      */
-    public YenTopKShortestPathsAlg(BaseGraph graph, BaseVertex sourceVertex, BaseVertex targetVertex) {
-        if (graph == null) {
-            throw new IllegalArgumentException("A NULL graph object occurs!");
-        }
-        this.graph = new VariableGraph((Graph) graph);
-        this.sourceVertex = sourceVertex;
-        this.targetVertex = targetVertex;
-        init();
-    }
+//    public YenTopKShortestPathsAlg(BaseGraph graph, BaseVertex sourceVertex, BaseVertex targetVertex) {
+//        if (graph == null) {
+//            throw new IllegalArgumentException("A NULL graph object occurs!");
+//        }
+//        this.graph = new VariableGraph((Graph) graph);
+//        this.sourceVertex = sourceVertex;
+//        this.targetVertex = targetVertex;
+//        init();
+//    }
 
     /**
      * Initiate members in the class.
      */
-    private void init() {
+    public static void init() {
         clear();
         // get the shortest path by default if both source and target exist
         if (sourceVertex != null && targetVertex != null) {
@@ -123,7 +122,7 @@ public class YenTopKShortestPathsAlg {
     /**
      * Clear the variables of the class.
      */
-    public void clear() {
+    public static void clear() {
         pathCandidates = new QYPriorityQueue<Path>();
         pathDerivationVertexIndex.clear();
         resultList.clear();
@@ -138,7 +137,7 @@ public class YenTopKShortestPathsAlg {
      * @param targetVertex
      * @return
      */
-    public Path getShortestPath(BaseVertex sourceVertex, BaseVertex targetVertex) {
+    public static Path getShortestPath(BaseVertex sourceVertex, BaseVertex targetVertex) {
         DijkstraShortestPathAlg dijkstraAlg = new DijkstraShortestPathAlg(graph);
         return dijkstraAlg.getShortestPath(sourceVertex, targetVertex);
     }
@@ -148,7 +147,7 @@ public class YenTopKShortestPathsAlg {
      *
      * @return
      */
-    public boolean hasNext() {
+    public static boolean hasNext() {
         return !pathCandidates.isEmpty();
     }
 
@@ -157,7 +156,7 @@ public class YenTopKShortestPathsAlg {
      *
      * @return
      */
-    public Path next() {
+    public static Path next() {
         //3.1 prepare for removing vertices and arcs
         Path curPath = pathCandidates.poll();
         resultList.add(curPath);
@@ -277,7 +276,7 @@ public class YenTopKShortestPathsAlg {
      * @param k
      * @return
      */
-    public List<Path> getShortestPaths(BaseVertex source, BaseVertex target, int k) {
+    public static List<Path> getShortestPaths(BaseVertex source, BaseVertex target, int k) {
         sourceVertex = source;
         targetVertex = target;
 
@@ -297,7 +296,7 @@ public class YenTopKShortestPathsAlg {
      *
      * @return
      */
-    public List<Path> getResultList() {
+    public static List<Path> getResultList() {
         return resultList;
     }
 
@@ -306,11 +305,27 @@ public class YenTopKShortestPathsAlg {
      *
      * @return
      */
-    public int getCadidateSize() {
+    public static int getCadidateSize() {
         return pathDerivationVertexIndex.size();
     }
 
-    public int getGeneratedPathSize() {
+    public static int getGeneratedPathSize() {
         return generatedPathNum;
+    }
+
+    public static ArrayList<Path> getKShortestPaths(int k, int ubigeoDestino) {
+        setTargetVertex(graph.getVertex(ubigeoDestino));
+        ArrayList<Path> rutas = new ArrayList<>();
+
+        for (int i = 0; i < Mapa.oficinasPrincipales.size(); i++) {
+            setSourceVertex(graph.getVertex(Mapa.oficinasPrincipales.get(i).getUbigeo()));
+            for (int j = 1; j <= k; j++) {
+                if (!YenTopKShortestPathsAlg.hasNext()) break;
+                rutas.add(YenTopKShortestPathsAlg.next());
+            }
+        }
+
+        Collections.sort(rutas);
+        return rutas;
     }
 }

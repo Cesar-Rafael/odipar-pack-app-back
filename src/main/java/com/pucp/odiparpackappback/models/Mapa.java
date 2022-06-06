@@ -48,9 +48,6 @@ public class Mapa {
         Mapa.unidadTransporteRepository = unidadTransporteRepository;
     }
 
-
-
-
     public static void cargarOficinas() {
         oficinas = (ArrayList<OficinaModel>) oficinaRepository.findAll();
 

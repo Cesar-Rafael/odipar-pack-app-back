@@ -37,7 +37,6 @@ import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.DijkstraShortestPathAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 
-
 import java.util.*;
 
 /**
@@ -45,6 +44,7 @@ import java.util.*;
  *
  * @author yqi
  */
+
 public class VariableGraph extends Graph {
     private final Set<Integer> remVertexIdSet = new HashSet<Integer>();
     private final Set<Pair<Integer, Integer>> remEdgeSet = new HashSet<Pair<Integer, Integer>>();

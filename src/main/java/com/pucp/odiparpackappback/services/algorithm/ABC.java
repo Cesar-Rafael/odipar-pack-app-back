@@ -1,21 +1,25 @@
 package com.pucp.odiparpackappback.services.algorithm;
 
+import com.pucp.odiparpackappback.Repositories.BloqueoRepository;
 import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
-import com.pucp.odiparpackappback.services.utils.ShortestPathRouting;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
+import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
+import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 public class ABC {
+    private BloqueoRepository bloqueoRepository;
+
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
-        Mapa.cargarPedidos(Date.from(Mapa.inicioSimulacion.atZone(ZoneId.systemDefault()).toInstant()), Date.from(Mapa.finSimulacion.atZone(ZoneId.systemDefault()).toInstant()));
+        Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
 
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
         Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
@@ -44,12 +48,12 @@ public class ABC {
                 int i = generarNumeroEnteroAleatorio(Mapa.rutas.size());
                 // Abeja Observadora
                 for (int c = 0; b < numAbejasObs; b++) {
-                    // Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                    //Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1);
-                    // Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
-                    //if (auxRuta.getFitness() > Mapa.rutas.get(i).getFitness()) {
-                    //    Mapa.rutas.set(i, auxRuta);
-                    //}
+                    //Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
+                    Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1);
+                    //Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
+                    if (auxRuta.getFitness() > Mapa.rutas.get(i).getFitness()) {
+                        Mapa.rutas.set(i, auxRuta);
+                    }
                 }
             }
         }
@@ -84,15 +88,17 @@ public class ABC {
     public Ruta kShortestPathRoutingRuta(Ruta rutaOriginal, int k) {
         int ubigeoDestino = rutaOriginal.getTramos().get(rutaOriginal.getTramos().size() - 1).getIdCiudadJ();
         // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
-        ArrayList<Path> rutasPath = ShortestPathRouting.getKShortestPaths(k, ubigeoDestino);
-        List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
-        ArrayList<Long> horasLlegada = new ArrayList<>();
-        ZoneId zoneId = ZoneId.systemDefault();
+        ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k, ubigeoDestino);
 
-        /*
+        List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
+        //ArrayList<Long> horasLlegada = new ArrayList<>();
+        ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
+        //ZoneId zoneId = ZoneId.systemDefault();
+
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
-                horasLlegada.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
+                //horasLlegada.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
+                horasLlegada.add(Mapa.inicioSimulacion);
             } else {
                 double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                 int horas = (int) Math.floor(tiempoViaje);
@@ -104,9 +110,27 @@ public class ABC {
                     horaLlegada = Mapa.inicioSimulacion.plusHours(horas + 1);
                 }
                 horaLlegada = horaLlegada.plusMinutes(minutos);
-                horasLlegada.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                //horasLlegada.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                horasLlegada.add(horaLlegada);
             }
-        }*/
+        }
+
+        Ruta rutaEncontrada = null;
+
+        for (int i = 0; i < horasLlegada.size() - 1; i++) {
+            int oficinaI = oficinas.get(i).getId();
+            int oficinaJ = oficinas.get(i + 1).getId();
+            List<BloqueoModel> bloqueos = bloqueoRepository.findBloqueoModelByUbigeoInicioAndUbigeoFin(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
+            if (bloqueos.size() > 0) {
+                System.out.println("Bloqueo Encontrado");
+                Pair tramoBloqueado = new Pair<Integer, Integer>(oficinaI, oficinaJ);
+                YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
+                rutaEncontrada = kShortestPathRoutingRuta(rutaOriginal, k);
+                YenTopKShortestPathsAlg.graph.recoverDeletedEdge(tramoBloqueado);
+            }
+        }
+
+        if (rutaEncontrada != null) return rutaEncontrada;
 
         // String seguimiento
         String seguimiento = rutasPath.get(k).getVertexList().toString();
@@ -114,13 +138,13 @@ public class ABC {
         double fitness = rutasPath.get(k).getWeight();
         // Asignación
         Ruta ruta = new Ruta(rutaOriginal.getIdRuta(), seguimiento, rutaOriginal.getPedidosParciales(), fitness, rutaOriginal.getIdUnidadTransporte(), rutaOriginal.getTramos());
-        ruta.setHorasDeLlegada(horasLlegada);
+        //ruta.setHorasDeLlegada(horasLlegada);
         return ruta;
     }
 
     public boolean kShortestPathRoutingPedido(PedidoModel pedido, int k) {
         // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
-        ArrayList<Path> rutasPath = ShortestPathRouting.getKShortestPaths(k + 1, pedido.getIdCiudadDestino());
+        ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k + 1, pedido.getIdCiudadDestino());
         // Parámetros
         Long idRuta = Long.valueOf(Mapa.rutas.size());
         String seguimiento = rutasPath.get(k).getVertexList().toString();
@@ -229,5 +253,9 @@ public class ABC {
             }
         }
         return -1;
+    }
+
+    Date obtenerFecha(LocalDateTime fecha) {
+        return Date.from(fecha.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

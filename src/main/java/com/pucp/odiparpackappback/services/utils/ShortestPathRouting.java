@@ -10,20 +10,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ShortestPathRouting {
-    private static final Graph grafo = new VariableGraph(Mapa.oficinas, Mapa.tramos);
-    private static final YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(grafo);
+    //private static Graph grafo = new VariableGraph(Mapa.oficinas, Mapa.tramos);
+    //private static final YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(grafo);
 
     public static ArrayList<Path> getKShortestPaths(int k, int ubigeoDestino) {
-        yenAlg.setTargetVertex(grafo.getVertex(ubigeoDestino));
+        YenTopKShortestPathsAlg.setTargetVertex(YenTopKShortestPathsAlg.graph.getVertex(ubigeoDestino));
         ArrayList<Path> rutas = new ArrayList<>();
 
         for (int i = 0; i < Mapa.oficinasPrincipales.size(); i++) {
             //System.out.println("Oficina " + Mapa.oficinasPrincipales.get(i));
 
-            yenAlg.setSourceVertex(grafo.getVertex(Mapa.oficinasPrincipales.get(i).getUbigeo()));
+            YenTopKShortestPathsAlg.setSourceVertex(YenTopKShortestPathsAlg.graph.getVertex(Mapa.oficinasPrincipales.get(i).getUbigeo()));
             for (int j = 1; j <= k; j++) {
-                if (!yenAlg.hasNext()) break;
-                rutas.add(yenAlg.next());
+                if (!YenTopKShortestPathsAlg.hasNext()) break;
+                rutas.add(YenTopKShortestPathsAlg.next());
                 //System.out.println("Path " + j + " : " + yenAlg.next());
             }
         }
