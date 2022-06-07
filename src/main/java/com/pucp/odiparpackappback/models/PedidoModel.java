@@ -14,8 +14,7 @@ public class PedidoModel {
     private int cantPaquetesNoAsignado;
     private int idCiudadDestino;
     private String ciudadDestino;
-    @Temporal(TemporalType.TIMESTAMP)
-    private java.util.Date fechaHoraCreacion;
+    private Date fechaHoraCreacion;
     private EstadoPedido estado;
 
     public PedidoModel() {
