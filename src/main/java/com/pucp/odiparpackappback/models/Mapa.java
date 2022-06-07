@@ -2,6 +2,7 @@ package com.pucp.odiparpackappback.models;
 
 import com.pucp.odiparpackappback.Repositories.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
+import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ public class Mapa {
 
     public static double fitnessSolucion = 0;
 
+    public static ArrayList<Pair<Integer, Integer>> bloqueos = new ArrayList<>();
 
     private static PedidoRepository pedidoRepository;
     private static OficinaRepository oficinaRepository;
@@ -72,6 +74,9 @@ public class Mapa {
     }
     public static void cargarPedidos(Date fechaInicio, Date fechaFin){
         pedidos = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
+        for (PedidoModel p : pedidos) {
+            System.out.println(p.getFechaHoraCreacion());
+        }
     }
 
     public static List<BloqueoModel> obtenerTramosBloqueados(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin) {

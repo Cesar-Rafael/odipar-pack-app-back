@@ -46,8 +46,8 @@ import java.util.*;
  */
 
 public class VariableGraph extends Graph {
-    private final Set<Integer> remVertexIdSet = new HashSet<Integer>();
-    private final Set<Pair<Integer, Integer>> remEdgeSet = new HashSet<Pair<Integer, Integer>>();
+    private Set<Integer> remVertexIdSet = new HashSet<Integer>();
+    private Set<Pair<Integer, Integer>> remEdgeSet = new HashSet<Pair<Integer, Integer>>();
 
     /**
      * Default constructor

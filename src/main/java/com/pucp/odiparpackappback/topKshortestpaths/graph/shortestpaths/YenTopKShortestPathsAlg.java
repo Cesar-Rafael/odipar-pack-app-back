@@ -264,6 +264,10 @@ public class YenTopKShortestPathsAlg {
         graph.recoverDeletedEdges();
         graph.recoverDeletedVertices();
 
+        for (Pair p : Mapa.bloqueos) {
+            graph.deleteEdge(p);
+        }
+
         return curPath;
     }
 
@@ -313,7 +317,7 @@ public class YenTopKShortestPathsAlg {
         return generatedPathNum;
     }
 
-    public static ArrayList<Path> getKShortestPaths(int k, int ubigeoDestino) {
+    public static ArrayList<Path> getKShortestPaths(int k, int ubigeoDestino, Pair<Integer, Integer> edge) {
         setTargetVertex(graph.getVertex(ubigeoDestino));
         ArrayList<Path> rutas = new ArrayList<>();
 
@@ -322,8 +326,11 @@ public class YenTopKShortestPathsAlg {
             for (int j = 1; j <= k; j++) {
                 if (!YenTopKShortestPathsAlg.hasNext()) break;
                 rutas.add(YenTopKShortestPathsAlg.next());
+                if (edge != null) graph.deleteEdge(edge);
             }
         }
+
+        if (edge != null) graph.deleteEdge(edge);
 
         Collections.sort(rutas);
         return rutas;

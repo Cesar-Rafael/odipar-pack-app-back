@@ -7,6 +7,7 @@ import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
+import org.springframework.boot.autoconfigure.amqp.AbstractRabbitListenerContainerFactoryConfigurer;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,10 +19,21 @@ import java.util.Random;
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
+        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
+
+        //System.out.println(Mapa.inicioSimulacion);
+        //System.out.println(Mapa.finSimulacion);
+
         Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
 
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
         Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
+
+        if (Mapa.pedidos.size() == 0) {
+            System.out.println("No hay pedidos que asignar");
+            return;
+        }
 
         int contador = 0;
         // Etapa: Generación de la Población Inicial
@@ -48,14 +60,16 @@ public class ABC {
                 // Abeja Observadora
                 for (int c = 0; b < numAbejasObs; b++) {
                     //Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                    //Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1);
+                    Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1, null);
                     //Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
-                    //if (auxRuta.getFitness() > Mapa.rutas.get(i).getFitness()) {
-                    //    Mapa.rutas.set(i, auxRuta);
-                    //}
+                    if (auxRuta.getFitness() > Mapa.rutas.get(i).getFitness()) {
+                        Mapa.rutas.set(i, auxRuta);
+                    }
                 }
             }
         }
+
+        Mapa.bloqueos = new ArrayList<>();
     }
 
     public int generarNumeroEnteroAleatorio(int max) {
@@ -84,16 +98,15 @@ public class ABC {
         return bool;
     }
 
-    public Ruta kShortestPathRoutingRuta(Ruta rutaOriginal, int k) {
+    public Ruta kShortestPathRoutingRuta(Ruta rutaOriginal, int k, Pair<Integer, Integer> edge) {
         int ubigeoDestino = rutaOriginal.getTramos().get(rutaOriginal.getTramos().size() - 1).getIdCiudadJ();
         // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
-        ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k, ubigeoDestino);
+        ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k, ubigeoDestino, edge);
 
         List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
         //ArrayList<Long> horasLlegada = new ArrayList<>();
         ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
         //ZoneId zoneId = ZoneId.systemDefault();
-
 
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
@@ -119,18 +132,22 @@ public class ABC {
             }
         }
 
+
         Ruta rutaEncontrada = null;
 
         for (int i = 0; i < horasLlegada.size() - 1; i++) {
             int oficinaI = oficinas.get(i).getId();
             int oficinaJ = oficinas.get(i + 1).getId();
+
             List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
+            //List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i).minusHours(6)), obtenerFecha(horasLlegada.get(i + 1).minusHours(6)));
             if (bloqueos.size() > 0) {
-                System.out.println("¡Bloqueo encontrado!");
                 Pair tramoBloqueado = new Pair<Integer, Integer>(oficinaI, oficinaJ);
                 YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
-                rutaEncontrada = kShortestPathRoutingRuta(rutaOriginal, k);
-                YenTopKShortestPathsAlg.graph.recoverDeletedEdge(tramoBloqueado);
+                Mapa.bloqueos.add(tramoBloqueado);
+                rutaEncontrada = kShortestPathRoutingRuta(rutaOriginal, k, tramoBloqueado);
+                //YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
+                //YenTopKShortestPathsAlg.graph.recoverDeletedEdge(tramoBloqueado);
             }
         }
 
@@ -138,17 +155,18 @@ public class ABC {
 
         // String seguimiento
         String seguimiento = rutasPath.get(k).getVertexList().toString();
+        ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
         // double fitness
         double fitness = rutasPath.get(k).getWeight();
         // Asignación
-        Ruta ruta = new Ruta(rutaOriginal.getIdRuta(), seguimiento, rutaOriginal.getPedidosParciales(), fitness, rutaOriginal.getIdUnidadTransporte(), rutaOriginal.getTramos());
+        Ruta ruta = new Ruta(rutaOriginal.getIdRuta(), seguimiento, rutaOriginal.getPedidosParciales(), fitness, rutaOriginal.getIdUnidadTransporte(), tramos);
         //ruta.setHorasDeLlegada(horasLlegada);
         return ruta;
     }
 
     public boolean kShortestPathRoutingPedido(PedidoModel pedido, int k) {
         // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
-        ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k + 1, pedido.getIdCiudadDestino());
+        ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k + 1, pedido.getIdCiudadDestino(), null);
         // Parámetros
         Long idRuta = Long.valueOf(Mapa.rutas.size());
         String seguimiento = rutasPath.get(k).getVertexList().toString();
@@ -260,6 +278,9 @@ public class ABC {
     }
 
     Date obtenerFecha(LocalDateTime fecha) {
-        return Date.from(fecha.atZone(ZoneId.systemDefault()).toInstant());
+        //System.out.println(fecha);
+        Date nuevaFecha = Date.from(fecha.atZone(ZoneId.systemDefault()).toInstant());
+        //System.out.println(nuevaFecha);
+        return nuevaFecha;
     }
 }

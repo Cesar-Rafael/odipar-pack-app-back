@@ -65,7 +65,7 @@ public class PedidoController {
         Mapa.cargarTramos();
         Mapa.cargarVehiculos();
 
-        abc.algoritmoAbejasVPRTW(10, 10, 10);
+        abc.algoritmoAbejasVPRTW(10, 2, 2);
 
         // BD RutaModel
         System.out.println("REPORTE:");
