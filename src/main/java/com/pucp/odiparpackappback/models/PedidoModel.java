@@ -1,9 +1,8 @@
 package com.pucp.odiparpackappback.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -15,7 +14,8 @@ public class PedidoModel {
     private int cantPaquetesNoAsignado;
     private int idCiudadDestino;
     private String ciudadDestino;
-    private Date fechaHoraCreacion;
+    @Temporal(TemporalType.TIMESTAMP)
+    private java.util.Date fechaHoraCreacion;
     private EstadoPedido estado;
 
     public PedidoModel() {
@@ -51,6 +51,9 @@ public class PedidoModel {
         return fechaHoraCreacion;
     }
     public void setFechaHoraCreacion(Date fechaHoraCreacion) {
+        LocalDateTime fechaHoraAux = fechaHoraCreacion.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime().minusHours(5);
         this.fechaHoraCreacion = fechaHoraCreacion;
     }
 
