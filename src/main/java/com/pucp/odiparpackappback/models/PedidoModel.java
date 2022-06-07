@@ -8,7 +8,7 @@ import java.util.Date;
 @Entity
 @Table
 public class PedidoModel {
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private Long rucCliente;
     private int cantPaquetes;
     private int cantPaquetesNoAsignado;
