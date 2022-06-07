@@ -1,6 +1,7 @@
 package com.pucp.odiparpackappback.services.algorithm;
 
 import com.pucp.odiparpackappback.Repositories.BloqueoRepository;
+import com.pucp.odiparpackappback.controllers.RutaController;
 import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
@@ -11,10 +12,7 @@ import org.springframework.boot.autoconfigure.amqp.AbstractRabbitListenerContain
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ABC {
 
@@ -71,10 +69,26 @@ public class ABC {
 
         Mapa.bloqueos = new ArrayList<>();
 
-        // Actualizar idRuta de Vehículos
-        for (int r = 0; r < Mapa.rutas.size(); r++){
-            Mapa.rutas.get(r).getVehiculo().setIdRuta( Mapa.rutas.get(r).getIdRuta());
+        // Llamado a InsertarListaRutas
+        ArrayList<RutaModel> rutasAux = new ArrayList<>();
+        for (int rm = 0; rm < Mapa.rutas.size(); rm++){
+            RutaModel rutaAux = new RutaModel();
+            rutaAux.setIdRuta(Mapa.rutas.get(rm).getIdRuta());
+            rutaAux.setSeguimiento(Mapa.rutas.get(rm).getSeguimiento());
+            rutaAux.setIdUnidadTransporte(Mapa.rutas.get(rm).getIdUnidadTransporte());
+
+            ArrayList<Long> list = Mapa.rutas.get(rm).getHorasDeLlegada();
+            String listString = "";
+            for (long l : list)
+            {
+                listString += String.valueOf(l) + "\n";
+            }
+
+            rutaAux.setArrayHorasLlegada(listString);
+            rutasAux.add(rutaAux);
         }
+        Mapa.cargarRutas(rutasAux);
+
     }
 
     public int generarNumeroEnteroAleatorio(int max) {

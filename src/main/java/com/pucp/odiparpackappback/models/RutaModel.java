@@ -10,19 +10,20 @@ import javax.persistence.Table;
 public class RutaModel {
     private @Id @GeneratedValue Long id;
     private Long idRuta;
-    private Long idPedidoParcial;
     private Long idUnidadTransporte;
     private String seguimiento;                 // idTramo separado por comas
+    private String arrayHorasLlegada;           // Horas de llegada separado por comas
 
     public RutaModel() {
 
     }
-    public RutaModel(Long id, Long idRuta, Long idPedidoParcial, Long idUnidadTransporte, String seguimiento) {
+
+    public RutaModel(Long id, Long idRuta, Long idUnidadTransporte, String seguimiento, String arrayHorasLlegada) {
         this.id = id;
         this.idRuta = idRuta;
-        this.idPedidoParcial = idPedidoParcial;
         this.idUnidadTransporte = idUnidadTransporte;
         this.seguimiento = seguimiento;
+        this.arrayHorasLlegada = arrayHorasLlegada;
     }
 
     public Long getId() {
@@ -37,12 +38,6 @@ public class RutaModel {
     public void setIdRuta(Long idRuta) {
         this.idRuta = idRuta;
     }
-    public Long getIdPedido() {
-        return idPedidoParcial;
-    }
-    public void setIdPedido(Long idPedido) {
-        this.idPedidoParcial = idPedidoParcial;
-    }
     public Long getIdUnidadTransporte() {
         return idUnidadTransporte;
     }
@@ -55,4 +50,14 @@ public class RutaModel {
     public void setSeguimiento(String seguimiento) {
         this.seguimiento = seguimiento;
     }
+    public String getArrayHorasLlegada() {
+        return arrayHorasLlegada;
+    }
+    public void setArrayHorasLlegada(String arrayHorasLlegada) {
+        this.arrayHorasLlegada = arrayHorasLlegada;
+    }
 }
+
+
+
+

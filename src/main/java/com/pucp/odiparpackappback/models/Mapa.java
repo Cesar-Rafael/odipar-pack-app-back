@@ -40,15 +40,17 @@ public class Mapa {
     private static OficinaRepository oficinaRepository;
     private static TramoRepository tramoRepository;
     private static UnidadTransporteRepository unidadTransporteRepository;
+    private static RutaRepository rutaRepository;
 
     private static BloqueoRepository bloqueoRepository;
 
-    public Mapa(PedidoRepository pedidoRepository, OficinaRepository oficinaRepository, TramoRepository tramoRepository, UnidadTransporteRepository unidadTransporteRepository, BloqueoRepository bloqueoRepository) {
+    public Mapa(PedidoRepository pedidoRepository, OficinaRepository oficinaRepository, TramoRepository tramoRepository, UnidadTransporteRepository unidadTransporteRepository, BloqueoRepository bloqueoRepository, RutaRepository rutaRepository) {
         Mapa.pedidoRepository = pedidoRepository;
         Mapa.oficinaRepository = oficinaRepository;
         Mapa.tramoRepository = tramoRepository;
         Mapa.unidadTransporteRepository = unidadTransporteRepository;
         Mapa.bloqueoRepository = bloqueoRepository;
+        Mapa.rutaRepository = rutaRepository;
     }
 
     public static void cargarOficinas() {
@@ -89,5 +91,9 @@ public class Mapa {
 
     public static void cargarDiccionarioTramos() {
         dicTramos = DatosUtil.crearMapa();
+    }
+
+    public static List<RutaModel> cargarRutas(ArrayList<RutaModel> rutasAux){
+        return (List<RutaModel>) rutaRepository.saveAll(rutasAux);
     }
 }
