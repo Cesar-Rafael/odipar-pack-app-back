@@ -1,15 +1,13 @@
 package com.pucp.odiparpackappback.models;
 
-import com.pucp.odiparpackappback.Repositories.OficinaRepository;
-import com.pucp.odiparpackappback.Repositories.PedidoRepository;
-import com.pucp.odiparpackappback.Repositories.TramoRepository;
-import com.pucp.odiparpackappback.Repositories.UnidadTransporteRepository;
+import com.pucp.odiparpackappback.Repositories.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class Mapa {
@@ -22,7 +20,7 @@ public class Mapa {
     public static ArrayList<Ruta> rutas = new ArrayList<>();
     public static boolean flag = true;
 
-    public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 51, 0);
+    public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
     public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);
 
     public static double getFitnessSolucion() {
@@ -41,11 +39,14 @@ public class Mapa {
     private static TramoRepository tramoRepository;
     private static UnidadTransporteRepository unidadTransporteRepository;
 
-    public Mapa(PedidoRepository pedidoRepository, OficinaRepository oficinaRepository, TramoRepository tramoRepository, UnidadTransporteRepository unidadTransporteRepository) {
+    private static BloqueoRepository bloqueoRepository;
+
+    public Mapa(PedidoRepository pedidoRepository, OficinaRepository oficinaRepository, TramoRepository tramoRepository, UnidadTransporteRepository unidadTransporteRepository, BloqueoRepository bloqueoRepository) {
         Mapa.pedidoRepository = pedidoRepository;
         Mapa.oficinaRepository = oficinaRepository;
         Mapa.tramoRepository = tramoRepository;
         Mapa.unidadTransporteRepository = unidadTransporteRepository;
+        Mapa.bloqueoRepository = bloqueoRepository;
     }
 
     public static void cargarOficinas() {
@@ -59,8 +60,10 @@ public class Mapa {
                 oficinasPrincipales.add(oficinasPrincipalesAux.get(i));
             }
         }
-
     }
+
+
+
     public static void cargarTramos() {
         tramos = (ArrayList<TramoModel>) tramoRepository.findAll();
     }
@@ -69,6 +72,10 @@ public class Mapa {
     }
     public static void cargarPedidos(Date fechaInicio, Date fechaFin){
         pedidos = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
+    }
+
+    public static List<BloqueoModel> obtenerTramosBloqueados(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin) {
+        return bloqueoRepository.findBloqueoModelByUbigeoInicioAndUbigeoFin(oficinaI, oficinaJ, fechaInicio, fechaFin);
     }
 
     public static ArrayList<TramoModel> listarTramos(String tramos){

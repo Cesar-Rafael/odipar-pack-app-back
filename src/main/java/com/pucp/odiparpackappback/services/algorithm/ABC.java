@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 public class ABC {
-    private BloqueoRepository bloqueoRepository;
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
         Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
@@ -95,6 +94,7 @@ public class ABC {
         ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
         //ZoneId zoneId = ZoneId.systemDefault();
 
+
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
                 //horasLlegada.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
@@ -104,11 +104,15 @@ public class ABC {
                 int horas = (int) Math.floor(tiempoViaje);
                 int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
                 LocalDateTime horaLlegada;
+                horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+
+                /*
                 if (i == 1) {
                     horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
                 } else {
                     horaLlegada = Mapa.inicioSimulacion.plusHours(horas + 1);
-                }
+                }*/
+
                 horaLlegada = horaLlegada.plusMinutes(minutos);
                 //horasLlegada.add(horaLlegada.atZone(zoneId).toEpochSecond());
                 horasLlegada.add(horaLlegada);
@@ -120,9 +124,9 @@ public class ABC {
         for (int i = 0; i < horasLlegada.size() - 1; i++) {
             int oficinaI = oficinas.get(i).getId();
             int oficinaJ = oficinas.get(i + 1).getId();
-            List<BloqueoModel> bloqueos = bloqueoRepository.findBloqueoModelByUbigeoInicioAndUbigeoFin(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
+            List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
             if (bloqueos.size() > 0) {
-                System.out.println("Bloqueo Encontrado");
+                System.out.println("¡Bloqueo encontrado!");
                 Pair tramoBloqueado = new Pair<Integer, Integer>(oficinaI, oficinaJ);
                 YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
                 rutaEncontrada = kShortestPathRoutingRuta(rutaOriginal, k);

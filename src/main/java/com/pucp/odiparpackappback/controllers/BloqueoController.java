@@ -24,7 +24,7 @@ public class BloqueoController {
         return (List<BloqueoModel>) bloqueoRepository.findAll();
     }
 
-    @PostMapping("List<BloqueoModel>/Bloqueo/PostBloqueos")
+    @PostMapping("/Bloqueo/PostBloqueos")
     boolean InsertarListaBloqueos(@RequestBody List<BloqueoModel> bloqueosModel){
         List<BloqueoModel> listaAux = listarBloqueos();
         for(int i = 0; i < bloqueosModel.size(); i++){

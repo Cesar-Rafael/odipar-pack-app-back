@@ -21,6 +21,7 @@ public class PedidoController {
         return (List<PedidoModel>) pedidoRepository.findAll();
     }
 
+    /*
     @GetMapping("/Pedido/id")
     @ResponseBody
     List<PedidoModel> ListarPedidoxId(@RequestParam(required = false) Long id) {
@@ -32,6 +33,12 @@ public class PedidoController {
             }
         }
         return pedidos;
+    }*/
+
+    @GetMapping("/Pedido/{id}")
+    @ResponseBody
+    Optional<PedidoModel> ListarPedidoxId(@PathVariable("id") long id) {
+        return pedidoRepository.findById(id);
     }
 
     @PostMapping("/Pedido/PostPedido")
