@@ -13,22 +13,23 @@ import java.util.Objects;
 class UnidadTransporteController {
 
     private final UnidadTransporteRepository unidadTransporteRepository;
+
     UnidadTransporteController(UnidadTransporteRepository unidadTransporteRepository) {
         this.unidadTransporteRepository = unidadTransporteRepository;
     }
 
     @GetMapping("/UnidadTransporte/")
-    List<UnidadTransporteModel> listarUnidadesTransporte(){
+    List<UnidadTransporteModel> listarUnidadesTransporte() {
         return (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
     }
 
     @GetMapping("/UnidadTransporte/idRuta")
     @ResponseBody
-    List<UnidadTransporteModel> listarUnidadesTransportexIdRuta(@RequestParam(required = false) int idRuta){
+    List<UnidadTransporteModel> listarUnidadesTransportexIdRuta(@RequestParam(required = false) int idRuta) {
         List<UnidadTransporteModel> unidadesTransporteAux = (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
         List<UnidadTransporteModel> unidadesTransporte = new ArrayList<>();
-        for(int i = 0; i < unidadesTransporteAux.size(); i++){
-            if(unidadesTransporteAux.get(i).getIdRuta() == idRuta){
+        for (int i = 0; i < unidadesTransporteAux.size(); i++) {
+            if (unidadesTransporteAux.get(i).getIdRuta() == idRuta) {
                 unidadesTransporte.add(unidadesTransporteAux.get(i));
             }
         }
@@ -37,11 +38,11 @@ class UnidadTransporteController {
 
     @GetMapping("/UnidadTransporte/codigo")
     @ResponseBody
-    List<UnidadTransporteModel> listarUnidadesTransportexCodigo(@RequestParam(required = false) String codigo){
+    List<UnidadTransporteModel> listarUnidadesTransportexCodigo(@RequestParam(required = false) String codigo) {
         List<UnidadTransporteModel> unidadesTransporteAux = (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
         List<UnidadTransporteModel> unidadesTransporte = new ArrayList<>();
-        for(int i = 0; i < unidadesTransporteAux.size(); i++){
-            if(Objects.equals(unidadesTransporteAux.get(i).getCodigo(), codigo)){
+        for (int i = 0; i < unidadesTransporteAux.size(); i++) {
+            if (Objects.equals(unidadesTransporteAux.get(i).getCodigo(), codigo)) {
                 unidadesTransporte.add(unidadesTransporteAux.get(i));
             }
         }
@@ -49,14 +50,14 @@ class UnidadTransporteController {
     }
 
     @GetMapping("/UnidadTransporte/coordenadas")
-    UnidadTransporteModel actualizarCoordenadas(@RequestBody UnidadTransporteModel vehiculo,@RequestBody long tiempoTranscurido){
+    UnidadTransporteModel actualizarCoordenadas(@RequestBody UnidadTransporteModel vehiculo, @RequestBody long tiempoTranscurido) {
         //Buscar ruta
-        for(int i = 0; i< Mapa.rutas.size(); i++){
-            if(Mapa.rutas.get(i).getIdRuta().equals(vehiculo.getIdRuta()) ){
+        for (int i = 0; i < Mapa.rutas.size(); i++) {
+            if (Mapa.rutas.get(i).getIdRuta().equals(vehiculo.getIdRuta())) {
                 //Buscar hora llegada
-                for(int j=0; j<Mapa.rutas.get(i).getHorasDeLlegada().size(); j++){
-                    if(Mapa.rutas.get(i).getHorasDeLlegada().get(j)>Mapa.rutas.get(i).getHoraInicio()+tiempoTranscurido){
-                        long tiempo = Mapa.rutas.get(i).getHoraInicio() + tiempoTranscurido - Mapa.rutas.get(i).getHorasDeLlegada().get(j-1);
+                for (int j = 0; j < Mapa.rutas.get(i).getHorasDeLlegada().size(); j++) {
+                    if (Mapa.rutas.get(i).getHorasDeLlegada().get(j) > Mapa.rutas.get(i).getHoraInicio() + tiempoTranscurido) {
+                        long tiempo = Mapa.rutas.get(i).getHoraInicio() + tiempoTranscurido - Mapa.rutas.get(i).getHorasDeLlegada().get(j - 1);
                         double latUltimaOficina = vehiculo.getOrdenada();
                         double lonUltimaOficina = vehiculo.getAbscisa();
                         boolean f1 = false;
@@ -64,26 +65,26 @@ class UnidadTransporteController {
                         double latNuevaOficina = -1000;
                         double lonNuevaOficina = -1000;
                         //buscar coordenadas oficinas
-                        for(int k=0; k<Mapa.oficinas.size(); k++){
-                            if(Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ()){
+                        for (int k = 0; k < Mapa.oficinas.size(); k++) {
+                            if (Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ()) {
                                 latNuevaOficina = Mapa.oficinas.get(k).getLatitud();
                                 lonNuevaOficina = Mapa.oficinas.get(k).getLongitud();
                                 f1 = true;
                             }
                             //si se pasó la primera oficina encontrar en qué oficina está
-                            if(j!=0 && Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j-1).getIdCiudadJ()){
+                            if (j != 0 && Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j - 1).getIdCiudadJ()) {
                                 latUltimaOficina = Mapa.oficinas.get(k).getLatitud();
                                 lonUltimaOficina = Mapa.oficinas.get(k).getLongitud();
                                 f2 = true;
                             }
-                            if(f1 == true && (f2 == true || j!=0)) break;
+                            if (f1 == true && (f2 == true || j != 0)) break;
                         }
                         //hallar distancias
-                        double lat = latNuevaOficina-latUltimaOficina;
-                        double lon = lonNuevaOficina-lonUltimaOficina;
+                        double lat = latNuevaOficina - latUltimaOficina;
+                        double lon = lonNuevaOficina - lonUltimaOficina;
                         //regla de 3 para hallar coordenadas
-                        vehiculo.setAbscisa(tiempo*lon/(Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
-                        vehiculo.setOrdenada(tiempo*lat/(Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
+                        vehiculo.setAbscisa(tiempo * lon / (Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
+                        vehiculo.setOrdenada(tiempo * lat / (Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
                         return vehiculo;
                     }
                 }

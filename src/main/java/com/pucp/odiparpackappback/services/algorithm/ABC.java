@@ -106,11 +106,12 @@ public class ABC {
         List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
         //ArrayList<Long> horasLlegada = new ArrayList<>();
         ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
-        //ZoneId zoneId = ZoneId.systemDefault();
+        ArrayList<Long> horasLlegadaLong = new ArrayList<>();
+        ZoneId zoneId = ZoneId.systemDefault();
 
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
-                //horasLlegada.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
+                horasLlegadaLong.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
                 horasLlegada.add(Mapa.inicioSimulacion);
             } else {
                 double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
@@ -126,8 +127,8 @@ public class ABC {
                     horaLlegada = Mapa.inicioSimulacion.plusHours(horas + 1);
                 }*/
 
-                horaLlegada = horaLlegada.plusMinutes(minutos);
-                //horasLlegada.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                //horaLlegada = horaLlegada.plusMinutes(minutos);
+                horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
                 horasLlegada.add(horaLlegada);
             }
         }
@@ -160,7 +161,7 @@ public class ABC {
         double fitness = rutasPath.get(k).getWeight();
         // Asignación
         Ruta ruta = new Ruta(rutaOriginal.getIdRuta(), seguimiento, rutaOriginal.getPedidosParciales(), fitness, rutaOriginal.getIdUnidadTransporte(), tramos);
-        //ruta.setHorasDeLlegada(horasLlegada);
+        ruta.setHorasDeLlegada(horasLlegadaLong);
         return ruta;
     }
 

@@ -85,6 +85,7 @@ public class PedidoController {
                 System.out.println("Ciudad j:");
                 System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ());
             }
+            System.out.println(Mapa.rutas.get(i).getHorasDeLlegada());
             System.out.println();
         }
 
