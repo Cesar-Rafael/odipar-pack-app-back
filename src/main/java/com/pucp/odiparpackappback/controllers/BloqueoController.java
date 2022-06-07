@@ -26,12 +26,10 @@ public class BloqueoController {
 
     @PostMapping("/Bloqueo/PostBloqueos")
     boolean InsertarListaBloqueos(@RequestBody List<BloqueoModel> bloqueosModel){
-        List<BloqueoModel> listaAux = listarBloqueos();
-        for(int i = 0; i < bloqueosModel.size(); i++){
-            Long indice = Long.valueOf(listaAux.size()+i);
-            bloqueosModel.get(i).setId(indice);
-            // Se guarda en la BD
-            bloqueoRepository.save(bloqueosModel.get(i));
+        try{
+            bloqueoRepository.saveAll(bloqueosModel);
+        }catch(Exception ex){
+            System.out.println(ex);
         }
         return true;
     }

@@ -48,8 +48,10 @@ public class PedidoController {
 
     @PostMapping("/Pedido/PostPedidos")
     boolean InsertarListaPedidos(@RequestBody List<PedidoModel> pedidosModel) {
-        for (int i = 0; i < pedidosModel.size(); i++) {
-            pedidoRepository.save(pedidosModel.get(i));
+        try{
+            pedidoRepository.saveAll(pedidosModel);
+        }catch(Exception ex){
+            System.out.println(ex);
         }
         return true;
     }

@@ -1,15 +1,14 @@
 package com.pucp.odiparpackappback.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
 @Table
 public class PedidoModel {
-    private @Id @GeneratedValue Long id;
+    private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     private Long rucCliente;
     private int cantPaquetes;
     private int cantPaquetesNoAsignado;
