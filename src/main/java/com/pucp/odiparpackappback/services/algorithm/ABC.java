@@ -70,6 +70,11 @@ public class ABC {
         }
 
         Mapa.bloqueos = new ArrayList<>();
+
+        // Actualizar idRuta de Vehículos
+        for (int r = 0; r < Mapa.rutas.size(); r++){
+            Mapa.rutas.get(r).getVehiculo().setIdRuta( Mapa.rutas.get(r).getIdRuta());
+        }
     }
 
     public int generarNumeroEnteroAleatorio(int max) {
