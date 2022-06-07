@@ -51,9 +51,6 @@ public class PedidoModel {
         return fechaHoraCreacion;
     }
     public void setFechaHoraCreacion(Date fechaHoraCreacion) {
-        LocalDateTime fechaHoraAux = fechaHoraCreacion.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime().minusHours(5);
         this.fechaHoraCreacion = fechaHoraCreacion;
     }
 
