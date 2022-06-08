@@ -1,25 +1,22 @@
 package com.pucp.odiparpackappback.services.algorithm;
 
-import com.pucp.odiparpackappback.Repositories.BloqueoRepository;
-import com.pucp.odiparpackappback.controllers.RutaController;
 import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
-import org.springframework.boot.autoconfigure.amqp.AbstractRabbitListenerContainerFactoryConfigurer;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
-        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
-
         //System.out.println(Mapa.inicioSimulacion);
         //System.out.println(Mapa.finSimulacion);
 
@@ -71,20 +68,22 @@ public class ABC {
 
         // Llamado a InsertarListaRutas
         ArrayList<RutaModel> rutasAux = new ArrayList<>();
-        for (int rm = 0; rm < Mapa.rutas.size(); rm++){
+        for (int rm = 0; rm < Mapa.rutas.size(); rm++) {
             RutaModel rutaAux = new RutaModel();
             rutaAux.setIdRuta(Mapa.rutas.get(rm).getIdRuta());
             rutaAux.setSeguimiento(Mapa.rutas.get(rm).getSeguimiento());
             rutaAux.setIdUnidadTransporte(Mapa.rutas.get(rm).getIdUnidadTransporte());
 
             ArrayList<Long> list = Mapa.rutas.get(rm).getHorasDeLlegada();
-            String listString = "";
-            for (long l : list)
-            {
-                listString += String.valueOf(l) + "\n";
+            System.out.println(list);
+
+            StringBuilder listString = new StringBuilder();
+            for (int i = 0; i < list.size(); i++) {
+                listString.append(list.get(i));
+                if (i != list.size() - 1) listString.append(",");
             }
 
-            rutaAux.setArrayHorasLlegada(listString);
+            rutaAux.setArrayHorasLlegada(listString.toString());
             rutasAux.add(rutaAux);
         }
         Mapa.cargarRutas(rutasAux);
@@ -100,6 +99,7 @@ public class ABC {
         // Se asigna el pedido actual a la población inicial...
         boolean asignado;
         for (int a = 0; a < Mapa.rutas.size(); a++) {
+
             // Se verifica si el pedido puede ser asignado a esa ruta
             asignado = asignarPedidoRutaVehiculo(pedido, Mapa.rutas.get(a));
             if (asignado) {
@@ -146,22 +146,21 @@ public class ABC {
                     horaLlegada = Mapa.inicioSimulacion.plusHours(horas + 1);
                 }*/
 
-                //horaLlegada = horaLlegada.plusMinutes(minutos);
+                horaLlegada = horaLlegada.plusMinutes(minutos);
                 horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
                 horasLlegada.add(horaLlegada);
             }
         }
-
 
         Ruta rutaEncontrada = null;
 
         for (int i = 0; i < horasLlegada.size() - 1; i++) {
             int oficinaI = oficinas.get(i).getId();
             int oficinaJ = oficinas.get(i + 1).getId();
-
             List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
             //List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i).minusHours(6)), obtenerFecha(horasLlegada.get(i + 1).minusHours(6)));
             if (bloqueos.size() > 0) {
+                System.out.println("Bloqueo Encontrado");
                 Pair tramoBloqueado = new Pair<Integer, Integer>(oficinaI, oficinaJ);
                 YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
                 Mapa.bloqueos.add(tramoBloqueado);
@@ -179,8 +178,7 @@ public class ABC {
         // double fitness
         double fitness = rutasPath.get(k).getWeight();
         // Asignación
-        Ruta ruta = new Ruta(rutaOriginal.getIdRuta(), seguimiento, rutaOriginal.getPedidosParciales(), fitness, rutaOriginal.getIdUnidadTransporte(), tramos);
-        ruta.setHorasDeLlegada(horasLlegadaLong);
+        Ruta ruta = new Ruta(rutaOriginal.getIdRuta(), seguimiento, rutaOriginal.getPedidosParciales(), fitness, rutaOriginal.getIdUnidadTransporte(), tramos, horasLlegadaLong);
         return ruta;
     }
 
@@ -191,6 +189,34 @@ public class ABC {
         Long idRuta = Long.valueOf(Mapa.rutas.size());
         String seguimiento = rutasPath.get(k).getVertexList().toString();
         ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
+
+        List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
+        //ArrayList<Long> horasLlegada = new ArrayList<>();
+        ArrayList<Long> horasLlegadaLong = new ArrayList<>();
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        for (int i = 0; i < oficinas.size(); i++) {
+            if (i == 0) {
+                horasLlegadaLong.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
+            } else {
+                double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
+                int horas = (int) Math.floor(tiempoViaje);
+                int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
+                LocalDateTime horaLlegada;
+                horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+
+                /*
+                if (i == 1) {
+                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                } else {
+                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas + 1);
+                }*/
+
+                horaLlegada = horaLlegada.plusMinutes(minutos);
+                horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
+            }
+        }
+
         double fitness = rutasPath.get(k).getWeight();
         // Asignación Vehículo
         for (int i = 0; i < Mapa.vehiculos.size(); i++) {
@@ -214,7 +240,7 @@ public class ABC {
                     for (int a = 0; a < tramos.size(); a++) {
                         tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                     }
-                    Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos);
+                    Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
                     Mapa.rutas.add(auxRuta);
                     return true;
                 } else {
@@ -236,7 +262,7 @@ public class ABC {
                     for (int a = 0; a < tramos.size(); a++) {
                         tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                     }
-                    Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos);
+                    Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
                     Mapa.rutas.add(auxRuta);
                     return kShortestPathRoutingPedido(pedido, 0);
                 }
