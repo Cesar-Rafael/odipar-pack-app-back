@@ -9,8 +9,7 @@ public enum Region {
     SIERRA(1),
     SELVA(2);
 
-    private static final Map<Integer, Region> lookup
-            = new HashMap<Integer, Region>();
+    private static final Map<Integer, Region> lookup = new HashMap<Integer, Region>();
 
     static {
         for (Region w : EnumSet.allOf(Region.class))

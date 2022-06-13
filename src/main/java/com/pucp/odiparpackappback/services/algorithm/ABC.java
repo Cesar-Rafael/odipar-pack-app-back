@@ -17,9 +17,13 @@ import java.util.Random;
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion) {
-        // En la simulación se lee los Pedidos desde la BD
         if (opcion == 0){
-            Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
+            // En la simulación se lee los Pedidos desde el Frontend
+            Mapa.cargarPedidosSimulacion("src/main/resources/static/pedido_model.csv", obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
+        }
+        else{
+            // En el día a día los Pedidos se leen desde la BD
+            Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
         }
         // Mensaje
         if (Mapa.pedidos.size() == 0) {
@@ -155,7 +159,7 @@ public class ABC {
         for (int i = 0; i < horasLlegada.size() - 1; i++) {
             int oficinaI = oficinas.get(i).getId();
             int oficinaJ = oficinas.get(i + 1).getId();
-            List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
+            List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueadosDiaDia(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
             //List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i).minusHours(6)), obtenerFecha(horasLlegada.get(i + 1).minusHours(6)));
             if (bloqueos.size() > 0) {
                 System.out.println("Bloqueo Encontrado");

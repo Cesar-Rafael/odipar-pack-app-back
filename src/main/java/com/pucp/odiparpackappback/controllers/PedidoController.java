@@ -59,17 +59,13 @@ public class PedidoController {
     @GetMapping("/ABCDD/")
     boolean ejecutarABCDiaDia() {
         ABC abc = new ABC();
-
-        //Mapa.cargarPedidos();
-        Mapa.cargarOficinas();
-        Mapa.cargarTramos();
-        Mapa.cargarVehiculos();
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
-        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
-
+        // Lectura desde BD
+        Mapa.cargarOficinasDiaDia();
+        Mapa.cargarTramosDiaDia();
+        Mapa.cargarVehiculosDiaDia();
+        // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 2, 2, 1);
-
-        // BD RutaModel
+        // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
         System.out.println(Mapa.pedidos.size());
@@ -80,17 +76,10 @@ public class PedidoController {
             System.out.println(Mapa.rutas.get(i).getIdUnidadTransporte());
             System.out.println("Seguimiento:");
             System.out.println(Mapa.rutas.get(i).getSeguimiento());
-            System.out.println("Tramos:");
-            for (int j = 0; j < Mapa.rutas.get(i).getTramos().size(); j++) {
-                System.out.println("Ciudad i:");
-                System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadI());
-                System.out.println("Ciudad j:");
-                System.out.println(Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ());
-            }
             System.out.println(Mapa.rutas.get(i).getHorasDeLlegada());
             System.out.println();
         }
-
+        // Actualización
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -98,7 +87,6 @@ public class PedidoController {
                 ejecutarABCDD2();
             }
         }, 300000, 300000);
-
         return true;
     }
 
@@ -106,19 +94,36 @@ public class PedidoController {
     boolean ejecutarABCDD2() {
         ABC abc = new ABC();
         abc.algoritmoAbejasVPRTW(10, 2, 2, 1);
-        System.out.println("Me he ejecutado :)");
+        System.out.println("¡Rutas actualizadas!");
         return true;
     }
 
     @GetMapping("/ABCS/")
     boolean ejecutarABCSimulacion() {
         ABC abc = new ABC();
-        // Lectura desde BD
-        Mapa.cargarOficinas();
-        Mapa.cargarTramos();
-        Mapa.cargarVehiculos();
+        // Lectura de Datos
+        Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
+        Mapa.cargarTramosDiaDia();
+        Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
+        // Rango de Simulación
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(0);
+        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(0);
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
+        // Reporte Interno
+        System.out.println("REPORTE:");
+        System.out.println("Cantidad Pedidos:");
+        System.out.println(Mapa.pedidos.size());
+        for (int i = 0; i < Mapa.rutas.size(); i++) {
+            System.out.println("IdRuta:");
+            System.out.println(Mapa.rutas.get(i).getIdRuta());
+            System.out.println("IdUnidadTransporte:");
+            System.out.println(Mapa.rutas.get(i).getIdUnidadTransporte());
+            System.out.println("Seguimiento:");
+            System.out.println(Mapa.rutas.get(i).getSeguimiento());
+            System.out.println(Mapa.rutas.get(i).getHorasDeLlegada());
+            System.out.println();
+        }
         // Actualización
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -127,14 +132,13 @@ public class PedidoController {
                 ejecutarABCS2();
             }
         }, 300000, 300000);
-
         return true;
     }
 
     boolean ejecutarABCS2() {
         ABC abc = new ABC();
         abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
-        System.out.println("Me he ejecutado :)");
+        System.out.println("¡Rutas actualizadas!");
         return true;
     }
 }

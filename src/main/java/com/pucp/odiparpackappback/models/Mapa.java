@@ -5,6 +5,10 @@ import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,12 +58,10 @@ public class Mapa {
         Mapa.rutaRepository = rutaRepository;
     }
 
-    public static void cargarOficinas() {
+    public static void cargarOficinasDiaDia() {
         oficinas = (ArrayList<OficinaModel>) oficinaRepository.findAll();
-
         ArrayList<OficinaModel> oficinasPrincipalesAux = new ArrayList<>();
         oficinasPrincipalesAux = (ArrayList<OficinaModel>) oficinaRepository.findAll();
-
         for(int i = 0; i < oficinasPrincipalesAux.size(); i++){
             if(oficinasPrincipalesAux.get(i).isEsPrincipal()){
                 oficinasPrincipales.add(oficinasPrincipalesAux.get(i));
@@ -67,22 +69,187 @@ public class Mapa {
         }
     }
 
+    public static void cargarOficinasSimulacion(String rutaOficinas) {
+        File archivoPedidos;
+        FileReader fr = null;
+        BufferedReader br;
+        try {
+            archivoPedidos = new File(rutaOficinas);
+            fr = new FileReader(archivoPedidos);
+            br = new BufferedReader(fr);
+            //Lectura de fichero
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                // String
+                String[] parts = linea.split(";");
+                // Obtengo atributos
+                int ubigeo = Integer.parseInt(parts[0]);
+                String departamento = parts[1];
+                boolean esPrincipal = Boolean.parseBoolean(parts[2]);
+                parts[3] = parts[3].replace(',', '.');
+                parts[3] = parts[3].replace("\"","");
+                parts[4] = parts[4].replace(',', '.');
+                parts[4] = parts[4].replace("\"","");
+                double latitud = Double.parseDouble(parts[3]);
+                double longitud = Double.parseDouble(parts[4]);
+                String provincia = parts[5];
+                Region region = Region.get(Integer.parseInt(parts[6]));
+                //Agrega Oficina
+                OficinaModel oficina = new OficinaModel(ubigeo, departamento, provincia, latitud, longitud, region, esPrincipal);
+                oficinas.add(oficina);
+            }
+            // Oficinas Principales
+            for(int i = 0; i < oficinas.size(); i++){
+                if(oficinas.get(i).isEsPrincipal()){
+                    oficinasPrincipales.add(oficinas.get(i));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != fr) {
+                    fr.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
 
+    public static void cargarTramosSimulacion(String rutaTramos) {
+        File archivoPedidos;
+        FileReader fr = null;
+        BufferedReader br;
+        try {
+            archivoPedidos = new File(rutaTramos);
+            fr = new FileReader(archivoPedidos);
+            br = new BufferedReader(fr);
+            //Lectura de fichero
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                // String
+                String[] parts = linea.split(";");
+                // Obtengo atributos
+                Long id = Long.valueOf(parts[0]);
+                int idCiudadI = Integer.parseInt(parts[1]);
+                int idCiudadJ = Integer.parseInt(parts[2]);
+                boolean bloqueado = Boolean.parseBoolean(parts[3]);
+                parts[4] = parts[4].replace(',', '.');
+                parts[4] = parts[4].replace(',', '.');
+                double tiempoDeViaje = Double.parseDouble(parts[4]);
+                //Agrega Ruta
+                TramoModel tramo = new TramoModel(id, idCiudadI, idCiudadJ, tiempoDeViaje, bloqueado);
+                tramos.add(tramo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != fr) {
+                    fr.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
 
-    public static void cargarTramos() {
+    public static void cargarVehiculosSimulacion(String rutaVehiculos) {
+        File archivoPedidos;
+        FileReader fr = null;
+        BufferedReader br;
+        try {
+            archivoPedidos = new File(rutaVehiculos);
+            fr = new FileReader(archivoPedidos);
+            br = new BufferedReader(fr);
+            //Lectura de fichero
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                // String
+                String[] parts = linea.split(";");
+                // Obtengo atributos
+                Long id = Long.valueOf(parts[0]);
+                parts[1] = parts[1].replace(',', '.');
+                parts[1] = parts[1].replace(',', '.');
+                double abscisa = Double.parseDouble(parts[1]);
+                int capacidadDisponible = Integer.parseInt(parts[2]);
+                int capacidadTotal = Integer.parseInt(parts[3]);
+                String codigo = parts[4];
+                EstadoUnidadTransporte estado = EstadoUnidadTransporte.get(Integer.parseInt(parts[5]));
+                Long idRuta = Long.valueOf(parts[6]);
+                int oficinaActual = Integer.parseInt(parts[7]);
+                parts[8] = parts[8].replace(',', '.');
+                double ordenada = Double.parseDouble(parts[8]);
+                //Agrega Vehiculo
+                UnidadTransporteModel vehiculo = new UnidadTransporteModel(id, codigo, capacidadTotal, estado, oficinaActual, abscisa, ordenada);
+                vehiculos.add(vehiculo);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != fr) {
+                    fr.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public static void cargarTramosDiaDia() {
         tramos = (ArrayList<TramoModel>) tramoRepository.findAll();
     }
-    public static void cargarVehiculos() {
+    public static void cargarVehiculosDiaDia() {
         vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
     }
-    public static void cargarPedidos(Date fechaInicio, Date fechaFin){
+    public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin){
         pedidos = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
-//        for (PedidoModel p : pedidos) {
-//            System.out.println(p.getFechaHoraCreacion());
-//        }
     }
 
-    public static List<BloqueoModel> obtenerTramosBloqueados(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin) {
+    public static void cargarPedidosSimulacion(String rutaArchivo, Date fechaInicio, Date fechaFin){
+        File archivoPedidos;
+        FileReader fr = null;
+        BufferedReader br;
+
+        try {
+            archivoPedidos = new File(rutaArchivo);
+            fr = new FileReader(archivoPedidos);
+            br = new BufferedReader(fr);
+
+            //Lectura de fichero
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                // String
+                String[] parts = linea.split(";");
+                // Obtengo atributos
+                long id = Long.parseLong(parts[0]);
+                int cantPaquetes = Integer.parseInt(parts[1]);
+                String ciudadDestino = parts[2];
+                Date fechaHoraCreacion = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.ssssss").parse(parts[3]);
+                int idCiudadDestino = Integer.parseInt(parts[4]);
+                long rucCliente = Long.parseLong(parts[5]);
+                //Agrega Pedido
+                if(fechaHoraCreacion.after(fechaInicio) && fechaHoraCreacion.before(fechaFin)){
+                    PedidoModel pedido = new PedidoModel(id, rucCliente, cantPaquetes, idCiudadDestino, ciudadDestino, fechaHoraCreacion);
+                    pedidos.add(pedido);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != fr) {
+                    fr.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    public static List<BloqueoModel> obtenerTramosBloqueadosDiaDia(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin) {
         return bloqueoRepository.findBloqueoModelByUbigeoInicioAndUbigeoFin(oficinaI, oficinaJ, fechaInicio, fechaFin);
     }
 
