@@ -67,7 +67,7 @@ public class PedidoController {
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
         Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
 
-        abc.algoritmoAbejasVPRTW(10, 10, 10);
+        abc.algoritmoAbejasVPRTW(10, 2, 2);
 
         // BD RutaModel
         System.out.println("REPORTE:");
@@ -105,7 +105,7 @@ public class PedidoController {
     @GetMapping("/ABC2/")
     boolean ejecutarABC2() {
         ABC abc = new ABC();
-        abc.algoritmoAbejasVPRTW(10, 10, 10);
+        abc.algoritmoAbejasVPRTW(10, 2, 2);
         System.out.println("Me he ejecutado :)");
         return true;
     }
