@@ -30,7 +30,7 @@ public class RutaController {
         return true;
     }
 
-    @PostMapping("/Ruta/UnidadTransporte/{id}")
+    @GetMapping("/Ruta/UnidadTransporte/{id}")
     @ResponseBody
     public String listarRutasxIdUT(@PathVariable("id") long id){
         List<RutaModel> aux = (List<RutaModel>) rutaRepository.findAll();
