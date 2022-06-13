@@ -39,5 +39,6 @@ public class RutaController {
                 return aux.get(i).getSeguimiento();
             }
         }
+        return null;
     }
 }
