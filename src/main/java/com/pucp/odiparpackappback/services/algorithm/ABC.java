@@ -16,8 +16,10 @@ import java.util.Random;
 
 public class ABC {
 
-    public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
-        Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
+    public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion) {
+        if (opcion == 0){
+            Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
+        }
 
         if (Mapa.pedidos.size() == 0) {
             System.out.println("No hay pedidos que asignar");

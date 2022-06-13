@@ -67,7 +67,7 @@ public class PedidoController {
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
         Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
 
-        abc.algoritmoAbejasVPRTW(10, 2, 2);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 1);
 
         // BD RutaModel
         System.out.println("REPORTE:");
@@ -105,7 +105,7 @@ public class PedidoController {
     @GetMapping("/ABC2/")
     boolean ejecutarABC2() {
         ABC abc = new ABC();
-        abc.algoritmoAbejasVPRTW(10, 2, 2);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
         System.out.println("Me he ejecutado :)");
         return true;
     }
@@ -118,7 +118,7 @@ public class PedidoController {
         Mapa.cargarTramos();
         Mapa.cargarVehiculos();
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(10, 2, 2);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
         // Actualización
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
