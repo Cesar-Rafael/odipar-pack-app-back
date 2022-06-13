@@ -5,6 +5,9 @@ import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -264,6 +267,47 @@ public class Mapa {
 
     public static List<BloqueoModel> obtenerTramosBloqueadosDiaDia(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin) {
         return bloqueoRepository.findBloqueoModelByUbigeoInicioAndUbigeoFin(oficinaI, oficinaJ, fechaInicio, fechaFin);
+    }
+
+    public static List<BloqueoModel> obtenerTramosBloqueadosSimulacion(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin, String rutaArchivo) {
+        File archivoPedidos;
+        FileReader fr = null;
+        BufferedReader br;
+        List<BloqueoModel> listaBloqueos = new ArrayList<>();
+        try {
+            archivoPedidos = new File(rutaArchivo);
+            fr = new FileReader(archivoPedidos);
+            br = new BufferedReader(fr);
+
+            //Lectura de fichero
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                // String
+                String[] parts = linea.split(";");
+                // Obtengo atributos
+                Long id = Long.valueOf(parts[0]);
+                Date fechaFinAux = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.ssssss").parse(parts[1]);
+                Date fechaInicioAux = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss.ssssss").parse(parts[2]);
+                int ubigeoFin = Integer.parseInt(parts[3]);
+                int ubigeoInicio = Integer.parseInt(parts[4]);
+                //Agrega Bloqueo
+                if(fechaInicioAux.after(fechaInicio) && fechaFinAux.before(fechaFin) && (((oficinaI == ubigeoInicio) && (oficinaJ == ubigeoFin)) || ((oficinaI == ubigeoFin) && (oficinaJ == ubigeoInicio)))){
+                    BloqueoModel bloqueo = new BloqueoModel(id, ubigeoInicio, ubigeoFin, fechaInicioAux, fechaFinAux);
+                    listaBloqueos.add(bloqueo);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != fr) {
+                    fr.close();
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return listaBloqueos;
     }
 
     public static ArrayList<TramoModel> listarTramos(String tramos){

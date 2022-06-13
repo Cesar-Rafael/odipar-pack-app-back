@@ -56,7 +56,7 @@ public class ABC {
                 // Abeja Observadora
                 for (int c = 0; b < numAbejasObs; b++) {
                     //Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                    Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1, null);
+                    Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutas.get(i), c + 1, null, opcion);
                     //Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
                     if (auxRuta.getFitness() > Mapa.rutas.get(i).getFitness()) {
                         Mapa.rutas.set(i, auxRuta);
@@ -119,7 +119,7 @@ public class ABC {
         return bool;
     }
 
-    public Ruta kShortestPathRoutingRuta(Ruta rutaOriginal, int k, Pair<Integer, Integer> edge) {
+    public Ruta kShortestPathRoutingRuta(Ruta rutaOriginal, int k, Pair<Integer, Integer> edge, int opcion) {
         int ubigeoDestino = rutaOriginal.getTramos().get(rutaOriginal.getTramos().size() - 1).getIdCiudadJ();
         // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
         ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k, ubigeoDestino, edge);
@@ -159,14 +159,19 @@ public class ABC {
         for (int i = 0; i < horasLlegada.size() - 1; i++) {
             int oficinaI = oficinas.get(i).getId();
             int oficinaJ = oficinas.get(i + 1).getId();
-            List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueadosDiaDia(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
+            List<BloqueoModel> bloqueos = new ArrayList<>();
+            if(opcion == 0){
+                bloqueos = Mapa.obtenerTramosBloqueadosSimulacion(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)), "src/main/resources/static/bloqueo_model.csv");
+            }else{
+                bloqueos = Mapa.obtenerTramosBloqueadosDiaDia(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
+            }
             //List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i).minusHours(6)), obtenerFecha(horasLlegada.get(i + 1).minusHours(6)));
             if (bloqueos.size() > 0) {
                 System.out.println("Bloqueo Encontrado");
                 Pair tramoBloqueado = new Pair<Integer, Integer>(oficinaI, oficinaJ);
                 YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
                 Mapa.bloqueos.add(tramoBloqueado);
-                rutaEncontrada = kShortestPathRoutingRuta(rutaOriginal, k, tramoBloqueado);
+                rutaEncontrada = kShortestPathRoutingRuta(rutaOriginal, k, tramoBloqueado, opcion);
                 //YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
                 //YenTopKShortestPathsAlg.graph.recoverDeletedEdge(tramoBloqueado);
             }
