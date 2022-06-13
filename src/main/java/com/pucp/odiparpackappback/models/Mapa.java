@@ -139,9 +139,15 @@ public class Mapa {
                 String[] parts = linea.split(";");
                 // Obtengo atributos
                 Long id = Long.valueOf(parts[0]);
-                int idCiudadI = Integer.parseInt(parts[1]);
-                int idCiudadJ = Integer.parseInt(parts[2]);
-                boolean bloqueado = Boolean.parseBoolean(parts[3]);
+                boolean bloqueado;
+                if(Integer.parseInt(parts[1]) == 0){
+                    bloqueado = false;
+                }
+                else{
+                    bloqueado = true;
+                }
+                int idCiudadI = Integer.parseInt(parts[2]);
+                int idCiudadJ = Integer.parseInt(parts[3]);
                 parts[4] = parts[4].replace(',', '.');
                 parts[4] = parts[4].replace(',', '.');
                 double tiempoDeViaje = Double.parseDouble(parts[4]);

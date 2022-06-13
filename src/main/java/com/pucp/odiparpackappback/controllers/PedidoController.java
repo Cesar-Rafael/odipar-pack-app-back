@@ -103,7 +103,7 @@ public class PedidoController {
         ABC abc = new ABC();
         // Lectura de Datos
         Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
-        Mapa.cargarTramosDiaDia();
+        Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         // Rango de Simulación
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(0);
