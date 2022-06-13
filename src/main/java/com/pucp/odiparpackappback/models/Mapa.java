@@ -77,9 +77,9 @@ public class Mapa {
     }
     public static void cargarPedidos(Date fechaInicio, Date fechaFin){
         pedidos = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
-        for (PedidoModel p : pedidos) {
-            System.out.println(p.getFechaHoraCreacion());
-        }
+//        for (PedidoModel p : pedidos) {
+//            System.out.println(p.getFechaHoraCreacion());
+//        }
     }
 
     public static List<BloqueoModel> obtenerTramosBloqueados(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin) {

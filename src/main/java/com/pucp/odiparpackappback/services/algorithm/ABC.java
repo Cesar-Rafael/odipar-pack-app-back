@@ -22,9 +22,6 @@ public class ABC {
 
         Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
 
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
-        Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
-
         if (Mapa.pedidos.size() == 0) {
             System.out.println("No hay pedidos que asignar");
             return;
@@ -75,7 +72,6 @@ public class ABC {
             rutaAux.setIdUnidadTransporte(Mapa.rutas.get(rm).getIdUnidadTransporte());
 
             ArrayList<Long> list = Mapa.rutas.get(rm).getHorasDeLlegada();
-            System.out.println(list);
 
             StringBuilder listString = new StringBuilder();
             for (int i = 0; i < list.size(); i++) {
@@ -86,8 +82,10 @@ public class ABC {
             rutaAux.setArrayHorasLlegada(listString.toString());
             rutasAux.add(rutaAux);
         }
-        Mapa.cargarRutas(rutasAux);
 
+        Mapa.cargarRutas(rutasAux);
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
+        Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
     }
 
     public int generarNumeroEnteroAleatorio(int max) {

@@ -20,6 +20,16 @@ public class RutaController {
         return (List<RutaModel>) rutaRepository.findAll();
     }
 
+    @GetMapping("/ruta/{idVehicule}")
+    @ResponseBody
+    RutaModel ListarPedidoxId(@PathVariable("idVehicule") long idVehicule) {
+        RutaModel ruta = rutaRepository.findByIdUnidadTransporte(idVehicule);
+        if (ruta != null) {
+            return ruta;
+        }
+        return null;
+    }
+
     @PostMapping("/Ruta/PostRutas")
     public boolean InsertarListaRutas(@RequestBody List<RutaModel> rutasModel) {
         try{

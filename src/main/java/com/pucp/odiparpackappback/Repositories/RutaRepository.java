@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RutaRepository extends CrudRepository<RutaModel, Long> {
-
+    RutaModel findByIdUnidadTransporte(long idVehicule);
 }
