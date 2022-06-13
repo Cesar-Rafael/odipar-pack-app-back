@@ -56,8 +56,8 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/ABC/")
-    boolean ejecutarABC() {
+    @GetMapping("/ABCDD/")
+    boolean ejecutarABCDiaDia() {
         ABC abc = new ABC();
 
         //Mapa.cargarPedidos();
