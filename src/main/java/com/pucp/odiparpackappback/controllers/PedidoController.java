@@ -107,4 +107,25 @@ public class PedidoController {
         System.out.println("Me he ejecutado :)");
         return true;
     }
+
+    @GetMapping("/ABCS/")
+    boolean ejecutarABCSimulacion() {
+        ABC abc = new ABC();
+        // Lectura desde Archivos
+        Mapa.cargarOficinas();
+        Mapa.cargarTramos();
+        Mapa.cargarVehiculos();
+        // Ejecución del Algoritmo
+        abc.algoritmoAbejasVPRTW(10, 2, 2);
+        // Actualización
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                ejecutarABC2();
+            }
+        }, 300000, 300000);
+
+        return true;
+    }
 }

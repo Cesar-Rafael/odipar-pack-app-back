@@ -20,6 +20,7 @@ public class Mapa {
     public static ArrayList<PedidoModel> pedidos = new ArrayList<>();
     public static ArrayList<Ruta> rutas = new ArrayList<>();
     public static boolean flag = true;
+    public static double k = 0.0;
 
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
     public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);

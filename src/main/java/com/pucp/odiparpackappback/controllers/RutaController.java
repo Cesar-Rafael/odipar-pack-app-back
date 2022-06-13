@@ -3,12 +3,10 @@ package com.pucp.odiparpackappback.controllers;
 import com.pucp.odiparpackappback.Repositories.RutaRepository;
 import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.models.RutaModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RutaController {
@@ -30,5 +28,16 @@ public class RutaController {
             System.out.println(ex);
         }
         return true;
+    }
+
+    @PostMapping("/Ruta/UnidadTransporte/{id}")
+    @ResponseBody
+    public String listarRutasxIdUT(@PathVariable("id") long id){
+        List<RutaModel> aux = (List<RutaModel>) rutaRepository.findAll();
+        for(int i=0; i<aux.size();i++){
+            if(aux.get(i).getIdUnidadTransporte() == id){
+                return aux.get(i).getSeguimiento();
+            }
+        }
     }
 }
