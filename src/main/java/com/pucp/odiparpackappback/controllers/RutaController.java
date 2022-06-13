@@ -43,12 +43,7 @@ public class RutaController {
     @GetMapping("/Ruta/UnidadTransporte/{id}")
     @ResponseBody
     public String listarRutasxIdUT(@PathVariable("id") long id){
-        List<RutaModel> aux = (List<RutaModel>) rutaRepository.findAll();
-        for(int i=0; i<aux.size();i++){
-            if(aux.get(i).getIdUnidadTransporte() == id){
-                return aux.get(i).getSeguimiento();
-            }
-        }
-        return null;
+        RutaModel aux = rutaRepository.findByIdUnidadTransporte(id);
+        return aux.getSeguimiento();
     }
 }
