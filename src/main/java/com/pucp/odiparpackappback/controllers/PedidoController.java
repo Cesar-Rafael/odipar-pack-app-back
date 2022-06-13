@@ -64,8 +64,10 @@ public class PedidoController {
         Mapa.cargarOficinas();
         Mapa.cargarTramos();
         Mapa.cargarVehiculos();
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
+        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
 
-        abc.algoritmoAbejasVPRTW(10, 2, 2);
+        abc.algoritmoAbejasVPRTW(10, 10, 10);
 
         // BD RutaModel
         System.out.println("REPORTE:");

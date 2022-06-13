@@ -17,13 +17,14 @@ public class Ruta {
     private UnidadTransporteModel vehiculo;
     private double fitness;
 
-    public Ruta(Long idRuta, String seguimiento, ArrayList<PedidoParcialModel> pedidosParciales, double fitness, Long idUnidadTransporte, ArrayList<TramoModel> tramos) {
+    public Ruta(Long idRuta, String seguimiento, ArrayList<PedidoParcialModel> pedidosParciales, double fitness, Long idUnidadTransporte, ArrayList<TramoModel> tramos, ArrayList<Long> horasDeLlegada) {
         this.idRuta = idRuta;                               // 3
         this.seguimiento = seguimiento;                     // "[150101, 150201, 21801, 130701, 140301]"
         this.pedidosParciales = pedidosParciales;           // [3, 15, 21, 130]
         this.fitness = fitness;                             // 13.8765
         this.idUnidadTransporte = idUnidadTransporte;       // 12
         this.tramos = tramos;
+        this.horasDeLlegada = horasDeLlegada;
     }
 
     public Ruta(ArrayList<Integer> ubigeoOficinas, UnidadTransporteModel vehiculo, ArrayList<Double> tiemposTramos, double fitness, ArrayList<TramoModel> tramos) {
