@@ -113,7 +113,7 @@ public class PedidoController {
     @GetMapping("/ABCS/")
     boolean ejecutarABCSimulacion() {
         ABC abc = new ABC();
-        // Lectura desde Archivos
+        // Lectura desde BD
         Mapa.cargarOficinas();
         Mapa.cargarTramos();
         Mapa.cargarVehiculos();

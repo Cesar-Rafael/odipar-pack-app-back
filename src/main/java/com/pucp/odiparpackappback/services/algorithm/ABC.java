@@ -17,9 +17,6 @@ import java.util.Random;
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen) {
-        //System.out.println(Mapa.inicioSimulacion);
-        //System.out.println(Mapa.finSimulacion);
-
         Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
 
         if (Mapa.pedidos.size() == 0) {
