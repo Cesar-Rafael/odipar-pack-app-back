@@ -71,7 +71,7 @@ public class OficinaModel {
         this.longitud = longitud;
     }
 
-    public boolean isEsPrincipal() {
+    public boolean getEsPrincipal() {
         return esPrincipal;
     }
     public void setEsPrincipal(boolean esPrincipal) {

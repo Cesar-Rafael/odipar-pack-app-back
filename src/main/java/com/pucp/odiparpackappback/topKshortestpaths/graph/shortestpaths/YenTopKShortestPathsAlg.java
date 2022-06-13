@@ -320,11 +320,8 @@ public class YenTopKShortestPathsAlg {
     public static ArrayList<Path> getKShortestPaths(int k, int ubigeoDestino, Pair<Integer, Integer> edge) {
         setTargetVertex(graph.getVertex(ubigeoDestino));
         ArrayList<Path> rutas = new ArrayList<>();
-
         for (int i = 0; i < Mapa.oficinasPrincipales.size(); i++) {
             setSourceVertex(graph.getVertex(Mapa.oficinasPrincipales.get(i).getUbigeo()));
-            System.out.println("Oficinas Principales");
-            System.out.println(Mapa.oficinasPrincipales.size());
             for (int j = 1; j <= k; j++) {
                 if (!YenTopKShortestPathsAlg.hasNext()) break;
                 rutas.add(YenTopKShortestPathsAlg.next());

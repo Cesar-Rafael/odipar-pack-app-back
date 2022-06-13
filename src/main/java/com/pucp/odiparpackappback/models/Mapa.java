@@ -63,7 +63,7 @@ public class Mapa {
         ArrayList<OficinaModel> oficinasPrincipalesAux = new ArrayList<>();
         oficinasPrincipalesAux = (ArrayList<OficinaModel>) oficinaRepository.findAll();
         for(int i = 0; i < oficinasPrincipalesAux.size(); i++){
-            if(oficinasPrincipalesAux.get(i).isEsPrincipal()){
+            if(oficinasPrincipalesAux.get(i).getEsPrincipal()){
                 oficinasPrincipales.add(oficinasPrincipalesAux.get(i));
             }
         }
@@ -85,7 +85,14 @@ public class Mapa {
                 // Obtengo atributos
                 int ubigeo = Integer.parseInt(parts[0]);
                 String departamento = parts[1];
-                boolean esPrincipal = Boolean.parseBoolean(parts[2]);
+
+                boolean esPrincipal;
+                if (Integer.parseInt(parts[2]) == 0) {
+                    esPrincipal = false;
+                }
+                else{
+                    esPrincipal = true;
+                }
                 parts[3] = parts[3].replace(',', '.');
                 parts[3] = parts[3].replace("\"","");
                 parts[4] = parts[4].replace(',', '.');
@@ -100,7 +107,7 @@ public class Mapa {
             }
             // Oficinas Principales
             for(int i = 0; i < oficinas.size(); i++){
-                if(oficinas.get(i).isEsPrincipal()){
+                if(oficinas.get(i).getEsPrincipal()){
                     oficinasPrincipales.add(oficinas.get(i));
                 }
             }
