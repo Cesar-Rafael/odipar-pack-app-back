@@ -95,7 +95,7 @@ public class PedidoController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                ejecutarABC2();
+                ejecutarABCDD2();
             }
         }, 300000, 300000);
 
@@ -103,9 +103,9 @@ public class PedidoController {
     }
 
     @GetMapping("/ABC2/")
-    boolean ejecutarABC2() {
+    boolean ejecutarABCDD2() {
         ABC abc = new ABC();
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 1);
         System.out.println("Me he ejecutado :)");
         return true;
     }
@@ -124,10 +124,17 @@ public class PedidoController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                ejecutarABC2();
+                ejecutarABCS2();
             }
         }, 300000, 300000);
 
+        return true;
+    }
+
+    boolean ejecutarABCS2() {
+        ABC abc = new ABC();
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
+        System.out.println("Me he ejecutado :)");
         return true;
     }
 }

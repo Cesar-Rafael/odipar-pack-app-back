@@ -17,15 +17,16 @@ import java.util.Random;
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion) {
+        // En la simulación se lee los Pedidos desde la BD
         if (opcion == 0){
             Mapa.cargarPedidos(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
         }
-
+        // Mensaje
         if (Mapa.pedidos.size() == 0) {
             System.out.println("No hay pedidos que asignar");
             return;
         }
-
+        // Inicio ABC
         int contador = 0;
         // Etapa: Generación de la Población Inicial
         while (true) {
