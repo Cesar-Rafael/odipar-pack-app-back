@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class ABC {
 
-    public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion) {
+    public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion, int k) {
         if (opcion == 0){
             // En la simulación se lee los Pedidos desde el Frontend
             Mapa.cargarPedidosSimulacion("src/main/resources/static/pedido_model.csv", obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
@@ -25,8 +25,16 @@ public class ABC {
             // En el día a día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
         }
+        ZoneId zoneId = ZoneId.systemDefault();
+        ArrayList<PedidoModel> pedidos = new ArrayList<>();
+        for(int i = 0; i < Mapa.pedidos.size(); i++ ){
+            if(Mapa.inicioSimulacion.plusMinutes(5*k).compareTo(Mapa.pedidos.get(i).getFechaHoraCreacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) > 0) {
+                pedidos.add(Mapa.pedidos.get(i));
+            }
+        }
+
         // Mensaje
-        if (Mapa.pedidos.size() == 0) {
+        if (pedidos.size() == 0) {
             System.out.println("No hay pedidos que asignar");
             return;
         }
@@ -34,15 +42,15 @@ public class ABC {
         int contador = 0;
         // Etapa: Generación de la Población Inicial
         while (true) {
-            int i = generarNumeroEnteroAleatorio(Mapa.pedidos.size());
+            int i = generarNumeroEnteroAleatorio(pedidos.size());
             // En caso el pedido escogido al azar no esté asignado...
-            if (Mapa.pedidos.get(i).getEstado() == EstadoPedido.NO_ASIGNADO) {
-                boolean estado = asignarPedidoPoblacionInicial(Mapa.pedidos.get(i));
+            if (pedidos.get(i).getEstado() == EstadoPedido.NO_ASIGNADO) {
+                boolean estado = asignarPedidoPoblacionInicial(pedidos.get(i));
                 if (!estado) {
                     break;
                 }
                 contador++;
-                if (contador == Mapa.pedidos.size()) {
+                if (contador == pedidos.size()) {
                     break;
                 }
             }

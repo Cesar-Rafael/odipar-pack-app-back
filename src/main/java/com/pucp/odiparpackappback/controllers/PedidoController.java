@@ -71,7 +71,7 @@ public class PedidoController {
         Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosDiaDia();
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 1);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 1, 1);
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
@@ -99,7 +99,7 @@ public class PedidoController {
 
     boolean ejecutarABCDD2() {
         ABC abc = new ABC();
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 1);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 1, 1);
         System.out.println("¡Rutas actualizadas!");
         return true;
     }
@@ -117,7 +117,7 @@ public class PedidoController {
         Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
         Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 0, k);
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
@@ -137,15 +137,15 @@ public class PedidoController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                ejecutarABCS2();
+                ejecutarABCS2(k);
             }
-        }, 300000/k, 300000/k);
+        }, 300000, 300000);
         return true;
     }
 
-    boolean ejecutarABCS2() {
+    boolean ejecutarABCS2(int k) {
         ABC abc = new ABC();
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
+        abc.algoritmoAbejasVPRTW(10, 2, 2, 0, k);
         System.out.println("¡Rutas actualizadas!");
         return true;
     }
