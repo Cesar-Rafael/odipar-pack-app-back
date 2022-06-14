@@ -104,16 +104,24 @@ public class ABC {
                 list.add(horaLlegada.atZone(zoneId).toEpochSecond());
                 horasLlegada.add(horaLlegada);
             }
-            if(rutaRegreso.startsWith("[")) rutaAux.setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso.replace('[', ' '));
-            else rutaAux.setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']');
-
+            Mapa.rutas.get(rm).setHorasDeLlegada(list);
+            if(rutaRegreso.startsWith("[")) {
+                rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso.replace('[', ' ');
+            }
+            else {
+                rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']';
+                Mapa.rutas.get(rm).setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']');
+            }
+            rutaAux.setSeguimiento(rutaRegreso);
+            Mapa.rutas.get(rm).setSeguimiento(rutaRegreso);
             StringBuilder listString = new StringBuilder();
             for (int i = 0; i < list.size(); i++) {
                 listString.append(list.get(i));
                 if (i != list.size() - 1) listString.append(",");
             }
             rutaAux.setArrayHorasLlegada(listString.toString());
-
+            ArrayList<TramoModel> tramos = Mapa.listarTramos(rutaRegreso);
+            Mapa.rutas.get(rm).setTramos(tramos);
             rutasAux.add(rutaAux);
         }
         Mapa.cargarRutas(rutasAux);
