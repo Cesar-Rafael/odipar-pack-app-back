@@ -6,6 +6,7 @@ import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -56,9 +57,10 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/ABCDD/")
-    boolean ejecutarABCDiaDia() {
+    @GetMapping("/ABCDD")
+    boolean ejecutarABCDiaDia(@RequestBody LocalDateTime inicioSimulacionAux) {
         ABC abc = new ABC();
+        Mapa.inicioSimulacion = inicioSimulacionAux;    // La fecha actual
         // Lectura desde BD
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
@@ -90,7 +92,6 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/ABC2/")
     boolean ejecutarABCDD2() {
         ABC abc = new ABC();
         abc.algoritmoAbejasVPRTW(10, 2, 2, 1);
@@ -98,15 +99,15 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/ABCS/")
-    boolean ejecutarABCSimulacion() {
+    @GetMapping("/ABCS")
+    boolean ejecutarABCSimulacion(@RequestBody LocalDateTime inicioSimulacionAux, @RequestBody int k) {
         ABC abc = new ABC();
         // Lectura de Datos
         Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
         Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         // Rango de Simulación
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(0);
+        Mapa.inicioSimulacion = inicioSimulacionAux;
         Mapa.finSimulacion = Mapa.finSimulacion.minusHours(0);
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
@@ -131,7 +132,7 @@ public class PedidoController {
             public void run() {
                 ejecutarABCS2();
             }
-        }, 300000, 300000);
+        }, 300000/k, 300000/k);
         return true;
     }
 
