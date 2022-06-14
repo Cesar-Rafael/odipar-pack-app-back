@@ -335,4 +335,15 @@ public class YenTopKShortestPathsAlg {
         Collections.sort(rutas);
         return rutas;
     }
+
+    public static ArrayList<Path> getShortestPathsReturn(int ubigeoInicio) {
+        setSourceVertex(graph.getVertex(ubigeoInicio));
+        ArrayList<Path> rutas = new ArrayList<>();
+
+        for (int i = 0; i < Mapa.oficinasPrincipales.size(); i++) {
+            setTargetVertex(graph.getVertex(Mapa.oficinasPrincipales.get(i).getUbigeo()));
+            rutas.add(YenTopKShortestPathsAlg.getShortestPath(graph.getVertex(ubigeoInicio),graph.getVertex(Mapa.oficinasPrincipales.get(i).getUbigeo()) ));
+        }
+        return rutas;
+    }
 }

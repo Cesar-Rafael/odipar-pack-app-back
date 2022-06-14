@@ -4,6 +4,7 @@ import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
+import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.DijkstraShortestPathAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 
@@ -76,14 +77,43 @@ public class ABC {
 
             ArrayList<Long> list = Mapa.rutas.get(rm).getHorasDeLlegada();
             System.out.println(list);
+            //regreso a oficina
+            List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size()-1).getIdCiudadJ());
+            int ganador = 1;
+            for(int p = 0; p < shortestPath.size(); p ++){
+                if(shortestPath.get(p).getWeight()<shortestPath.get(ganador).getWeight()) ganador = p;
+            }
+            shortestPath.get(ganador).getVertexList().remove(0).toString();
+            String rutaRegreso = shortestPath.get(ganador).getVertexList().toString();
+            System.out.println("regreso");
+            System.out.println(rutaRegreso);
+            //new Ruta(seguimiento, tramos, horasLlegadaLong);
+            List<BaseVertex> oficinas = shortestPath.get(ganador).getVertexList();
+            ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
+            ZoneId zoneId = ZoneId.systemDefault();
+            for (int i = 0; i < oficinas.size(); i++) {
+                double tiempoViaje;
+                if(i!=0) tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
+                else tiempoViaje = findTiempoViaje(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size()-1).getIdCiudadJ(), oficinas.get(i).getId());
+                int horas = (int) Math.floor(tiempoViaje);
+                int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
+                LocalDateTime horaLlegada;
+                horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+
+                horaLlegada = horaLlegada.plusMinutes(minutos);
+                list.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                horasLlegada.add(horaLlegada);
+            }
+            if(rutaRegreso.startsWith("[")) rutaAux.setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso.replace('[', ' '));
+            else rutaAux.setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']');
 
             StringBuilder listString = new StringBuilder();
             for (int i = 0; i < list.size(); i++) {
                 listString.append(list.get(i));
                 if (i != list.size() - 1) listString.append(",");
             }
-
             rutaAux.setArrayHorasLlegada(listString.toString());
+
             rutasAux.add(rutaAux);
         }
         Mapa.cargarRutas(rutasAux);
