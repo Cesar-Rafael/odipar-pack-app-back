@@ -4,6 +4,7 @@ import com.pucp.odiparpackappback.Repositories.PedidoRepository;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -57,10 +58,14 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/ABCDD")
-    boolean ejecutarABCDiaDia(@RequestBody LocalDateTime inicioSimulacionAux) {
+    @PostMapping("/ABCDD")
+    boolean ejecutarABCDiaDia(@RequestParam String inicioSimulacionAux) {
         ABC abc = new ABC();
-        Mapa.inicioSimulacion = inicioSimulacionAux;    // La fecha actual
+        // Rango de Simulación
+        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux);
+        Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
+        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
         // Lectura desde BD
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
@@ -99,16 +104,18 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/ABCS")
-    boolean ejecutarABCSimulacion(@RequestBody LocalDateTime inicioSimulacionAux, @RequestBody int k) {
+    @PostMapping("/ABCS")
+    boolean ejecutarABCSimulacion(@RequestParam String inicioSimulacionAux, @RequestParam int k) {
         ABC abc = new ABC();
         // Lectura de Datos
         Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
         Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         // Rango de Simulación
-        Mapa.inicioSimulacion = inicioSimulacionAux;
-        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(0);
+        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux);
+        Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
+        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 2, 2, 0);
         // Reporte Interno
