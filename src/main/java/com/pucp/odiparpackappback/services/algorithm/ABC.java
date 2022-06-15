@@ -154,7 +154,7 @@ public class ABC {
             } else {
                 double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                 int horas = (int) Math.floor(tiempoViaje);
-                int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
+                int minutos = (int) Math.ceil((tiempoViaje - 1.0 * horas) * 60);
                 LocalDateTime horaLlegada = horasLlegada.get(i - 1);
 
                 if (i == 1) {
@@ -163,12 +163,8 @@ public class ABC {
                     horaLlegada = horaLlegada.plusHours(horas + 1);
                 }
 
-                if (horas == 0) {
-                    System.out.println("Horas: " + horas);
-                    System.out.println("Minutos: " + minutos);
-                }
-
                 horaLlegada = horaLlegada.plusMinutes(minutos);
+
                 horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
                 horasLlegada.add(horaLlegada);
             }
@@ -228,7 +224,7 @@ public class ABC {
             } else {
                 double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                 int horas = (int) Math.floor(tiempoViaje);
-                int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
+                int minutos = (int) Math.ceil((tiempoViaje - 1.0 * horas) * 60);
                 LocalDateTime horaLlegada = horasLlegada.get(i - 1);
 
                 if (i == 1) {
