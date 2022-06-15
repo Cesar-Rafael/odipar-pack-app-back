@@ -1,6 +1,7 @@
 package com.pucp.odiparpackappback.controllers;
 
 import com.pucp.odiparpackappback.Repositories.PedidoRepository;
+import com.pucp.odiparpackappback.dto.Simulation;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
@@ -8,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @RestController
@@ -71,7 +73,7 @@ public class PedidoController {
         Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosDiaDia();
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 1, 1);
+        abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
@@ -99,25 +101,35 @@ public class PedidoController {
 
     boolean ejecutarABCDD2() {
         ABC abc = new ABC();
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 1, 1);
+        abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
         System.out.println("¡Rutas actualizadas!");
         return true;
     }
 
     @PostMapping("/ABCS")
-    boolean ejecutarABCSimulacion(@RequestParam String inicioSimulacionAux, @RequestParam int k) {
+    boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
         // Lectura de Datos
-        Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
-        Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
-        Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
+        //Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
+        //Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
+        //Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
+        Mapa.cargarOficinasDiaDia();
+        Mapa.cargarTramosDiaDia();
+        Mapa.cargarVehiculosDiaDia();
+
         // Rango de Simulación
-        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux);
+        Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
-        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
+        //Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
+        //Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
+
+        // Carga de Pedidos y Bloqueos
+        Mapa.pedidos = simulation.pedidos;
+
+        // Bloqueos de la BD
+
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 0, k);
+        abc.algoritmoAbejasVPRTW(10, 5, 5, 0, simulation.velocidad);
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
@@ -137,7 +149,7 @@ public class PedidoController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                ejecutarABCS2(k);
+                ejecutarABCS2(simulation.velocidad);
             }
         }, 300000, 300000);
         return true;
@@ -145,7 +157,7 @@ public class PedidoController {
 
     boolean ejecutarABCS2(int k) {
         ABC abc = new ABC();
-        abc.algoritmoAbejasVPRTW(10, 2, 2, 0, k);
+        abc.algoritmoAbejasVPRTW(10, 5, 5, 0, k);
         System.out.println("¡Rutas actualizadas!");
         return true;
     }

@@ -17,20 +17,29 @@ import java.util.Random;
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion, int k) {
-        if (opcion == 0){
+
+        ArrayList<PedidoModel> pedidos = new ArrayList<>();
+
+        if (opcion == 0) {
             // En la simulación se lee los Pedidos desde el Frontend
-            Mapa.cargarPedidosSimulacion("src/main/resources/static/pedido_model.csv", obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
-        }
-        else{
+            // Mapa.cargarPedidosSimulacion("src/main/resources/static/pedido_model.csv", obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
+//            ZoneId zoneId = ZoneId.systemDefault();
+//            for (int i = 0; i < Mapa.pedidos.size(); i++) {
+//                if (Mapa.inicioSimulacion.plusMinutes(5 * k).compareTo(Mapa.pedidos.get(i).getFechaHoraCreacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) > 0) {
+//                    pedidos.add(Mapa.pedidos.get(i));
+//                }
+//            }
+            Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
+            Date fechaFin = obtenerFecha(Mapa.finSimulacion);
+            for (PedidoModel p : Mapa.pedidos) {
+                if (fechaInicio.compareTo(p.getFechaHoraCreacion()) <= 0 && p.getFechaHoraCreacion().compareTo(fechaFin) <= 0) {
+                    pedidos.add(p);
+                }
+            }
+        } else {
             // En el día a día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
-        }
-        ZoneId zoneId = ZoneId.systemDefault();
-        ArrayList<PedidoModel> pedidos = new ArrayList<>();
-        for(int i = 0; i < Mapa.pedidos.size(); i++ ){
-            if(Mapa.inicioSimulacion.plusMinutes(5*k).compareTo(Mapa.pedidos.get(i).getFechaHoraCreacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) > 0) {
-                pedidos.add(Mapa.pedidos.get(i));
-            }
+            pedidos = Mapa.pedidos;
         }
 
         // Mensaje
@@ -146,15 +155,18 @@ public class ABC {
                 double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                 int horas = (int) Math.floor(tiempoViaje);
                 int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
-                LocalDateTime horaLlegada;
-                horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                LocalDateTime horaLlegada = horasLlegada.get(i - 1);
 
-                /*
                 if (i == 1) {
-                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                    horaLlegada = horaLlegada.plusHours(horas);
                 } else {
-                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas + 1);
-                }*/
+                    horaLlegada = horaLlegada.plusHours(horas + 1);
+                }
+
+                if (horas == 0) {
+                    System.out.println("Horas: " + horas);
+                    System.out.println("Minutos: " + minutos);
+                }
 
                 horaLlegada = horaLlegada.plusMinutes(minutos);
                 horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
@@ -167,10 +179,11 @@ public class ABC {
         for (int i = 0; i < horasLlegada.size() - 1; i++) {
             int oficinaI = oficinas.get(i).getId();
             int oficinaJ = oficinas.get(i + 1).getId();
-            List<BloqueoModel> bloqueos = new ArrayList<>();
-            if(opcion == 0){
-                bloqueos = Mapa.obtenerTramosBloqueadosSimulacion(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)), "src/main/resources/static/bloqueo_model.csv");
-            }else{
+            List<BloqueoModel> bloqueos;
+            if (opcion == 0) {
+                //bloqueos = Mapa.obtenerTramosBloqueadosSimulacion(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)), "src/main/resources/static/bloqueo_model.csv");
+                bloqueos = Mapa.obtenerTramosBloqueadosDiaDia(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
+            } else {
                 bloqueos = Mapa.obtenerTramosBloqueadosDiaDia(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i)), obtenerFecha(horasLlegada.get(i + 1)));
             }
             //List<BloqueoModel> bloqueos = Mapa.obtenerTramosBloqueados(oficinaI, oficinaJ, obtenerFecha(horasLlegada.get(i).minusHours(6)), obtenerFecha(horasLlegada.get(i + 1).minusHours(6)));
@@ -180,8 +193,6 @@ public class ABC {
                 YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
                 Mapa.bloqueos.add(tramoBloqueado);
                 rutaEncontrada = kShortestPathRoutingRuta(rutaOriginal, k, tramoBloqueado, opcion);
-                //YenTopKShortestPathsAlg.graph.deleteEdge(tramoBloqueado);
-                //YenTopKShortestPathsAlg.graph.recoverDeletedEdge(tramoBloqueado);
             }
         }
 
@@ -206,29 +217,29 @@ public class ABC {
         ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
 
         List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
-        //ArrayList<Long> horasLlegada = new ArrayList<>();
+        ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
         ArrayList<Long> horasLlegadaLong = new ArrayList<>();
         ZoneId zoneId = ZoneId.systemDefault();
 
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
                 horasLlegadaLong.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
+                horasLlegada.add(Mapa.inicioSimulacion);
             } else {
                 double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                 int horas = (int) Math.floor(tiempoViaje);
                 int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
-                LocalDateTime horaLlegada;
-                horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                LocalDateTime horaLlegada = horasLlegada.get(i - 1);
 
-                /*
                 if (i == 1) {
-                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                    horaLlegada = horaLlegada.plusHours(horas);
                 } else {
-                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas + 1);
-                }*/
+                    horaLlegada = horaLlegada.plusHours(horas + 1);
+                }
 
                 horaLlegada = horaLlegada.plusMinutes(minutos);
                 horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                horasLlegada.add(horaLlegada);
             }
         }
 
@@ -339,9 +350,7 @@ public class ABC {
     }
 
     Date obtenerFecha(LocalDateTime fecha) {
-        //System.out.println(fecha);
         Date nuevaFecha = Date.from(fecha.atZone(ZoneId.systemDefault()).toInstant());
-        //System.out.println(nuevaFecha);
         return nuevaFecha;
     }
 }

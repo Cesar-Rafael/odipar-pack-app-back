@@ -5,9 +5,6 @@ import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -31,27 +28,15 @@ public class Mapa {
 
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
     public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);
-
-    public static double getFitnessSolucion() {
-        return fitnessSolucion;
-    }
-
-    public static void setFitnessSolucion(double fitnessSolucion) {
-        Mapa.fitnessSolucion = fitnessSolucion;
-    }
-
     public static double fitnessSolucion = 0;
-
     public static ArrayList<Pair<Integer, Integer>> bloqueos = new ArrayList<>();
-
+    public static ArrayList<BloqueoModel> bloqueosSimulacion = new ArrayList<>();
     private static PedidoRepository pedidoRepository;
     private static OficinaRepository oficinaRepository;
     private static TramoRepository tramoRepository;
     private static UnidadTransporteRepository unidadTransporteRepository;
     private static RutaRepository rutaRepository;
-
     private static BloqueoRepository bloqueoRepository;
-
     public Mapa(PedidoRepository pedidoRepository, OficinaRepository oficinaRepository, TramoRepository tramoRepository, UnidadTransporteRepository unidadTransporteRepository, BloqueoRepository bloqueoRepository, RutaRepository rutaRepository) {
         Mapa.pedidoRepository = pedidoRepository;
         Mapa.oficinaRepository = oficinaRepository;
@@ -61,12 +46,20 @@ public class Mapa {
         Mapa.rutaRepository = rutaRepository;
     }
 
+    public static double getFitnessSolucion() {
+        return fitnessSolucion;
+    }
+
+    public static void setFitnessSolucion(double fitnessSolucion) {
+        Mapa.fitnessSolucion = fitnessSolucion;
+    }
+
     public static void cargarOficinasDiaDia() {
         oficinas = (ArrayList<OficinaModel>) oficinaRepository.findAll();
         ArrayList<OficinaModel> oficinasPrincipalesAux = new ArrayList<>();
         oficinasPrincipalesAux = (ArrayList<OficinaModel>) oficinaRepository.findAll();
-        for(int i = 0; i < oficinasPrincipalesAux.size(); i++){
-            if(oficinasPrincipalesAux.get(i).getEsPrincipal()){
+        for (int i = 0; i < oficinasPrincipalesAux.size(); i++) {
+            if (oficinasPrincipalesAux.get(i).getEsPrincipal()) {
                 oficinasPrincipales.add(oficinasPrincipalesAux.get(i));
             }
         }
@@ -90,16 +83,11 @@ public class Mapa {
                 String departamento = parts[1];
 
                 boolean esPrincipal;
-                if (Integer.parseInt(parts[2]) == 0) {
-                    esPrincipal = false;
-                }
-                else{
-                    esPrincipal = true;
-                }
+                esPrincipal = Integer.parseInt(parts[2]) != 0;
                 parts[3] = parts[3].replace(',', '.');
-                parts[3] = parts[3].replace("\"","");
+                parts[3] = parts[3].replace("\"", "");
                 parts[4] = parts[4].replace(',', '.');
-                parts[4] = parts[4].replace("\"","");
+                parts[4] = parts[4].replace("\"", "");
                 double latitud = Double.parseDouble(parts[3]);
                 double longitud = Double.parseDouble(parts[4]);
                 String provincia = parts[5];
@@ -109,8 +97,8 @@ public class Mapa {
                 oficinas.add(oficina);
             }
             // Oficinas Principales
-            for(int i = 0; i < oficinas.size(); i++){
-                if(oficinas.get(i).getEsPrincipal()){
+            for (int i = 0; i < oficinas.size(); i++) {
+                if (oficinas.get(i).getEsPrincipal()) {
                     oficinasPrincipales.add(oficinas.get(i));
                 }
             }
@@ -143,12 +131,7 @@ public class Mapa {
                 // Obtengo atributos
                 Long id = Long.valueOf(parts[0]);
                 boolean bloqueado;
-                if(Integer.parseInt(parts[1]) == 0){
-                    bloqueado = false;
-                }
-                else{
-                    bloqueado = true;
-                }
+                bloqueado = Integer.parseInt(parts[1]) != 0;
                 int idCiudadI = Integer.parseInt(parts[2]);
                 int idCiudadJ = Integer.parseInt(parts[3]);
                 parts[4] = parts[4].replace(',', '.');
@@ -217,14 +200,16 @@ public class Mapa {
     public static void cargarTramosDiaDia() {
         tramos = (ArrayList<TramoModel>) tramoRepository.findAll();
     }
+
     public static void cargarVehiculosDiaDia() {
         vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
     }
-    public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin){
+
+    public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin) {
         pedidos = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
     }
 
-    public static void cargarPedidosSimulacion(String rutaArchivo, Date fechaInicio, Date fechaFin){
+    public static void cargarPedidosSimulacion(String rutaArchivo, Date fechaInicio, Date fechaFin) {
         File archivoPedidos;
         FileReader fr = null;
         BufferedReader br;
@@ -247,7 +232,7 @@ public class Mapa {
                 int idCiudadDestino = Integer.parseInt(parts[4]);
                 long rucCliente = Long.parseLong(parts[5]);
                 //Agrega Pedido
-                if(fechaHoraCreacion.after(fechaInicio) && fechaHoraCreacion.before(fechaFin)){
+                if (fechaHoraCreacion.after(fechaInicio) && fechaHoraCreacion.before(fechaFin)) {
                     PedidoModel pedido = new PedidoModel(id, rucCliente, cantPaquetes, idCiudadDestino, ciudadDestino, fechaHoraCreacion);
                     pedidos.add(pedido);
                 }
@@ -291,7 +276,7 @@ public class Mapa {
                 int ubigeoFin = Integer.parseInt(parts[3]);
                 int ubigeoInicio = Integer.parseInt(parts[4]);
                 //Agrega Bloqueo
-                if(fechaInicioAux.after(fechaInicio) && fechaFinAux.before(fechaFin) && (((oficinaI == ubigeoInicio) && (oficinaJ == ubigeoFin)) || ((oficinaI == ubigeoFin) && (oficinaJ == ubigeoInicio)))){
+                if (fechaInicioAux.after(fechaInicio) && fechaFinAux.before(fechaFin) && (((oficinaI == ubigeoInicio) && (oficinaJ == ubigeoFin)) || ((oficinaI == ubigeoFin) && (oficinaJ == ubigeoInicio)))) {
                     BloqueoModel bloqueo = new BloqueoModel(id, ubigeoInicio, ubigeoFin, fechaInicioAux, fechaFinAux);
                     listaBloqueos.add(bloqueo);
                 }
@@ -310,7 +295,7 @@ public class Mapa {
         return listaBloqueos;
     }
 
-    public static ArrayList<TramoModel> listarTramos(String tramos){
+    public static ArrayList<TramoModel> listarTramos(String tramos) {
         return DatosUtil.listarTramos(tramos);
     }
 
@@ -318,7 +303,7 @@ public class Mapa {
         dicTramos = DatosUtil.crearMapa();
     }
 
-    public static List<RutaModel> cargarRutas(ArrayList<RutaModel> rutasAux){
+    public static List<RutaModel> cargarRutas(ArrayList<RutaModel> rutasAux) {
         return (List<RutaModel>) rutaRepository.saveAll(rutasAux);
     }
 }
