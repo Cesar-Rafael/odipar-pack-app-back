@@ -25,7 +25,6 @@ public class ABC {
             // En el día a día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
         }
-        ZoneId zoneId = ZoneId.systemDefault();
         ArrayList<PedidoModel> pedidos = new ArrayList<>();
         for(int i = 0; i < Mapa.pedidos.size(); i++ ){
             if(Mapa.inicioSimulacion.plusMinutes(5*k).compareTo(Mapa.pedidos.get(i).getFechaHoraCreacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) > 0) {

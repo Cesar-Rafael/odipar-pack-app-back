@@ -58,6 +58,14 @@ public class PedidoController {
         return true;
     }
 
+    @PostMapping("/PararSimulacion/")
+    boolean PararSimulacion() {
+        Mapa.setFlag(false);
+        Mapa.pedidos.clear();
+        Mapa.rutas.clear();
+        return true;
+    }
+
     @PostMapping("/ABCDD")
     boolean ejecutarABCDiaDia(@RequestParam String inicioSimulacionAux) {
         ABC abc = new ABC();
@@ -106,6 +114,7 @@ public class PedidoController {
 
     @PostMapping("/ABCS")
     boolean ejecutarABCSimulacion(@RequestParam String inicioSimulacionAux, @RequestParam int k) {
+        Mapa.setFlag(true);
         ABC abc = new ABC();
         // Lectura de Datos
         Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
@@ -137,7 +146,7 @@ public class PedidoController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                ejecutarABCS2(k);
+                if(Mapa.isFlag())ejecutarABCS2(k);
             }
         }, 300000, 300000);
         return true;
