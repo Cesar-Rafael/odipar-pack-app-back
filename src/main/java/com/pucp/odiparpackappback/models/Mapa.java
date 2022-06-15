@@ -26,6 +26,14 @@ public class Mapa {
     public static boolean flag = true;
     public static double k = 0.0;
 
+    public static boolean isFlag() {
+        return flag;
+    }
+
+    public static void setFlag(boolean flag) {
+        Mapa.flag = flag;
+    }
+
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
     public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);
     public static double fitnessSolucion = 0;
