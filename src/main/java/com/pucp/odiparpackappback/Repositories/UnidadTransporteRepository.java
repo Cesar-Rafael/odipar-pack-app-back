@@ -5,7 +5,9 @@ import com.pucp.odiparpackappback.models.UnidadTransporteModel;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 @Repository
 public interface UnidadTransporteRepository extends CrudRepository<UnidadTransporteModel, Long> {
-    UnidadTransporteModel findUnidadTransporteModelByEstado_Disponible();
+    ArrayList<UnidadTransporteModel> findUnidadTransporteModelByEstadoEquals(EstadoUnidadTransporte etiqueta);
 }

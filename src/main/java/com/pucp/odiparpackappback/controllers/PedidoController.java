@@ -71,7 +71,7 @@ public class PedidoController {
         // Lectura desde BD
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
-        Mapa.cargarVehiculosDiaDia();
+        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, 1);
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
         // Reporte Interno
@@ -113,13 +113,14 @@ public class PedidoController {
         //Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
         //Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
         //Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
-        Mapa.cargarOficinasDiaDia();
-        Mapa.cargarTramosDiaDia();
-        Mapa.cargarVehiculosDiaDia();
 
         // Rango de Simulación
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
+
+        Mapa.cargarOficinasDiaDia();
+        Mapa.cargarTramosDiaDia();
+        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, simulation.velocidad);
         //Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
         //Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
 
@@ -157,6 +158,7 @@ public class PedidoController {
 
     boolean ejecutarABCS2(int k) {
         ABC abc = new ABC();
+        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, k);
         abc.algoritmoAbejasVPRTW(10, 5, 5, 0, k);
         System.out.println("¡Rutas actualizadas!");
         return true;

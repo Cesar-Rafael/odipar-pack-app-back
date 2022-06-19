@@ -94,7 +94,7 @@ public class ABC {
 
             ArrayList<Long> list = Mapa.rutas.get(rm).getHorasDeLlegada();
             //regreso vehiculo ======================================================================
-            System.out.println(list);
+            //System.out.println(list);
             //regreso a oficina
             List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size()-1).getIdCiudadJ());
             int ganador = 1;
@@ -103,8 +103,8 @@ public class ABC {
             }
             shortestPath.get(ganador).getVertexList().remove(0).toString();
             String rutaRegreso = shortestPath.get(ganador).getVertexList().toString();
-            System.out.println("regreso");
-            System.out.println(rutaRegreso);
+            //System.out.println("regreso");
+            //System.out.println(rutaRegreso);
             //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
             List<BaseVertex> oficinas = shortestPath.get(ganador).getVertexList();
             ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
@@ -279,14 +279,14 @@ public class ABC {
 
         double fitness = rutasPath.get(k).getWeight();
         // Asignación Vehículo
-        List<PedidoParcialModel> auxPedidos = new ArrayList<>();
-        for(int i = 0; i < Mapa.rutas.size(); i++ ){
-            for(int j = 0; j < Mapa.rutas.get(i).getPedidosParciales().size(); j++){
-                auxPedidos = Mapa.rutas.get(i).getPedidosParciales();
-            }
-        }
-        ArrayList<UnidadTransporteModel> auxVehiculos = actualizarMantenimiento(auxPedidos);
+        //List<PedidoParcialModel> auxPedidos = new ArrayList<>();
+        //for(int i = 0; i < Mapa.rutas.size(); i++ ){
+        //    for(int j = 0; j < Mapa.rutas.get(i).getPedidosParciales().size(); j++){
+        //        auxPedidos = Mapa.rutas.get(i).getPedidosParciales();
+        //    }
+        //}
 
+        //ArrayList<UnidadTransporteModel> auxVehiculos = actualizarMantenimiento(auxPedidos);
         for (int i = 0; i < Mapa.vehiculos.size(); i++) {
             // El vehículo está disponible
             if (Mapa.vehiculos.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE) {
@@ -336,13 +336,13 @@ public class ABC {
                 }
             }
         }
-        for(int a = 0; a < Mapa.vehiculos.size(); a++){
-            for(int b = 0; b < auxVehiculos.size(); b++){
-                if(Mapa.vehiculos.get(a).getId() == auxVehiculos.get(b).getId()){
-                    auxVehiculos.get(b).setEstado(EstadoUnidadTransporte.DISPONIBLE);
-                }
-            }
-        }
+        //for(int a = 0; a < Mapa.vehiculos.size(); a++){
+        //    for(int b = 0; b < auxVehiculos.size(); b++){
+        //        if(Mapa.vehiculos.get(a).getId() == auxVehiculos.get(b).getId()){
+        //            auxVehiculos.get(b).setEstado(EstadoUnidadTransporte.DISPONIBLE);
+        //        }
+        //    }
+        //}
         // No pudo ser asignado a ningún vehículo
         return false;
     }
@@ -407,11 +407,11 @@ public class ABC {
         ArrayList<UnidadTransporteModel> auxArrayVehiculos = new ArrayList<>();
         for(int i = 0; i < auxPedidos.size(); i++){
             for(int j = 0; j < Mapa.vehiculos.size(); j++){
-                if (Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.DISPONIBLE){
+                if (Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.DISPONIBLE || Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.EN_TRANSITO){
                     Date d = new Date(auxPedidos.get(i).getFechaHoraEntrega() * 1000);
                     LocalDateTime auxd = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
                     LocalDateTime auxd2 = Mapa.vehiculos.get(j).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                    if(auxd.isBefore(auxd2.plusDays(1))){
+                    if(auxd.isBefore(auxd2.plusDays(1))) {
                         Mapa.vehiculos.get(j).setEstado(EstadoUnidadTransporte.EN_MANTENIMIENTO);
                         auxArrayVehiculos.add(Mapa.vehiculos.get(j));
                     }

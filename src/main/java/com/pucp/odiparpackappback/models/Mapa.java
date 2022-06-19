@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -209,9 +210,18 @@ public class Mapa {
         tramos = (ArrayList<TramoModel>) tramoRepository.findAll();
     }
 
-    public static void cargarVehiculosDiaDia() {
-        vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
-
+    public static void cargarVehiculosDiaDia(LocalDateTime inicioSimulacion, int velocidad) {
+        ArrayList<UnidadTransporteModel> aux = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
+        ArrayList<UnidadTransporteModel> retorno = new ArrayList<>();
+        for(int i = 0; i < aux.size(); i++){
+            System.out.println(aux.get(i).getId());
+            System.out.println(aux.get(i).getFechaMantenimiento());
+            System.out.println(aux.get(i).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            if(!aux.get(i).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusDays(1).isBefore(inicioSimulacion.plusDays((long) velocidad))){
+                retorno.add(aux.get(i));
+            }
+        }
+        vehiculos = retorno;
     }
 
     public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin) {

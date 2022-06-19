@@ -1,6 +1,7 @@
 package com.pucp.odiparpackappback.controllers;
 
 import com.pucp.odiparpackappback.Repositories.UnidadTransporteRepository;
+import com.pucp.odiparpackappback.models.EstadoUnidadTransporte;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.UnidadTransporteModel;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,6 @@ class UnidadTransporteController {
     }
 
     @GetMapping("/UnidadTransporte/codigo")
-    @ResponseBody
     List<UnidadTransporteModel> listarUnidadesTransportexCodigo(@RequestParam(required = false) String codigo) {
         List<UnidadTransporteModel> unidadesTransporteAux = (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
         List<UnidadTransporteModel> unidadesTransporte = new ArrayList<>();
@@ -94,6 +94,6 @@ class UnidadTransporteController {
     }
 
     void listarUnidadesTransporteMantenimiento() {
-        Mapa.vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
+        Mapa.vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findUnidadTransporteModelByEstadoEquals(EstadoUnidadTransporte.DISPONIBLE);
     }
 }
