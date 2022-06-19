@@ -161,4 +161,12 @@ public class PedidoController {
         System.out.println("¡Rutas actualizadas!");
         return true;
     }
+
+    @PostMapping("/PararSimulacion")
+    boolean pararSimulacion(){
+        Mapa.setFlag(false);
+        Mapa.pedidos.clear();
+        Mapa.rutas.clear();
+        return true;
+    }
 }

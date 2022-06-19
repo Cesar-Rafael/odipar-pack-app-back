@@ -8,5 +8,6 @@ public class OdiparPackAppBackApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(OdiparPackAppBackApplication.class, args);
+
     }
 }

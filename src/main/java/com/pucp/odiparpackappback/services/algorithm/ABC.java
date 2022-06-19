@@ -4,6 +4,7 @@ import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
+import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.DijkstraShortestPathAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 
@@ -23,7 +24,6 @@ public class ABC {
         if (opcion == 0) {
             // En la simulación se lee los Pedidos desde el Frontend
             // Mapa.cargarPedidosSimulacion("src/main/resources/static/pedido_model.csv", obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
-//            ZoneId zoneId = ZoneId.systemDefault();
 //            for (int i = 0; i < Mapa.pedidos.size(); i++) {
 //                if (Mapa.inicioSimulacion.plusMinutes(5 * k).compareTo(Mapa.pedidos.get(i).getFechaHoraCreacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) > 0) {
 //                    pedidos.add(Mapa.pedidos.get(i));
@@ -93,14 +93,52 @@ public class ABC {
             rutaAux.setIdUnidadTransporte(Mapa.rutas.get(rm).getIdUnidadTransporte());
 
             ArrayList<Long> list = Mapa.rutas.get(rm).getHorasDeLlegada();
-
+            //regreso vehiculo ======================================================================
+            System.out.println(list);
+            //regreso a oficina
+            List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size()-1).getIdCiudadJ());
+            int ganador = 1;
+            for(int p = 0; p < shortestPath.size(); p ++){
+                if(shortestPath.get(p).getWeight()<shortestPath.get(ganador).getWeight()) ganador = p;
+            }
+            shortestPath.get(ganador).getVertexList().remove(0).toString();
+            String rutaRegreso = shortestPath.get(ganador).getVertexList().toString();
+            System.out.println("regreso");
+            System.out.println(rutaRegreso);
+            //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
+            List<BaseVertex> oficinas = shortestPath.get(ganador).getVertexList();
+            ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
+            ZoneId zoneId = ZoneId.systemDefault();
+            for (int i = 0; i < oficinas.size(); i++) {
+                double tiempoViaje;
+                if(i!=0) tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
+                else tiempoViaje = findTiempoViaje(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size()-1).getIdCiudadJ(), oficinas.get(i).getId());
+                int horas = (int) Math.floor(tiempoViaje);
+                int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
+                LocalDateTime horaLlegada;
+                horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                horaLlegada = horaLlegada.plusMinutes(minutos);
+                list.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                horasLlegada.add(horaLlegada);
+            }
+            Mapa.rutas.get(rm).setHorasDeLlegada(list);
+            if(rutaRegreso.startsWith("[")) {
+                rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso.replace('[', ' ');
+            }
+            else {
+                rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']';
+                Mapa.rutas.get(rm).setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']');
+            }
+            rutaAux.setSeguimiento(rutaRegreso);
+            Mapa.rutas.get(rm).setSeguimiento(rutaRegreso);
             StringBuilder listString = new StringBuilder();
             for (int i = 0; i < list.size(); i++) {
                 listString.append(list.get(i));
                 if (i != list.size() - 1) listString.append(",");
             }
-
             rutaAux.setArrayHorasLlegada(listString.toString());
+            ArrayList<TramoModel> tramos = Mapa.listarTramos(rutaRegreso);
+            Mapa.rutas.get(rm).setTramos(tramos);
             rutasAux.add(rutaAux);
         }
 
