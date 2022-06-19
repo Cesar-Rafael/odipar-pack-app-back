@@ -105,7 +105,7 @@ public class ABC {
             String rutaRegreso = shortestPath.get(ganador).getVertexList().toString();
             System.out.println("regreso");
             System.out.println(rutaRegreso);
-            //new Ruta(seguimiento, tramos, horasLlegadaLong);
+            //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
             List<BaseVertex> oficinas = shortestPath.get(ganador).getVertexList();
             ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
             ZoneId zoneId = ZoneId.systemDefault();
@@ -117,8 +117,6 @@ public class ABC {
                 int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
                 LocalDateTime horaLlegada;
                 horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
-            //vehivulo-regreso=========================================
-
                 horaLlegada = horaLlegada.plusMinutes(minutos);
                 list.add(horaLlegada.atZone(zoneId).toEpochSecond());
                 horasLlegada.add(horaLlegada);
