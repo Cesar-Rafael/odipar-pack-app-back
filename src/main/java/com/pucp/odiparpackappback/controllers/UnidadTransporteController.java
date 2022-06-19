@@ -92,4 +92,8 @@ class UnidadTransporteController {
         }
         return null;
     }
+
+    void listarUnidadesTransporteMantenimiento() {
+        Mapa.vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
+    }
 }

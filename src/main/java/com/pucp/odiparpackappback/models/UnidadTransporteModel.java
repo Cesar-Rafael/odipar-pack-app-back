@@ -1,6 +1,7 @@
 package com.pucp.odiparpackappback.models;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table
@@ -14,6 +15,7 @@ public class UnidadTransporteModel {
     private double abscisa;
     private double ordenada;
     private Long idRuta = Long.valueOf(-1);
+    private Date fechaMantenimiento = null;
 
     public UnidadTransporteModel() {
 
@@ -95,4 +97,12 @@ public class UnidadTransporteModel {
     public void disminuirCapacidad(int cantPaquetes) {
         capacidadDisponible -= cantPaquetes;
     }
+
+    public Date getFechaMantenimiento() {
+        return fechaMantenimiento;
+    }
+    public void setFechaMantenimiento(Date fechaMantenimiento) {
+        this.fechaMantenimiento = fechaMantenimiento;
+    }
+
 }

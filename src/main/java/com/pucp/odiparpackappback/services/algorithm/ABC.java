@@ -241,6 +241,14 @@ public class ABC {
 
         double fitness = rutasPath.get(k).getWeight();
         // Asignación Vehículo
+        List<PedidoParcialModel> auxPedidos = new ArrayList<>();
+        for(int i = 0; i < Mapa.rutas.size(); i++ ){
+            for(int j = 0; j < Mapa.rutas.get(i).getPedidosParciales().size(); j++){
+                auxPedidos = Mapa.rutas.get(i).getPedidosParciales();
+            }
+        }
+        ArrayList<UnidadTransporteModel> auxVehiculos = actualizarMantenimiento(auxPedidos);
+
         for (int i = 0; i < Mapa.vehiculos.size(); i++) {
             // El vehículo está disponible
             if (Mapa.vehiculos.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE) {
@@ -287,6 +295,13 @@ public class ABC {
                     Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
                     Mapa.rutas.add(auxRuta);
                     return kShortestPathRoutingPedido(pedido, 0);
+                }
+            }
+        }
+        for(int a = 0; a < Mapa.vehiculos.size(); a++){
+            for(int b = 0; b < auxVehiculos.size(); b++){
+                if(Mapa.vehiculos.get(a).getId() == auxVehiculos.get(b).getId()){
+                    auxVehiculos.get(b).setEstado(EstadoUnidadTransporte.DISPONIBLE);
                 }
             }
         }
@@ -349,4 +364,23 @@ public class ABC {
         Date nuevaFecha = Date.from(fecha.atZone(ZoneId.systemDefault()).toInstant());
         return nuevaFecha;
     }
+
+    ArrayList<UnidadTransporteModel> actualizarMantenimiento(List<PedidoParcialModel> auxPedidos){
+        ArrayList<UnidadTransporteModel> auxArrayVehiculos = new ArrayList<>();
+        for(int i = 0; i < auxPedidos.size(); i++){
+            for(int j = 0; j < Mapa.vehiculos.size(); j++){
+                if (Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.DISPONIBLE){
+                    Date d = new Date(auxPedidos.get(i).getFechaHoraEntrega() * 1000);
+                    LocalDateTime auxd = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    LocalDateTime auxd2 = Mapa.vehiculos.get(j).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                    if(auxd.isBefore(auxd2.plusDays(1))){
+                        Mapa.vehiculos.get(j).setEstado(EstadoUnidadTransporte.EN_MANTENIMIENTO);
+                        auxArrayVehiculos.add(Mapa.vehiculos.get(j));
+                    }
+                }
+            }
+        }
+        return auxArrayVehiculos;
+    }
 }
+

@@ -211,6 +211,7 @@ public class Mapa {
 
     public static void cargarVehiculosDiaDia() {
         vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
+
     }
 
     public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin) {
