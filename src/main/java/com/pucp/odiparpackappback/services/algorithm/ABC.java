@@ -23,7 +23,6 @@ public class ABC {
         if (opcion == 0) {
             // En la simulación se lee los Pedidos desde el Frontend
             // Mapa.cargarPedidosSimulacion("src/main/resources/static/pedido_model.csv", obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
-//            ZoneId zoneId = ZoneId.systemDefault();
 //            for (int i = 0; i < Mapa.pedidos.size(); i++) {
 //                if (Mapa.inicioSimulacion.plusMinutes(5 * k).compareTo(Mapa.pedidos.get(i).getFechaHoraCreacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) > 0) {
 //                    pedidos.add(Mapa.pedidos.get(i));
