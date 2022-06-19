@@ -214,9 +214,6 @@ public class Mapa {
         ArrayList<UnidadTransporteModel> aux = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
         ArrayList<UnidadTransporteModel> retorno = new ArrayList<>();
         for(int i = 0; i < aux.size(); i++){
-            System.out.println(aux.get(i).getId());
-            System.out.println(aux.get(i).getFechaMantenimiento());
-            System.out.println(aux.get(i).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             if(!aux.get(i).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusDays(1).isBefore(inicioSimulacion.plusDays((long) velocidad))){
                 retorno.add(aux.get(i));
             }

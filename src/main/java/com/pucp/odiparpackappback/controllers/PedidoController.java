@@ -147,10 +147,16 @@ public class PedidoController {
         }
         // Actualización
         Timer timer = new Timer();
+
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                ejecutarABCS2(simulation.velocidad);
+                if(!Mapa.flag){
+                    return;
+                }
+                else{
+                    ejecutarABCS2(simulation.velocidad);
+                }
             }
         }, 300000, 300000);
         return true;
