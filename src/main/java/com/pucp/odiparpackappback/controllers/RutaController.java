@@ -45,6 +45,7 @@ public class RutaController {
     public String listarRutasxIdUT(@PathVariable("id") long id){
         RutaModel aux = rutaRepository.findByIdUnidadTransporte(id);
         return aux.getSeguimiento();
-
     }
+
+
 }

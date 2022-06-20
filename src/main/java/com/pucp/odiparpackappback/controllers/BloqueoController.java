@@ -4,11 +4,13 @@ import com.pucp.odiparpackappback.Repositories.BloqueoRepository;
 import com.pucp.odiparpackappback.models.BloqueoModel;
 import com.pucp.odiparpackappback.models.OficinaModel;
 import com.pucp.odiparpackappback.models.PedidoModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.pucp.odiparpackappback.models.RutaModel;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -32,5 +34,22 @@ public class BloqueoController {
             System.out.println(ex);
         }
         return true;
+    }
+
+    @GetMapping("/ruta/{fechaInicio}/{fechaFin}")
+    @ResponseBody
+    List<BloqueoModel> ListarBloqueosEntreFechas(@PathVariable("fechaInicio") String fechaInicio,@PathVariable("fechaFin") String fechaFin) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date fechaInicioDate = sdf.parse(fechaInicio);
+            Date fechaFinDate = sdf.parse(fechaFin);
+            List<BloqueoModel> bloqueos = bloqueoRepository.findBloqueoModelByFechaInicioAndAndFechaFin(fechaInicioDate, fechaFinDate);
+            if (bloqueos != null) {
+                return bloqueos;
+            }
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
