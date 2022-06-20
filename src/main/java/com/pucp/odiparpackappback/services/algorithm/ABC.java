@@ -17,20 +17,16 @@ import java.util.Random;
 
 public class ABC {
 
-    public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion, int k) {
+    public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion, int velocidad) {
 
         ArrayList<PedidoModel> pedidos = new ArrayList<>();
 
         if (opcion == 0) {
-            // En la simulación se lee los Pedidos desde el Frontend
-            // Mapa.cargarPedidosSimulacion("src/main/resources/static/pedido_model.csv", obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
-//            for (int i = 0; i < Mapa.pedidos.size(); i++) {
-//                if (Mapa.inicioSimulacion.plusMinutes(5 * k).compareTo(Mapa.pedidos.get(i).getFechaHoraCreacion().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) > 0) {
-//                    pedidos.add(Mapa.pedidos.get(i));
-//                }
-//            }
+            LocalDateTime fin = Mapa.inicioSimulacion;
+            fin = fin.plusMinutes(5*velocidad*288);
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
-            Date fechaFin = obtenerFecha(Mapa.finSimulacion);
+
+            Date fechaFin = obtenerFecha(fin);
             for (PedidoModel p : Mapa.pedidos) {
                 if (fechaInicio.compareTo(p.getFechaHoraCreacion()) <= 0 && p.getFechaHoraCreacion().compareTo(fechaFin) <= 0) {
                     pedidos.add(p);
@@ -143,8 +139,7 @@ public class ABC {
         }
 
         Mapa.cargarRutas(rutasAux);
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
-        Mapa.finSimulacion = Mapa.finSimulacion.plusMinutes(90);
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(5*velocidad*288);
     }
 
     public int generarNumeroEnteroAleatorio(int max) {

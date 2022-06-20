@@ -116,7 +116,7 @@ public class PedidoController {
 
         // Rango de Simulación
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
-        Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
+        Mapa.finSimulacion = Mapa.inicioSimulacion.plusDays(7);
 
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
@@ -162,10 +162,10 @@ public class PedidoController {
         return true;
     }
 
-    boolean ejecutarABCS2(int k) {
+    boolean ejecutarABCS2(int velocidad) {
         ABC abc = new ABC();
-        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, k);
-        abc.algoritmoAbejasVPRTW(10, 5, 5, 0, k);
+        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, velocidad);
+        abc.algoritmoAbejasVPRTW(10, 5, 5, 0, velocidad);
         System.out.println("¡Rutas actualizadas!");
         return true;
     }
