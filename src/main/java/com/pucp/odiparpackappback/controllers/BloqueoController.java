@@ -36,7 +36,7 @@ public class BloqueoController {
         return true;
     }
 
-    @GetMapping("/ruta/{fechaInicio}/{fechaFin}")
+    @GetMapping("/bloqueo/{fechaInicio}/{fechaFin}")
     @ResponseBody
     List<BloqueoModel> ListarBloqueosEntreFechas(@PathVariable("fechaInicio") String fechaInicio,@PathVariable("fechaFin") String fechaFin) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
