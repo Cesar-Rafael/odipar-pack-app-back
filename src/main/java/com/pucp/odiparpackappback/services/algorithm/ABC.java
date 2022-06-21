@@ -4,7 +4,6 @@ import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
-import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.DijkstraShortestPathAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 
@@ -23,7 +22,7 @@ public class ABC {
 
         if (opcion == 0) {
             LocalDateTime fin = Mapa.inicioSimulacion;
-            fin = fin.plusMinutes(5*velocidad*288);
+            fin = fin.plusMinutes(5 * velocidad * 288);
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
 
             Date fechaFin = obtenerFecha(fin);
@@ -92,10 +91,10 @@ public class ABC {
             //regreso vehiculo ======================================================================
             //System.out.println(list);
             //regreso a oficina
-            List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size()-1).getIdCiudadJ());
+            List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size() - 1).getIdCiudadJ());
             int ganador = 1;
-            for(int p = 0; p < shortestPath.size(); p ++){
-                if(shortestPath.get(p).getWeight()<shortestPath.get(ganador).getWeight()) ganador = p;
+            for (int p = 0; p < shortestPath.size(); p++) {
+                if (shortestPath.get(p).getWeight() < shortestPath.get(ganador).getWeight()) ganador = p;
             }
             shortestPath.get(ganador).getVertexList().remove(0).toString();
             String rutaRegreso = shortestPath.get(ganador).getVertexList().toString();
@@ -107,8 +106,9 @@ public class ABC {
             ZoneId zoneId = ZoneId.systemDefault();
             for (int i = 0; i < oficinas.size(); i++) {
                 double tiempoViaje;
-                if(i!=0) tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
-                else tiempoViaje = findTiempoViaje(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size()-1).getIdCiudadJ(), oficinas.get(i).getId());
+                if (i != 0) tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
+                else
+                    tiempoViaje = findTiempoViaje(Mapa.rutas.get(rm).getTramos().get(Mapa.rutas.get(rm).getTramos().size() - 1).getIdCiudadJ(), oficinas.get(i).getId());
                 int horas = (int) Math.floor(tiempoViaje);
                 int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
                 LocalDateTime horaLlegada;
@@ -118,10 +118,9 @@ public class ABC {
                 horasLlegada.add(horaLlegada);
             }
             Mapa.rutas.get(rm).setHorasDeLlegada(list);
-            if(rutaRegreso.startsWith("[")) {
+            if (rutaRegreso.startsWith("[")) {
                 rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso.replace('[', ' ');
-            }
-            else {
+            } else {
                 rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']';
                 Mapa.rutas.get(rm).setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']');
             }
@@ -139,7 +138,7 @@ public class ABC {
         }
 
         Mapa.cargarRutas(rutasAux);
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(5*velocidad*288);
+        Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(5 * velocidad * 288);
     }
 
     public int generarNumeroEnteroAleatorio(int max) {
@@ -242,6 +241,9 @@ public class ABC {
         ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k + 1, pedido.getIdCiudadDestino(), null);
         // Parámetros
         Long idRuta = Long.valueOf(Mapa.rutas.size());
+        if (rutasPath.size() == 0) {
+            System.out.println("pedido id: " + pedido.getId());
+        }
         String seguimiento = rutasPath.get(k).getVertexList().toString();
         ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
 
@@ -398,15 +400,15 @@ public class ABC {
         return nuevaFecha;
     }
 
-    ArrayList<UnidadTransporteModel> actualizarMantenimiento(List<PedidoParcialModel> auxPedidos){
+    ArrayList<UnidadTransporteModel> actualizarMantenimiento(List<PedidoParcialModel> auxPedidos) {
         ArrayList<UnidadTransporteModel> auxArrayVehiculos = new ArrayList<>();
-        for(int i = 0; i < auxPedidos.size(); i++){
-            for(int j = 0; j < Mapa.vehiculos.size(); j++){
-                if (Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.DISPONIBLE || Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.EN_TRANSITO){
+        for (int i = 0; i < auxPedidos.size(); i++) {
+            for (int j = 0; j < Mapa.vehiculos.size(); j++) {
+                if (Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.DISPONIBLE || Mapa.vehiculos.get(j).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) {
                     Date d = new Date(auxPedidos.get(i).getFechaHoraEntrega() * 1000);
                     LocalDateTime auxd = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
                     LocalDateTime auxd2 = Mapa.vehiculos.get(j).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                    if(auxd.isBefore(auxd2.plusDays(1))) {
+                    if (auxd.isBefore(auxd2.plusDays(1))) {
                         Mapa.vehiculos.get(j).setEstado(EstadoUnidadTransporte.EN_MANTENIMIENTO);
                         auxArrayVehiculos.add(Mapa.vehiculos.get(j));
                     }

@@ -5,12 +5,14 @@ import com.pucp.odiparpackappback.dto.Simulation;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @RestController
 public class PedidoController {
@@ -52,9 +54,9 @@ public class PedidoController {
 
     @PostMapping("/Pedido/PostPedidos")
     boolean InsertarListaPedidos(@RequestBody List<PedidoModel> pedidosModel) {
-        try{
+        try {
             pedidoRepository.saveAll(pedidosModel);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex);
         }
         return true;
@@ -111,14 +113,15 @@ public class PedidoController {
         ABC abc = new ABC();
         // Lectura de Datos
         Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
-        Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
+        //Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
+        Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
 
         // Rango de Simulación
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         Mapa.finSimulacion = Mapa.inicioSimulacion.plusDays(7);
 
-        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, simulation.velocidad);
+        //Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, simulation.velocidad);
         //Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
         //Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
 
@@ -150,10 +153,9 @@ public class PedidoController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(!Mapa.flag){     // Si ha terminado la simulación, se para la re-ejecución
+                if (!Mapa.flag) {     // Si ha terminado la simulación, se para la re-ejecución
                     return;
-                }
-                else{
+                } else {
                     ejecutarABCS2(simulation.velocidad);
                 }
             }
@@ -170,7 +172,7 @@ public class PedidoController {
     }
 
     @PostMapping("/PararSimulacion")
-    boolean pararSimulacion(){
+    boolean pararSimulacion() {
         Mapa.setFlag(false);
         Mapa.pedidos.clear();
         Mapa.rutas.clear();
