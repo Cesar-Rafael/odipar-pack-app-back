@@ -7,12 +7,10 @@ import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
 import com.pucp.odiparpackappback.topKshortestpaths.utils.Pair;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ABC {
 
@@ -107,6 +105,7 @@ public class ABC {
 
                 ArrayList<Long> list = Mapa.rutasSimulacion.get(rm).getHorasDeLlegada();
 
+
                 //regreso a oficina
                 List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutasSimulacion.get(rm).getTramos().get(Mapa.rutasSimulacion.get(rm).getTramos().size() - 1).getIdCiudadJ());
                 int ganador = 1;
@@ -122,14 +121,17 @@ public class ABC {
                 ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
                 ZoneId zoneId = ZoneId.systemDefault();
                 for (int i = 0; i < oficinas.size(); i++) {
+
+
+                    LocalDateTime horaLlegada = LocalDateTime.ofInstant(Instant.ofEpochSecond(list.get(list.size()-1)), zoneId);
+
                     double tiempoViaje;
                     if (i != 0) tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                     else
                         tiempoViaje = findTiempoViaje(Mapa.rutasSimulacion.get(rm).getTramos().get(Mapa.rutasSimulacion.get(rm).getTramos().size() - 1).getIdCiudadJ(), oficinas.get(i).getId());
                     int horas = (int) Math.floor(tiempoViaje);
                     int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
-                    LocalDateTime horaLlegada;
-                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                    horaLlegada = horaLlegada.plusHours(horas+1);
                     horaLlegada = horaLlegada.plusMinutes(minutos);
                     list.add(horaLlegada.atZone(zoneId).toEpochSecond());
                     horasLlegada.add(horaLlegada);
@@ -408,7 +410,7 @@ public class ABC {
                         Mapa.vehiculosSimulacion.get(i).setIdRuta(idRuta);
                         // Asignación Ruta
                         Long idUnidadTransporte = Mapa.vehiculosSimulacion.get(i).getId();
-                        PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, Mapa.vehiculosDiaDia.get(i).getCapacidadDisponible(), 0L, idRuta);
+                        PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, Mapa.vehiculosSimulacion.get(i).getCapacidadDisponible(), 0L, idRuta);
                         pedidosParciales.add(pedidoParcial);
                         // Pedido
                         Mapa.vehiculosSimulacion.get(i).setCapacidadDisponible(0);
