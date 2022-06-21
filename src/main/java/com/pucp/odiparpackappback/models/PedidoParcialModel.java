@@ -1,15 +1,8 @@
 package com.pucp.odiparpackappback.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table
 public class PedidoParcialModel {
-    private @Id @GeneratedValue Long id; // correlativo
-    private Long idPedido;               // relación con Pedido
+    private Long id;                    // correlativo
+    private Long idPedido;              // relación con Pedido
     private int idCiudadOrigen;
     private int cantPaquetes;           // puede ser igual a la cantPaquetes del Pedido
     private Long fechaHoraEntrega;
@@ -18,7 +11,7 @@ public class PedidoParcialModel {
     public PedidoParcialModel() {
 
     }
-    public PedidoParcialModel(Long id, int idCiudadOrigen, int cantPaquetes, Long fechaHoraEntrega, Long idRuta){
+    public PedidoParcialModel(Long id, Long idPedido, int idCiudadOrigen, int cantPaquetes, Long fechaHoraEntrega, Long idRuta){
         this.id = id;
         this.idPedido = idPedido;
         this.idCiudadOrigen = idCiudadOrigen;
@@ -62,5 +55,17 @@ public class PedidoParcialModel {
     }
     public void setIdRuta(Long idRuta) {
         this.idRuta = idRuta;
+    }
+
+    @Override
+    public String toString() {
+        return "PedidoParcialModel{" +
+                "id=" + id +
+                ", idPedido=" + idPedido +
+                ", idCiudadOrigen=" + idCiudadOrigen +
+                ", cantPaquetes=" + cantPaquetes +
+                ", fechaHoraEntrega=" + fechaHoraEntrega +
+                ", idRuta=" + idRuta +
+                '}';
     }
 }

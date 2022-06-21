@@ -52,12 +52,12 @@ class UnidadTransporteController {
     @GetMapping("/UnidadTransporte/coordenadas")
     UnidadTransporteModel actualizarCoordenadas(@RequestBody UnidadTransporteModel vehiculo, @RequestBody long tiempoTranscurido) {
         //Buscar ruta
-        for (int i = 0; i < Mapa.rutas.size(); i++) {
-            if (Mapa.rutas.get(i).getIdRuta().equals(vehiculo.getIdRuta())) {
+        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+            if (Mapa.rutasSimulacion.get(i).getIdRuta().equals(vehiculo.getIdRuta())) {
                 //Buscar hora llegada
-                for (int j = 0; j < Mapa.rutas.get(i).getHorasDeLlegada().size(); j++) {
-                    if (Mapa.rutas.get(i).getHorasDeLlegada().get(j) > Mapa.rutas.get(i).getHoraInicio() + tiempoTranscurido) {
-                        long tiempo = Mapa.rutas.get(i).getHoraInicio() + tiempoTranscurido - Mapa.rutas.get(i).getHorasDeLlegada().get(j - 1);
+                for (int j = 0; j < Mapa.rutasSimulacion.get(i).getHorasDeLlegada().size(); j++) {
+                    if (Mapa.rutasSimulacion.get(i).getHorasDeLlegada().get(j) > Mapa.rutasSimulacion.get(i).getHoraInicio() + tiempoTranscurido) {
+                        long tiempo = Mapa.rutasSimulacion.get(i).getHoraInicio() + tiempoTranscurido - Mapa.rutasSimulacion.get(i).getHorasDeLlegada().get(j - 1);
                         double latUltimaOficina = vehiculo.getOrdenada();
                         double lonUltimaOficina = vehiculo.getAbscisa();
                         boolean f1 = false;
@@ -66,13 +66,13 @@ class UnidadTransporteController {
                         double lonNuevaOficina = -1000;
                         //buscar coordenadas oficinas
                         for (int k = 0; k < Mapa.oficinas.size(); k++) {
-                            if (Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j).getIdCiudadJ()) {
+                            if (Mapa.oficinas.get(k).getUbigeo() == Mapa.rutasSimulacion.get(i).getTramos().get(j).getIdCiudadJ()) {
                                 latNuevaOficina = Mapa.oficinas.get(k).getLatitud();
                                 lonNuevaOficina = Mapa.oficinas.get(k).getLongitud();
                                 f1 = true;
                             }
                             //si se pasó la primera oficina encontrar en qué oficina está
-                            if (j != 0 && Mapa.oficinas.get(k).getUbigeo() == Mapa.rutas.get(i).getTramos().get(j - 1).getIdCiudadJ()) {
+                            if (j != 0 && Mapa.oficinas.get(k).getUbigeo() == Mapa.rutasSimulacion.get(i).getTramos().get(j - 1).getIdCiudadJ()) {
                                 latUltimaOficina = Mapa.oficinas.get(k).getLatitud();
                                 lonUltimaOficina = Mapa.oficinas.get(k).getLongitud();
                                 f2 = true;
@@ -83,8 +83,8 @@ class UnidadTransporteController {
                         double lat = latNuevaOficina - latUltimaOficina;
                         double lon = lonNuevaOficina - lonUltimaOficina;
                         //regla de 3 para hallar coordenadas
-                        vehiculo.setAbscisa(tiempo * lon / (Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
-                        vehiculo.setOrdenada(tiempo * lat / (Mapa.rutas.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
+                        vehiculo.setAbscisa(tiempo * lon / (Mapa.rutasSimulacion.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
+                        vehiculo.setOrdenada(tiempo * lat / (Mapa.rutasSimulacion.get(i).getTramos().get(j).getTiempoDeViaje() - 3600));
                         return vehiculo;
                     }
                 }
@@ -94,6 +94,6 @@ class UnidadTransporteController {
     }
 
     void listarUnidadesTransporteMantenimiento() {
-        Mapa.vehiculos = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findUnidadTransporteModelByEstadoEquals(EstadoUnidadTransporte.DISPONIBLE);
+        Mapa.vehiculosSimulacion = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findUnidadTransporteModelByEstadoEquals(EstadoUnidadTransporte.DISPONIBLE);
     }
 }

@@ -65,29 +65,32 @@ public class PedidoController {
     @PostMapping("/ABCDD")
     boolean ejecutarABCDiaDia(@RequestParam String inicioSimulacionAux) {
         ABC abc = new ABC();
-        // Rango de Simulación
-        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux);
-        Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
-        Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
-        Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
+
         // Lectura desde BD
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, 1);
+
+
+        // Rango de Simulación
+        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux).minusHours(6);
+        Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90).minusHours(6);
+
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
+
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
-        System.out.println(Mapa.pedidos.size());
-        for (int i = 0; i < Mapa.rutas.size(); i++) {
+        System.out.println(Mapa.pedidosDiaDia.size());
+        for (int i = 0; i < Mapa.rutasDiaDia.size(); i++) {
             System.out.println("IdRuta:");
-            System.out.println(Mapa.rutas.get(i).getIdRuta());
+            System.out.println(Mapa.rutasDiaDia.get(i).getIdRuta());
             System.out.println("IdUnidadTransporte:");
-            System.out.println(Mapa.rutas.get(i).getIdUnidadTransporte());
+            System.out.println(Mapa.rutasDiaDia.get(i).getIdUnidadTransporte());
             System.out.println("Seguimiento:");
-            System.out.println(Mapa.rutas.get(i).getSeguimiento());
-            System.out.println(Mapa.rutas.get(i).getHorasDeLlegada());
+            System.out.println(Mapa.rutasDiaDia.get(i).getSeguimiento());
+            System.out.println(Mapa.rutasDiaDia.get(i).getHorasDeLlegada());
             System.out.println();
         }
         // Actualización
@@ -97,7 +100,7 @@ public class PedidoController {
             public void run() {
                 ejecutarABCDD2();
             }
-        }, 300000, 300000);
+        }, 300000, 300000); // Siempre se ejecuta después de 5 minutos - 300,000 segundos
         return true;
     }
 
@@ -111,24 +114,18 @@ public class PedidoController {
     @PostMapping("/ABCS")
     boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
+        // Carga de Pedidos
+        Mapa.pedidosSimulacion = simulation.pedidos;
+
         // Lectura de Datos
         Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
-        //Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
-        Mapa.cargarTramosDiaDia();
+        Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
+        Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
 
         // Rango de Simulación
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         Mapa.finSimulacion = Mapa.inicioSimulacion.plusDays(7);
-
-        //Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, simulation.velocidad);
-        //Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
-        //Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
-
-        // Carga de Pedidos y Bloqueos
-        Mapa.pedidos = simulation.pedidos;
-
-        // Bloqueos de la BD
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 5, 5, 0, simulation.velocidad);
@@ -136,15 +133,19 @@ public class PedidoController {
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
-        System.out.println(Mapa.pedidos.size());
-        for (int i = 0; i < Mapa.rutas.size(); i++) {
+        System.out.println(Mapa.pedidosSimulacion.size());
+        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
             System.out.println("IdRuta:");
-            System.out.println(Mapa.rutas.get(i).getIdRuta());
+            System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
             System.out.println("IdUnidadTransporte:");
-            System.out.println(Mapa.rutas.get(i).getIdUnidadTransporte());
+            System.out.println(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte());
             System.out.println("Seguimiento:");
-            System.out.println(Mapa.rutas.get(i).getSeguimiento());
-            System.out.println(Mapa.rutas.get(i).getHorasDeLlegada());
+            System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
+            System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
+            System.out.println("Pedidos Parciales:");
+            for(int j=0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++){
+                System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
+            }
             System.out.println();
         }
 
@@ -174,8 +175,8 @@ public class PedidoController {
     @PostMapping("/PararSimulacion")
     boolean pararSimulacion() {
         Mapa.setFlag(false);
-        Mapa.pedidos.clear();
-        Mapa.rutas.clear();
+        Mapa.pedidosSimulacion.clear();
+        Mapa.rutasSimulacion.clear();
         return true;
     }
 }

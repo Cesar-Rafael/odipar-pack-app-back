@@ -17,35 +17,41 @@ import java.util.List;
 
 @RestController
 public class Mapa {
+    // Variables en común
     public static ArrayList<OficinaModel> oficinasPrincipales = new ArrayList<>();
     public static ArrayList<OficinaModel> oficinas = new ArrayList<>();
     public static ArrayList<TramoModel> tramos = new ArrayList<>();
-    public static ArrayList<UnidadTransporteModel> vehiculos = new ArrayList<>();
     public static DicTramos dicTramos;
-    public static ArrayList<PedidoModel> pedidos = new ArrayList<>();
-    public static ArrayList<Ruta> rutas = new ArrayList<>();
+
+    // Variables independientes
+    public static ArrayList<UnidadTransporteModel> vehiculosDiaDia = new ArrayList<>();
+    public static ArrayList<UnidadTransporteModel> vehiculosSimulacion = new ArrayList<>();
+    public static ArrayList<Ruta> rutasDiaDia = new ArrayList<>();
+    public static ArrayList<Ruta> rutasSimulacion = new ArrayList<>();
+
+    public static ArrayList<PedidoModel> pedidosDiaDia = new ArrayList<>();
+    public static ArrayList<PedidoModel> pedidosSimulacion = new ArrayList<>();
+
+    public static ArrayList<BloqueoModel> bloqueosDiaDia = new ArrayList<>();
+    public static ArrayList<BloqueoModel> bloqueosSimulacion = new ArrayList<>();
+
+    // Variables solo para Simulacion
     public static boolean flag = true;
     public static double k = 0.0;
-
-    public static boolean isFlag() {
-        return flag;
-    }
-
-    public static void setFlag(boolean flag) {
-        Mapa.flag = flag;
-    }
-
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
     public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);
+
+    // Otras variables
     public static double fitnessSolucion = 0;
     public static ArrayList<Pair<Integer, Integer>> bloqueos = new ArrayList<>();
-    public static ArrayList<BloqueoModel> bloqueosSimulacion = new ArrayList<>();
+
     private static PedidoRepository pedidoRepository;
     private static OficinaRepository oficinaRepository;
     private static TramoRepository tramoRepository;
     private static UnidadTransporteRepository unidadTransporteRepository;
     private static RutaRepository rutaRepository;
     private static BloqueoRepository bloqueoRepository;
+
     public Mapa(PedidoRepository pedidoRepository, OficinaRepository oficinaRepository, TramoRepository tramoRepository, UnidadTransporteRepository unidadTransporteRepository, BloqueoRepository bloqueoRepository, RutaRepository rutaRepository) {
         Mapa.pedidoRepository = pedidoRepository;
         Mapa.oficinaRepository = oficinaRepository;
@@ -55,10 +61,16 @@ public class Mapa {
         Mapa.rutaRepository = rutaRepository;
     }
 
+    public static boolean isFlag() {
+        return flag;
+    }
+    public static void setFlag(boolean flag) {
+        Mapa.flag = flag;
+    }
+
     public static double getFitnessSolucion() {
         return fitnessSolucion;
     }
-
     public static void setFitnessSolucion(double fitnessSolucion) {
         Mapa.fitnessSolucion = fitnessSolucion;
     }
@@ -191,7 +203,7 @@ public class Mapa {
                 double ordenada = Double.parseDouble(parts[8]);
                 //Agrega Vehiculo
                 UnidadTransporteModel vehiculo = new UnidadTransporteModel(id, codigo, capacidadTotal, estado, oficinaActual, abscisa, ordenada);
-                vehiculos.add(vehiculo);
+                vehiculosSimulacion.add(vehiculo);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -218,11 +230,11 @@ public class Mapa {
                 retorno.add(aux.get(i));
             }
         }
-        vehiculos = retorno;
+        vehiculosDiaDia = retorno;
     }
 
     public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin) {
-        pedidos = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
+        pedidosDiaDia = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
     }
 
     public static void cargarPedidosSimulacion(String rutaArchivo, Date fechaInicio, Date fechaFin) {
@@ -250,7 +262,7 @@ public class Mapa {
                 //Agrega Pedido
                 if (fechaHoraCreacion.after(fechaInicio) && fechaHoraCreacion.before(fechaFin)) {
                     PedidoModel pedido = new PedidoModel(id, rucCliente, cantPaquetes, idCiudadDestino, ciudadDestino, fechaHoraCreacion);
-                    pedidos.add(pedido);
+                    pedidosSimulacion.add(pedido);
                 }
             }
         } catch (Exception e) {
@@ -270,11 +282,11 @@ public class Mapa {
         return bloqueoRepository.findBloqueoModelByUbigeoInicioAndUbigeoFin(oficinaI, oficinaJ, fechaInicio, fechaFin);
     }
 
-    public static List<BloqueoModel> obtenerTramosBloqueadosSimulacion(int oficinaI, int oficinaJ, Date fechaInicio, Date fechaFin, String rutaArchivo) {
+    public static void cargarBloqueosSimulacion(String rutaArchivo) {
         File archivoPedidos;
         FileReader fr = null;
         BufferedReader br;
-        List<BloqueoModel> listaBloqueos = new ArrayList<>();
+        ArrayList<BloqueoModel> listaBloqueos = new ArrayList<>();
         try {
             archivoPedidos = new File(rutaArchivo);
             fr = new FileReader(archivoPedidos);
@@ -292,10 +304,8 @@ public class Mapa {
                 int ubigeoFin = Integer.parseInt(parts[3]);
                 int ubigeoInicio = Integer.parseInt(parts[4]);
                 //Agrega Bloqueo
-                if (fechaInicioAux.after(fechaInicio) && fechaFinAux.before(fechaFin) && (((oficinaI == ubigeoInicio) && (oficinaJ == ubigeoFin)) || ((oficinaI == ubigeoFin) && (oficinaJ == ubigeoInicio)))) {
-                    BloqueoModel bloqueo = new BloqueoModel(id, ubigeoInicio, ubigeoFin, fechaInicioAux, fechaFinAux);
-                    listaBloqueos.add(bloqueo);
-                }
+                BloqueoModel bloqueo = new BloqueoModel(id, ubigeoInicio, ubigeoFin, fechaInicioAux, fechaFinAux);
+                listaBloqueos.add(bloqueo);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -308,7 +318,7 @@ public class Mapa {
                 e2.printStackTrace();
             }
         }
-        return listaBloqueos;
+        bloqueosSimulacion = listaBloqueos;
     }
 
     public static ArrayList<TramoModel> listarTramos(String tramos) {

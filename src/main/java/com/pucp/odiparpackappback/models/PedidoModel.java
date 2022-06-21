@@ -23,7 +23,6 @@ public class PedidoModel {
     }
 
     public PedidoModel(Long id, Long rucCliente, int cantPaquetes, int idCiudadDestino, String ciudadDestino, Date fechaHoraCreacion) {
-        this.id = id;
         this.rucCliente = rucCliente;
         this.cantPaquetes = cantPaquetes;
         this.cantPaquetesNoAsignado = cantPaquetes;
