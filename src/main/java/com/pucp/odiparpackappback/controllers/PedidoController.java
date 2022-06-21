@@ -110,16 +110,14 @@ public class PedidoController {
     boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
         // Lectura de Datos
-        //Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
-        //Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
-        //Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
+        Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
+        Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
+        Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
 
         // Rango de Simulación
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         Mapa.finSimulacion = Mapa.inicioSimulacion.plusDays(7);
 
-        Mapa.cargarOficinasDiaDia();
-        Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, simulation.velocidad);
         //Mapa.inicioSimulacion = Mapa.inicioSimulacion.minusHours(6);
         //Mapa.finSimulacion = Mapa.finSimulacion.minusHours(6);
@@ -131,6 +129,7 @@ public class PedidoController {
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 5, 5, 0, simulation.velocidad);
+
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
@@ -145,20 +144,20 @@ public class PedidoController {
             System.out.println(Mapa.rutas.get(i).getHorasDeLlegada());
             System.out.println();
         }
+
         // Actualización
         Timer timer = new Timer();
-
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if(!Mapa.flag){
+                if(!Mapa.flag){     // Si ha terminado la simulación, se para la re-ejecución
                     return;
                 }
                 else{
                     ejecutarABCS2(simulation.velocidad);
                 }
             }
-        }, 300000, 300000);
+        }, 300000, 300000); // Siempre se ejecuta después de 5 minutos - 300,000 segundos
         return true;
     }
 
