@@ -408,7 +408,7 @@ public class ABC {
                         Mapa.vehiculosSimulacion.get(i).setIdRuta(idRuta);
                         // Asignación Ruta
                         Long idUnidadTransporte = Mapa.vehiculosSimulacion.get(i).getId();
-                        PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, Mapa.vehiculosDiaDia.get(i).getCapacidadDisponible(), 0L, idRuta);
+                        PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, Mapa.vehiculosSimulacion.get(i).getCapacidadDisponible(), 0L, idRuta);
                         pedidosParciales.add(pedidoParcial);
                         // Pedido
                         Mapa.vehiculosSimulacion.get(i).setCapacidadDisponible(0);
@@ -551,7 +551,7 @@ public class ABC {
                     return true;
                 } else {
                     // No hay capacidad suficiente, se asigna el pedido a la ruta y luego se busca otra para completar el pedido
-                    int faltante = pedido.getCantPaquetesNoAsignado() - Mapa.vehiculosDiaDia.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible();
+                    int faltante = pedido.getCantPaquetesNoAsignado() - Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible();
                     // Asignación parcial
                     ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
                     PedidoParcialModel pedidoParcial = new PedidoParcialModel((long) pedidosParciales.size(), pedido.getId(), -1, pedido.getCantPaquetes() - faltante, 0L, ruta.getIdRuta());
