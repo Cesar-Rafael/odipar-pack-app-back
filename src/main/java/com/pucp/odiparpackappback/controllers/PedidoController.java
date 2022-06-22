@@ -111,6 +111,7 @@ public class PedidoController {
         return true;
     }
 
+    Timer timer;
     @PostMapping("/ABCS")
     boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
@@ -150,7 +151,7 @@ public class PedidoController {
         }
 
         // Actualización
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -174,7 +175,7 @@ public class PedidoController {
 
     @PostMapping("/PararSimulacion")
     boolean pararSimulacion() {
-        Mapa.setFlag(false);
+        timer.cancel();
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
         return true;
