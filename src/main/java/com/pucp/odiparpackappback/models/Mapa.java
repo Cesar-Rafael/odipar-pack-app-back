@@ -44,6 +44,7 @@ public class Mapa {
     // Otras variables
     public static double fitnessSolucion = 0;
     public static ArrayList<Pair<Integer, Integer>> bloqueos = new ArrayList<>();
+    public static String seguimiento;
 
     private static PedidoRepository pedidoRepository;
     private static OficinaRepository oficinaRepository;

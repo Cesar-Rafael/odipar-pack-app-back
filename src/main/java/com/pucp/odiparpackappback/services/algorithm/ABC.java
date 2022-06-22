@@ -1,5 +1,6 @@
 package com.pucp.odiparpackappback.services.algorithm;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg.getShortestPathsReturn2;
+
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion, int velocidad) {
@@ -19,6 +22,8 @@ public class ABC {
         // Opcion 1 - DiaDia
 
         ArrayList<PedidoModel> pedidos = new ArrayList<>();
+
+        // VarAux
 
         if (opcion == 0) {
             LocalDateTime fin = Mapa.inicioSimulacion;
@@ -329,6 +334,7 @@ public class ABC {
 
         // String seguimiento
         String seguimiento = rutasPath.get(k).getVertexList().toString();
+        Mapa.seguimiento = seguimiento;
         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
         // double fitness
         double fitness = rutasPath.get(k).getWeight();

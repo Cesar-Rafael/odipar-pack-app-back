@@ -345,4 +345,13 @@ public class YenTopKShortestPathsAlg {
         }
         return rutas;
     }
+
+    public static Path getShortestPathsReturn2(int ubigeoInicio,  int ubigeoFin) {
+        setSourceVertex(graph.getVertex(ubigeoInicio));
+        Path ruta = new Path();
+
+        setTargetVertex(graph.getVertex(ubigeoFin));
+        ruta = YenTopKShortestPathsAlg.getShortestPath(graph.getVertex(ubigeoInicio),graph.getVertex(ubigeoFin));
+        return ruta;
+    }
 }

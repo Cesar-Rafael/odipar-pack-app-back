@@ -16,6 +16,10 @@ public class Ruta {
     private Long idUnidadTransporte;
     private UnidadTransporteModel vehiculo;
     private double fitness;
+    private boolean flagTerminado;
+
+    public Ruta(){
+    }
 
     public Ruta(Long idRuta, String seguimiento, ArrayList<PedidoParcialModel> pedidosParciales, double fitness, Long idUnidadTransporte, ArrayList<TramoModel> tramos, ArrayList<Long> horasDeLlegada) {
         this.idRuta = idRuta;                               // 3
@@ -126,5 +130,11 @@ public class Ruta {
     }
     public void setFitness(double fitness) {
         this.fitness = fitness;
+    }
+    public boolean isFlagTerminado() {
+        return flagTerminado;
+    }
+    public void setFlagTerminado(boolean flagTerminado) {
+        this.flagTerminado = flagTerminado;
     }
 }
