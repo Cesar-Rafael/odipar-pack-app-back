@@ -129,7 +129,7 @@ public class PedidoController {
         Mapa.finSimulacion = Mapa.inicioSimulacion.plusDays(7);
 
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(10, 5, 5, 0, simulation.velocidad);
+        abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
 
         // Reporte Interno
         System.out.println("REPORTE:");
@@ -168,12 +168,12 @@ public class PedidoController {
     boolean ejecutarABCS2(int velocidad) {
         ABC abc = new ABC();
         Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, velocidad);
-        abc.algoritmoAbejasVPRTW(10, 5, 5, 0, velocidad);
+        abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
         System.out.println("¡Rutas actualizadas!");
         return true;
     }
 
-    @PostMapping("/PararSimulacion")
+    @GetMapping("/simulacion/detener")
     boolean pararSimulacion() {
         timer.cancel();
         Mapa.pedidosSimulacion.clear();
