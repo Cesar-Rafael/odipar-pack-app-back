@@ -21,7 +21,7 @@ public class TramoModel {
         this.id = id;
         this.idCiudadI = idCiudadI;
         this.idCiudadJ = idCiudadJ;
-        this.tiempoDeViaje = (tiempoDeViaje * 3600);
+        this.tiempoDeViaje = tiempoDeViaje;
         this.bloqueado = bloqueado;
     }
 
