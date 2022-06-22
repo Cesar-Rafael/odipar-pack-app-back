@@ -48,7 +48,9 @@ public class RutaController {
                     if (Mapa.rutasDiaDia.get(j).getIdUnidadTransporte() == idVehiculo) {
                         for (int c = 0; c < Mapa.rutasDiaDia.get(j).getPedidosParciales().size(); c++) {
                             for (int d = 0; d < Mapa.pedidosDiaDia.size(); d++) {
+                                System.out.println("Si me imprimo");
                                 if (Mapa.rutasDiaDia.get(j).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
+                                    System.out.println("Aqui si");
                                     pedidos.add(Mapa.pedidosDiaDia.get(d));
                                 }
                             }

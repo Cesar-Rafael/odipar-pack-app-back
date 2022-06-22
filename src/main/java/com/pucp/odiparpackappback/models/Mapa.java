@@ -236,6 +236,8 @@ public class Mapa {
     }
 
     public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin) {
+        System.out.println(fechaInicio);
+        System.out.println(fechaFin);
         pedidosDiaDia = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
     }
 

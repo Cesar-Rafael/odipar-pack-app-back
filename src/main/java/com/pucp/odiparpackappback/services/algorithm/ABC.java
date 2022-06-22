@@ -39,6 +39,8 @@ public class ABC {
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
+            System.out.println("REVISAR CANTIDAD");
+            System.out.println(Mapa.pedidosDiaDia.size());
             pedidos = Mapa.pedidosDiaDia;
         }
 
@@ -337,10 +339,10 @@ public class ABC {
             boolean asignado;
             for (int a = 0; a < Mapa.rutasDiaDia.size(); a++) {
                 // Se verifica si termino
-                ZoneId zoneId = ZoneId.systemDefault();
-                if(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1) > Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond()){
-                    Mapa.rutasSimulacion.get(a).setFlagTerminado(false);
-                }
+                //ZoneId zoneId = ZoneId.systemDefault();
+                //if(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1) > Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond()){
+                //    Mapa.rutasSimulacion.get(a).setFlagTerminado(false);
+                //}
                 // Se verifica si el pedido puede ser asignado a esa ruta
                 asignado = asignarPedidoRutaVehiculo(pedido, Mapa.rutasDiaDia.get(a), opcion);
                 if (asignado) {
