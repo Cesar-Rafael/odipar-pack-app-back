@@ -1,5 +1,6 @@
 package com.pucp.odiparpackappback.services.algorithm;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
+import static com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg.getShortestPathsReturn2;
+
 public class ABC {
 
     public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion, int velocidad) {
@@ -19,6 +22,8 @@ public class ABC {
         // Opcion 1 - DiaDia
 
         ArrayList<PedidoModel> pedidos = new ArrayList<>();
+
+        // VarAux
 
         if (opcion == 0) {
             LocalDateTime fin = Mapa.inicioSimulacion;
@@ -232,6 +237,11 @@ public class ABC {
             // Se asigna el pedido actual a la población inicial...
             boolean asignado;
             for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
+                // Se verifica si termino
+                ZoneId zoneId = ZoneId.systemDefault();
+                if(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1) > Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond()){
+                    Mapa.rutasSimulacion.get(a).setFlagTerminado(false);
+                }
                 // Se verifica si el pedido puede ser asignado a esa ruta
                 asignado = asignarPedidoRutaVehiculo(pedido, Mapa.rutasSimulacion.get(a), opcion);
                 if (asignado) {
@@ -243,7 +253,82 @@ public class ABC {
             // Si no puede ser asignado a alguna ruta... se crea una nueva y se inserta al arreglo de rutas
             boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
             if (!bool) {
-                System.out.println("¡No hay camiones para asignar más pedidos!");
+                // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen a tiempo?
+                if(true){
+                    // Local Principal más cercano al destino del Pedido
+                    ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(0 + 1, pedido.getIdCiudadDestino(), null);
+                    // Si alcanza tiempo, asignar a Vehiculo más cercano cuyo fin de ruta sea el inicio de la recien creada
+                    int iMenor = -1;
+                    for(int i = 0 ; i < Mapa.rutasSimulacion.size(); i++){
+                        List<Integer> listaSeg = new ArrayList<>();
+                        try{
+                            listaSeg = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                        }
+                        catch (Exception ex){
+                            System.out.println(ex);
+                        }
+                        if((listaSeg.get(listaSeg.size()-1) == pedido.getIdCiudadDestino())){
+                            if(i == 0){
+                                iMenor = i;
+                            }
+                            else{
+                                if(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size()-1) > Mapa.rutasSimulacion.get(i).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(i).getHorasDeLlegada().size()-1)){
+                                    iMenor = i;
+                                }
+                            }
+                        }
+                    }
+                    if(iMenor == -1){
+                        // Ninguna fin de rua coincide con la mejor ruta que puede tomar el pedido
+                        System.out.println("¡Colapso Logístico!");
+                        return false;
+                    }
+                    // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
+                    Long idVehiculoEscogido = Mapa.rutasSimulacion.get(iMenor).getIdUnidadTransporte();
+                    // Se agrega una nueva ruta ruta rutasSimulacion
+                    Long idRuta = Long.valueOf(Mapa.rutasSimulacion.size());
+                    String seguimiento = rutasPath.get(0).getVertexList().toString();
+                    ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
+                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), 0L, idRuta);
+                    pedidosParciales.add(pedidoParcial);
+                    double fitness = rutasPath.get(0).getWeight();
+                    ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
+                    ArrayList<Long> horasLlegadaLong = new ArrayList<>();
+                    List<BaseVertex> oficinas = rutasPath.get(0).getVertexList();
+                    ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
+                    ZoneId zoneId = ZoneId.systemDefault();
+
+                    for (int i = 0; i < oficinas.size(); i++) {
+                        if (i == 0) {
+                            horasLlegadaLong.add(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size()));
+                            horasLlegada.add(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size())), zoneId));
+                        } else {
+                            double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
+                            int horas = (int) Math.floor(tiempoViaje);
+                            int minutos = (int) Math.ceil((tiempoViaje - 1.0 * horas) * 60);
+                            LocalDateTime horaLlegada = horasLlegada.get(i - 1);
+
+                            if (i == 1) {
+                                horaLlegada = horaLlegada.plusHours(horas);
+                            } else {
+                                horaLlegada = horaLlegada.plusHours(horas + 1);
+                            }
+
+                            horaLlegada = horaLlegada.plusMinutes(minutos);
+                            horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                            horasLlegada.add(horaLlegada);
+                        }
+                    }
+                    Mapa.rutasSimulacion.get(iMenor).setFlagTerminado(true);
+                    Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
+                    Mapa.rutasSimulacion.add(rutaAux);
+                    return true;
+                }
+                else{
+                    // Si no alcanza tiempo, es colapso logístico
+                    System.out.println("¡Colapso Logístico!");
+                    return false;
+                }
             }
             // es falso, si ya no se puede crear más rutas
             return bool;
@@ -251,6 +336,11 @@ public class ABC {
             // Se asigna el pedido actual a la población inicial...
             boolean asignado;
             for (int a = 0; a < Mapa.rutasDiaDia.size(); a++) {
+                // Se verifica si termino
+                ZoneId zoneId = ZoneId.systemDefault();
+                if(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1) > Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond()){
+                    Mapa.rutasSimulacion.get(a).setFlagTerminado(false);
+                }
                 // Se verifica si el pedido puede ser asignado a esa ruta
                 asignado = asignarPedidoRutaVehiculo(pedido, Mapa.rutasDiaDia.get(a), opcion);
                 if (asignado) {
@@ -262,7 +352,82 @@ public class ABC {
             // Si no puede ser asignado a alguna ruta... se crea una nueva y se inserta al arreglo de rutas
             boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
             if (!bool) {
-                System.out.println("¡No hay camiones para asignar más pedidos!");
+                // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen a tiempo?
+                if(true){
+                    // Local Principal más cercano al destino del Pedido
+                    ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(0 + 1, pedido.getIdCiudadDestino(), null);
+                    // Si alcanza tiempo, asignar a Vehiculo más cercano cuyo fin de ruta sea el inicio de la recien creada
+                    int iMenor = -1;
+                    for(int i = 0 ; i < Mapa.rutasSimulacion.size(); i++){
+                        List<Integer> listaSeg = new ArrayList<>();
+                        try{
+                            listaSeg = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                        }
+                        catch (Exception ex){
+                            System.out.println(ex);
+                        }
+                        if((listaSeg.get(listaSeg.size()-1) == pedido.getIdCiudadDestino())){
+                            if(i == 0){
+                                iMenor = i;
+                            }
+                            else{
+                                if(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size()-1) > Mapa.rutasSimulacion.get(i).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(i).getHorasDeLlegada().size()-1)){
+                                    iMenor = i;
+                                }
+                            }
+                        }
+                    }
+                    if(iMenor == -1){
+                        // Ninguna fin de rua coincide con la mejor ruta que puede tomar el pedido
+                        System.out.println("¡Colapso Logístico!");
+                        return false;
+                    }
+                    // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
+                    Long idVehiculoEscogido = Mapa.rutasSimulacion.get(iMenor).getIdUnidadTransporte();
+                    // Se agrega una nueva ruta ruta rutasSimulacion
+                    Long idRuta = Long.valueOf(Mapa.rutasSimulacion.size());
+                    String seguimiento = rutasPath.get(0).getVertexList().toString();
+                    ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
+                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), 0L, idRuta);
+                    pedidosParciales.add(pedidoParcial);
+                    double fitness = rutasPath.get(0).getWeight();
+                    ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
+                    ArrayList<Long> horasLlegadaLong = new ArrayList<>();
+                    List<BaseVertex> oficinas = rutasPath.get(0).getVertexList();
+                    ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
+                    ZoneId zoneId = ZoneId.systemDefault();
+
+                    for (int i = 0; i < oficinas.size(); i++) {
+                        if (i == 0) {
+                            horasLlegadaLong.add(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size()));
+                            horasLlegada.add(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size())), zoneId));
+                        } else {
+                            double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
+                            int horas = (int) Math.floor(tiempoViaje);
+                            int minutos = (int) Math.ceil((tiempoViaje - 1.0 * horas) * 60);
+                            LocalDateTime horaLlegada = horasLlegada.get(i - 1);
+
+                            if (i == 1) {
+                                horaLlegada = horaLlegada.plusHours(horas);
+                            } else {
+                                horaLlegada = horaLlegada.plusHours(horas + 1);
+                            }
+
+                            horaLlegada = horaLlegada.plusMinutes(minutos);
+                            horasLlegadaLong.add(horaLlegada.atZone(zoneId).toEpochSecond());
+                            horasLlegada.add(horaLlegada);
+                        }
+                    }
+                    Mapa.rutasSimulacion.get(iMenor).setFlagTerminado(true);
+                    Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
+                    Mapa.rutasSimulacion.add(rutaAux);
+                    return true;
+                }
+                else{
+                    // Si no alcanza tiempo, es colapso logístico
+                    System.out.println("¡Colapso Logístico!");
+                    return false;
+                }
             }
             // es falso, si ya no se puede crear más rutas
             return bool;
@@ -329,6 +494,7 @@ public class ABC {
 
         // String seguimiento
         String seguimiento = rutasPath.get(k).getVertexList().toString();
+        Mapa.seguimiento = seguimiento;
         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
         // double fitness
         double fitness = rutasPath.get(k).getWeight();

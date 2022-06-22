@@ -37,6 +37,7 @@ public class Mapa {
 
     // Variables solo para Simulacion
     public static boolean flag = true;
+
     public static double k = 0.0;
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
     public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);
@@ -44,6 +45,7 @@ public class Mapa {
     // Otras variables
     public static double fitnessSolucion = 0;
     public static ArrayList<Pair<Integer, Integer>> bloqueos = new ArrayList<>();
+    public static String seguimiento;
 
     private static PedidoRepository pedidoRepository;
     private static OficinaRepository oficinaRepository;

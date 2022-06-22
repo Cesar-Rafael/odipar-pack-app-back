@@ -100,7 +100,7 @@ public class PedidoController {
             public void run() {
                 ejecutarABCDD2();
             }
-        }, 300000, 300000); // Siempre se ejecuta después de 5 minutos - 300,000 segundos
+        }, 18000000, 18000000); // Siempre se ejecuta después de 5 horas minutos - 18,000,000 segundos
         return true;
     }
 
@@ -111,6 +111,7 @@ public class PedidoController {
         return true;
     }
 
+    Timer timer;
     @PostMapping("/ABCS")
     boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
@@ -150,7 +151,7 @@ public class PedidoController {
         }
 
         // Actualización
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -174,6 +175,14 @@ public class PedidoController {
 
     @GetMapping("/simulacion/detener")
     boolean pararSimulacion() {
+        timer.cancel();
+        Mapa.pedidosSimulacion.clear();
+        Mapa.rutasSimulacion.clear();
+        return true;
+    }
+
+    @PostMapping("/PararDiaDia")
+    boolean pararDiaDia() {
         Mapa.setFlag(false);
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
