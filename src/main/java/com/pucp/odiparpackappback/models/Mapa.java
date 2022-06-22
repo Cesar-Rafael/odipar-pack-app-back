@@ -159,7 +159,7 @@ public class Mapa {
                 int idCiudadJ = Integer.parseInt(parts[3]);
                 parts[4] = parts[4].replace(',', '.');
                 parts[4] = parts[4].replace(',', '.');
-                double tiempoDeViaje = Double.parseDouble(parts[4]);
+                double tiempoDeViaje = Double.parseDouble(parts[4])/3600.0;
                 //Agrega Ruta
                 TramoModel tramo = new TramoModel(id, idCiudadI, idCiudadJ, tiempoDeViaje, bloqueado);
                 tramos.add(tramo);
