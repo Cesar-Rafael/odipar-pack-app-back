@@ -100,28 +100,41 @@ public class RutaController {
         return null;
     }
 
-    @GetMapping("/ruta/simulacion/listar")
+    @GetMapping("/ruta/simulacion/listar/{opcion}")
     @ResponseBody
-    public List<RutaConArraySegHorasLl> ListarRutasSimulacion() {
+    public List<RutaConArraySegHorasLl> ListarRutasSimulacion(@PathVariable("opcion") int opcion) {
+        ArrayList<Ruta> rutas;
+        ArrayList<UnidadTransporteModel> vehiculos;
+        ArrayList<PedidoModel> listaPedidos;
+        if(opcion == 0) {
+            rutas = Mapa.rutasSimulacion;
+            vehiculos = Mapa.vehiculosSimulacion;
+            listaPedidos = Mapa.pedidosSimulacion;
+        }
+        else{
+            rutas = Mapa.rutasDiaDia;
+            vehiculos = Mapa.vehiculosDiaDia;
+            listaPedidos = Mapa.pedidosDiaDia;
+        }
         try {
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
-            for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-                ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
+            for (int i = 0; i < rutas.size(); i++) {
+                ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(rutas.get(i).getSeguimiento());
                 String codigoPlaca = null;
-                for (int b = 0; b < Mapa.vehiculosSimulacion.size(); b++) {
-                    if (Mapa.vehiculosSimulacion.get(b).getId() == Mapa.rutasSimulacion.get(i).getIdUnidadTransporte()) {
-                        codigoPlaca = Mapa.vehiculosSimulacion.get(i).getCodigo();
+                for (int b = 0; b < vehiculos.size(); b++) {
+                    if (vehiculos.get(b).getId() == rutas.get(i).getIdUnidadTransporte()) {
+                        codigoPlaca = vehiculos.get(i).getCodigo();
                     }
                 }
                 ArrayList<PedidoModel> pedidos = new ArrayList<>();
-                for (int c = 0; c < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); c++) {
-                    for (int d = 0; d < Mapa.pedidosSimulacion.size(); d++) {
-                        if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
-                            pedidos.add(Mapa.pedidosSimulacion.get(d));
+                for (int c = 0; c < rutas.get(i).getPedidosParciales().size(); c++) {
+                    for (int d = 0; d < listaPedidos.size(); d++) {
+                        if (rutas.get(i).getPedidosParciales().get(c).getIdPedido() == listaPedidos.get(d).getId()) {
+                            pedidos.add(listaPedidos.get(d));
                         }
                     }
                 }
-                RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) i, Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
+                RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) i, rutas.get(i).getIdRuta(), rutas.get(i).getIdUnidadTransporte(), auxAI, rutas.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
                 auxRutasG.add(auxRutaG);
             }
             return auxRutasG;
