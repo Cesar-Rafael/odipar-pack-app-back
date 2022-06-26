@@ -22,7 +22,7 @@ public class PedidoController {
         this.pedidoRepository = pedidoRepository;
     }
 
-    @GetMapping("/Pedido/")
+    @GetMapping("/Pedido/Listar")
     public List<PedidoModel> listarPedidos() {
         return (List<PedidoModel>) pedidoRepository.findAll();
     }
@@ -111,6 +111,7 @@ public class PedidoController {
     }
 
     Timer timer;
+
     @PostMapping("/ABCS")
     boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
@@ -143,7 +144,7 @@ public class PedidoController {
             System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
             System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
             System.out.println("Pedidos Parciales:");
-            for(int j=0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++){
+            for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
                 System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
             }
             System.out.println();
