@@ -53,10 +53,6 @@ public class ABC {
         int contador = 0;
         // Etapa: Generación de la Población Inicial
         while (true) {
-<<<<<<< Updated upstream
-            //System.out.println("ME ESTOY IMPRIMIENDO... WHILE TRUE");
-=======
->>>>>>> Stashed changes
             int i = generarNumeroEnteroAleatorio(pedidos.size());
             // En caso el pedido escogido al azar no esté asignado...
             if (pedidos.get(i).getEstado() == EstadoPedido.NO_ASIGNADO) {
