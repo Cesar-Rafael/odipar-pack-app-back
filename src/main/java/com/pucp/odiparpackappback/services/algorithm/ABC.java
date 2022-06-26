@@ -53,6 +53,7 @@ public class ABC {
         int contador = 0;
         // Etapa: Generación de la Población Inicial
         while (true) {
+            System.out.println("ME ESTOY IMPRIMIENDO... WHILE TRUE");
             int i = generarNumeroEnteroAleatorio(pedidos.size());
             // En caso el pedido escogido al azar no esté asignado...
             if (pedidos.get(i).getEstado() == EstadoPedido.NO_ASIGNADO) {
@@ -255,7 +256,7 @@ public class ABC {
             // Si no puede ser asignado a alguna ruta... se crea una nueva y se inserta al arreglo de rutas
             boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
             if (!bool) {
-                // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen a tiempo?
+                // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen según lo establecido?
                 if(true){
                     // Local Principal más cercano al destino del Pedido
                     ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(0 + 1, pedido.getIdCiudadDestino(), null);
@@ -281,7 +282,7 @@ public class ABC {
                         }
                     }
                     if(iMenor == -1){
-                        // Ninguna fin de rua coincide con la mejor ruta que puede tomar el pedido
+                        // Ninguna fin de ruta coincide con la mejor ruta que puede tomar el pedido
                         System.out.println("¡Colapso Logístico!");
                         return false;
                     }

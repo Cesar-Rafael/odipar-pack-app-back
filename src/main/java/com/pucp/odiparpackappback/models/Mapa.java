@@ -47,7 +47,7 @@ public class Mapa {
     public static ArrayList<Pair<Integer, Integer>> bloqueos = new ArrayList<>();
     public static String seguimiento;
 
-    private static PedidoRepository pedidoRepository;
+    public static PedidoRepository pedidoRepository;
     private static OficinaRepository oficinaRepository;
     private static TramoRepository tramoRepository;
     private static UnidadTransporteRepository unidadTransporteRepository;

@@ -63,7 +63,7 @@ public class PedidoController {
     }
 
     @PostMapping("/ABCDD")
-    boolean ejecutarABCDiaDia(@RequestParam String inicioSimulacionAux) {
+    public boolean ejecutarABCDiaDia(@RequestParam String inicioSimulacionAux) {
         ABC abc = new ABC();
 
         // Lectura desde BD
@@ -74,7 +74,6 @@ public class PedidoController {
         // Rango de Simulación
         Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux).minusHours(6);
         Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
-
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
