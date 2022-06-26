@@ -72,8 +72,8 @@ public class PedidoController {
         Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, 1);
 
         // Rango de Simulación
-        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux).minusHours(6);
-        Mapa.finSimulacion = Mapa.inicioSimulacion.plusMinutes(90);
+        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux).minusDays(3);
+        Mapa.finSimulacion = LocalDateTime.parse(inicioSimulacionAux).minusHours(6);
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
