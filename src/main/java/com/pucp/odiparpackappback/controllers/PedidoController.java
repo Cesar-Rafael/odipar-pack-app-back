@@ -126,11 +126,11 @@ public class PedidoController {
 
         // Rango de Simulación
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
-        Mapa.finSimulacion = Mapa.inicioSimulacion.plusDays(7);
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
-
+        System.out.println("INICIO SIMULACION");
+        System.out.println(Mapa.inicioSimulacion);
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
@@ -161,13 +161,16 @@ public class PedidoController {
                     ejecutarABCS2(simulation.velocidad);
                 }
             }
-        }, 300000, 300000); // Siempre se ejecuta después de 5 minutos - 300,000 segundos
+        }, 60000, 60000); // Siempre se ejecuta después de 5 minutos - 300,000 segundos
         return true;
     }
 
     boolean ejecutarABCS2(int velocidad) {
         ABC abc = new ABC();
-        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, velocidad);
+        Mapa.cargarVehiculosDiaDia(Mapa.finSimulacion, velocidad);
+        Mapa.inicioSimulacion = Mapa.finSimulacion;
+        System.out.println("INICIO SIMULACION");
+        System.out.println(Mapa.inicioSimulacion);
         abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
         System.out.println("¡Rutas actualizadas!");
         return true;

@@ -28,9 +28,8 @@ public class ABC {
 
         if (opcion == 0) {
             LocalDateTime fin = Mapa.inicioSimulacion;
-            fin = fin.plusMinutes(5 * velocidad * 288);
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
-
+            fin = fin.plusMinutes(5 * velocidad * 288);
             Date fechaFin = obtenerFecha(fin);
             for (PedidoModel p : Mapa.pedidosSimulacion) {
                 if (fechaInicio.compareTo(p.getFechaHoraCreacion()) <= 0 && p.getFechaHoraCreacion().compareTo(fechaFin) <= 0) {
@@ -76,11 +75,11 @@ public class ABC {
                     // Abeja Observadora
                     for (int c = 0; b < numAbejasObs; b++) {
                         //Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                        Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutasSimulacion.get(i), c + 1, null, opcion);
+                        //Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutasSimulacion.get(i), c + 1, null, opcion);
                         //Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
-                        if (auxRuta.getFitness() > Mapa.rutasSimulacion.get(i).getFitness()) {
-                            Mapa.rutasSimulacion.set(i, auxRuta);
-                        }
+                        //if (auxRuta.getFitness() > Mapa.rutasSimulacion.get(i).getFitness()) {
+                        //    Mapa.rutasSimulacion.set(i, auxRuta);
+                        //}
                     }
                 }
             } else {
@@ -90,11 +89,11 @@ public class ABC {
                     // Abeja Observadora
                     for (int c = 0; b < numAbejasObs; b++) {
                         //Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                        Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutasDiaDia.get(i), c + 1, null, opcion);
+                        //Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutasDiaDia.get(i), c + 1, null, opcion);
                         //Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
-                        if (auxRuta.getFitness() > Mapa.rutasDiaDia.get(i).getFitness()) {
-                            Mapa.rutasDiaDia.set(i, auxRuta);
-                        }
+                        //if (auxRuta.getFitness() > Mapa.rutasDiaDia.get(i).getFitness()) {
+                        //    Mapa.rutasDiaDia.set(i, auxRuta);
+                        //}
                     }
                 }
             }
@@ -252,9 +251,17 @@ public class ABC {
             }
             // Si no puede ser asignado a alguna ruta... se crea una nueva y se inserta al arreglo de rutas
             boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
+            Region auxRegion = Mapa.oficinas.get(0).getRegion();
             if (!bool) {
                 // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen según lo establecido?
-                if (true) {
+                for(int z = 0; z < Mapa.oficinas.size(); z++){
+                    if(Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()){
+                        auxRegion = Mapa.oficinas.get(z).getRegion();
+                        break;
+                    }
+                }
+                ZoneId zoneId = ZoneId.systemDefault();
+                if (Mapa.finSimulacion.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), ZoneId.systemDefault()).plusDays(auxRegion.getCode()+1))) {
                     // Local Principal más cercano al destino del Pedido
                     ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(0 + 1, pedido.getIdCiudadDestino(), null);
                     // Si alcanza tiempo, asignar a Vehiculo más cercano cuyo fin de ruta sea el inicio de la recien creada
@@ -278,7 +285,7 @@ public class ABC {
                     }
                     if (iMenor == -1) {
                         // Ninguna fin de ruta coincide con la mejor ruta que puede tomar el pedido
-                        System.out.println("¡Colapso Logistico!");
+                        System.out.println("¡Hay pedidos pendientes de entrega!");
                         return false;
                     }
                     // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
@@ -294,7 +301,6 @@ public class ABC {
                     ArrayList<Long> horasLlegadaLong = new ArrayList<>();
                     List<BaseVertex> oficinas = rutasPath.get(0).getVertexList();
                     ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
-                    ZoneId zoneId = ZoneId.systemDefault();
 
                     for (int i = 0; i < oficinas.size(); i++) {
                         if (i == 0) {
@@ -330,6 +336,7 @@ public class ABC {
             // es falso, si ya no se puede crear más rutas
             return bool;
         } else {
+            Region auxRegion = Mapa.oficinas.get(0).getRegion();
             // Se asigna el pedido actual a la población inicial...
             boolean asignado;
             for (int a = 0; a < Mapa.rutasDiaDia.size(); a++) {
@@ -349,8 +356,15 @@ public class ABC {
             // Si no puede ser asignado a alguna ruta... se crea una nueva y se inserta al arreglo de rutas
             boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
             if (!bool) {
-                // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen a tiempo?
-                if (true) {
+                // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen según lo establecido?
+                for(int z = 0; z < Mapa.oficinas.size(); z++){
+                    if(Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()){
+                        auxRegion = Mapa.oficinas.get(z).getRegion();
+                        break;
+                    }
+                }
+                ZoneId zoneId = ZoneId.systemDefault();
+                if (Mapa.finSimulacion.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), ZoneId.systemDefault()).plusDays(auxRegion.getCode()+1))) {
                     // Local Principal más cercano al destino del Pedido
                     ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(0 + 1, pedido.getIdCiudadDestino(), null);
                     // Si alcanza tiempo, asignar a Vehiculo más cercano cuyo fin de ruta sea el inicio de la recien creada
@@ -374,7 +388,7 @@ public class ABC {
                     }
                     if (iMenor == -1) {
                         // Ninguna fin de rua coincide con la mejor ruta que puede tomar el pedido
-                        System.out.println("¡Colapso Logistico!");
+                        System.out.println("Hay pedidos pendientes de entrega");
                         return false;
                     }
                     // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
@@ -390,7 +404,7 @@ public class ABC {
                     ArrayList<Long> horasLlegadaLong = new ArrayList<>();
                     List<BaseVertex> oficinas = rutasPath.get(0).getVertexList();
                     ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
-                    ZoneId zoneId = ZoneId.systemDefault();
+                    zoneId = ZoneId.systemDefault();
 
                     for (int i = 0; i < oficinas.size(); i++) {
                         if (i == 0) {
