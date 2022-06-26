@@ -40,21 +40,23 @@ public class ABC {
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
-            System.out.println("REVISAR CANTIDAD");
             System.out.println(Mapa.pedidosDiaDia.size());
             pedidos = Mapa.pedidosDiaDia;
         }
 
         // Mensaje
         if (pedidos.size() == 0) {
-            System.out.println("No hay pedidos que asignar");
+            System.out.println("No hay pedidos que asignar...");
             return;
         }
         // Inicio ABC
         int contador = 0;
         // Etapa: Generación de la Población Inicial
         while (true) {
+<<<<<<< Updated upstream
             //System.out.println("ME ESTOY IMPRIMIENDO... WHILE TRUE");
+=======
+>>>>>>> Stashed changes
             int i = generarNumeroEnteroAleatorio(pedidos.size());
             // En caso el pedido escogido al azar no esté asignado...
             if (pedidos.get(i).getEstado() == EstadoPedido.NO_ASIGNADO) {
@@ -280,7 +282,7 @@ public class ABC {
                     }
                     if (iMenor == -1) {
                         // Ninguna fin de ruta coincide con la mejor ruta que puede tomar el pedido
-                        System.out.println("¡Colapso Logístico!");
+                        System.out.println("¡Colapso Logistico!");
                         return false;
                     }
                     // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
@@ -325,7 +327,7 @@ public class ABC {
                     return true;
                 } else {
                     // Si no alcanza tiempo, es colapso logístico
-                    System.out.println("¡Colapso Logístico!");
+                    System.out.println("¡Colapso Logistico!");
                     return false;
                 }
             }
@@ -376,7 +378,7 @@ public class ABC {
                     }
                     if (iMenor == -1) {
                         // Ninguna fin de rua coincide con la mejor ruta que puede tomar el pedido
-                        System.out.println("¡Colapso Logístico!");
+                        System.out.println("¡Colapso Logistico!");
                         return false;
                     }
                     // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
@@ -421,7 +423,7 @@ public class ABC {
                     return true;
                 } else {
                     // Si no alcanza tiempo, es colapso logístico
-                    System.out.println("¡Colapso Logístico!");
+                    System.out.println("¡Colapso Logistico!");
                     return false;
                 }
             }
