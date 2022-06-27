@@ -566,7 +566,7 @@ public class ABC {
                         Long idUnidadTransporte = Mapa.vehiculosSimulacion.get(i).getId();
                         ArrayList<Integer> auxAI = new ArrayList<>();
                         try {
-                        auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(Math.toIntExact(idRuta)).getSeguimiento());
+                            auxAI = new ObjectMapper().reader(List.class).readValue(seguimiento);
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
@@ -576,7 +576,7 @@ public class ABC {
                                 indiceAux = indice;
                             }
                         }
-                        PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), Mapa.rutasSimulacion.get(Math.toIntExact(idRuta)).getHorasDeLlegada().get(indiceAux), idRuta);
+                        PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), horasLlegadaLong.get(indiceAux), idRuta);
                         pedidosParciales.add(pedidoParcial);
                         // Actualización en Pedido
                         pedido.setCantPaquetesNoAsignado(0);
