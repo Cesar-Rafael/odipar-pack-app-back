@@ -40,6 +40,9 @@ public class Mapa {
 
     public static double k = 0.0;
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
+
+    public static LocalDateTime inicioDiaDia = LocalDateTime.now().minusDays(3);
+    public static LocalDateTime finDiaDia = LocalDateTime.now();
     public static LocalDateTime finSimulacion = inicioSimulacion.plusMinutes(90);
 
     // Otras variables

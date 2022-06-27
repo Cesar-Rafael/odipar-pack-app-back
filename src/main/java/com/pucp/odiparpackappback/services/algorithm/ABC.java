@@ -38,7 +38,7 @@ public class ABC {
             }
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
-            Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioSimulacion), obtenerFecha(Mapa.finSimulacion));
+            Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));
             System.out.println(Mapa.pedidosDiaDia.size());
             pedidos = Mapa.pedidosDiaDia;
         }
@@ -196,7 +196,7 @@ public class ABC {
                     int horas = (int) Math.floor(tiempoViaje);
                     int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
                     LocalDateTime horaLlegada;
-                    horaLlegada = Mapa.inicioSimulacion.plusHours(horas);
+                    horaLlegada = Mapa.finDiaDia.plusHours(horas);
                     horaLlegada = horaLlegada.plusMinutes(minutos);
                     list.add(horaLlegada.atZone(zoneId).toEpochSecond());
                     horasLlegada.add(horaLlegada);
@@ -452,11 +452,13 @@ public class ABC {
         ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
         ArrayList<Long> horasLlegadaLong = new ArrayList<>();
         ZoneId zoneId = ZoneId.systemDefault();
-
+        LocalDateTime inicio;
+        if(opcion == 0) inicio = Mapa.inicioSimulacion;
+        else inicio = Mapa.finDiaDia;
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
-                horasLlegadaLong.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
-                horasLlegada.add(Mapa.inicioSimulacion);
+                horasLlegadaLong.add(inicio.atZone(zoneId).toEpochSecond());
+                horasLlegada.add(inicio);
             } else {
                 double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                 int horas = (int) Math.floor(tiempoViaje);
@@ -621,8 +623,8 @@ public class ABC {
 
             for (int i = 0; i < oficinas.size(); i++) {
                 if (i == 0) {
-                    horasLlegadaLong.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
-                    horasLlegada.add(Mapa.inicioSimulacion);
+                    horasLlegadaLong.add(Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
+                    horasLlegada.add(Mapa.finDiaDia);
                 } else {
                     double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                     int horas = (int) Math.floor(tiempoViaje);

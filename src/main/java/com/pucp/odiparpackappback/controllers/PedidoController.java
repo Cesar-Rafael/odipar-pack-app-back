@@ -69,11 +69,11 @@ public class PedidoController {
         // Lectura desde BD
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
-        Mapa.cargarVehiculosDiaDia(Mapa.inicioSimulacion, 1);
+        Mapa.cargarVehiculosDiaDia(Mapa.inicioDiaDia, 1);
 
         // Rango de Simulación
-        Mapa.inicioSimulacion = LocalDateTime.parse(inicioSimulacionAux).minusDays(3);
-        Mapa.finSimulacion = LocalDateTime.parse(inicioSimulacionAux).minusHours(6);
+        Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);
+        Mapa.finDiaDia = LocalDateTime.now();
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
@@ -105,6 +105,9 @@ public class PedidoController {
 
     boolean ejecutarABCDD2() {
         ABC abc = new ABC();
+        // Rango de Simulación
+        Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);
+        Mapa.finDiaDia = LocalDateTime.now();
         abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
         System.out.println("¡Rutas actualizadas!");
         return true;
