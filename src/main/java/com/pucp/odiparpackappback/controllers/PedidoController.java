@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @RestController
 public class PedidoController {
@@ -116,7 +113,7 @@ public class PedidoController {
     Timer timer;
 
     @PostMapping("/ABCS")
-    boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
+    Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
         // Carga de Pedidos
         Mapa.pedidosSimulacion = simulation.pedidos;
@@ -150,7 +147,41 @@ public class PedidoController {
             }
             System.out.println();
         }
-        return true;
+        //reporte
+        HashMap<Long, Long> pedidos = new HashMap<>();
+        Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
+        Double tiempo = 0.0;
+        Double numPedidos = Mapa.pedidosSimulacion.size() + 0.0;
+        for(int i = 0; i< Mapa.rutasSimulacion.size(); i++){
+            for(int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++){
+                if(pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())){
+                    if(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
+                        pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
+                }
+                else{
+                    pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
+                }
+            }
+        }
+        for(int i = 0; i< Mapa.pedidosSimulacion.size(); i++){
+            if(pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())){
+                //System.out.println("entrega");
+                //System.out.println(pedidos.get(Mapa.pedidosSimulacion.get(i).getId()));
+                //System.out.println("inicio");
+                //System.out.println(Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime()/1000);
+                tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime()/1000;
+                //System.out.println("tiempo");
+                //System.out.println(tiempo);
+            }
+
+            else numPedidos--;
+        }
+
+        Double promTiempo = tiempo/numPedidos;
+        HashMap<String, Double> map = new HashMap<>();
+        map.put("cantRutas", numRutas);
+        map.put("promTiempo", promTiempo);
+        return map;
     }
 
     boolean ejecutarABCS2(int velocidad) {
