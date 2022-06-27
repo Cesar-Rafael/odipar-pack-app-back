@@ -29,7 +29,7 @@ public class ABC {
         if (opcion == 0) {
             LocalDateTime fin = Mapa.inicioSimulacion;
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
-            fin = fin.plusMinutes(5 * velocidad * 288);
+            fin = fin.plusMinutes(5 * velocidad * 288 * 7);
             Date fechaFin = obtenerFecha(fin);
             for (PedidoModel p : Mapa.pedidosSimulacion) {
                 if (fechaInicio.compareTo(p.getFechaHoraCreacion()) <= 0 && p.getFechaHoraCreacion().compareTo(fechaFin) <= 0) {
@@ -39,7 +39,6 @@ public class ABC {
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));
-            System.out.println(Mapa.pedidosDiaDia.size());
             pedidos = Mapa.pedidosDiaDia;
         }
 

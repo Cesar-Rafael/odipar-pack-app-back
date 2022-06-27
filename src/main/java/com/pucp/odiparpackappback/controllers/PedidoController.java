@@ -79,7 +79,7 @@ public class PedidoController {
         abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
 
         // Reporte Interno
-        System.out.println("REPORTE:");
+        System.out.println("REPORTE ABC DIA A DIA:");
         System.out.println("Cantidad Pedidos:");
         System.out.println(Mapa.pedidosDiaDia.size());
         for (int i = 0; i < Mapa.rutasDiaDia.size(); i++) {
@@ -133,7 +133,7 @@ public class PedidoController {
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
         // Reporte Interno
-        System.out.println("REPORTE:");
+        System.out.println("REPORTE ABC SIMULACION:");
         System.out.println("Cantidad Pedidos:");
         System.out.println(Mapa.pedidosSimulacion.size());
         for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
@@ -150,21 +150,6 @@ public class PedidoController {
             }
             System.out.println();
         }
-
-        // Actualización
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (!Mapa.flag) {     // Si ha terminado la simulación, se para la re-ejecución
-                    System.out.println("SE HA EJECUTADO 2");
-                    return;
-                } else {
-                    ejecutarABCS2(simulation.velocidad);
-                    System.out.println("SE HA EJECUTADO LA VERSION 2");
-                }
-            }
-        }, 60000, 60000); // Siempre se ejecuta después de 5 minutos - 300,000 milisegundos
         return true;
     }
 
