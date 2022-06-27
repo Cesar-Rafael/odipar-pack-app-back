@@ -47,7 +47,7 @@ public class PedidoController {
         return pedidoRepository.findById(id);
     }
 
-    @PostMapping("/Pedido/PostPedido")
+    @PostMapping("/Pedido/Insertar")
     PedidoModel InsertarPedido(@RequestBody PedidoModel pedidoModel) {
         return pedidoRepository.save(pedidoModel);
     }
