@@ -132,8 +132,6 @@ public class PedidoController {
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
-        System.out.println("INICIO SIMULACION");
-        System.out.println(Mapa.inicioSimulacion);
         // Reporte Interno
         System.out.println("REPORTE:");
         System.out.println("Cantidad Pedidos:");
@@ -159,12 +157,14 @@ public class PedidoController {
             @Override
             public void run() {
                 if (!Mapa.flag) {     // Si ha terminado la simulación, se para la re-ejecución
+                    System.out.println("SE HA EJECUTADO 2");
                     return;
                 } else {
                     ejecutarABCS2(simulation.velocidad);
+                    System.out.println("SE HA EJECUTADO LA VERSION 2");
                 }
             }
-        }, 60000, 60000); // Siempre se ejecuta después de 5 minutos - 300,000 segundos
+        }, 60000, 60000); // Siempre se ejecuta después de 5 minutos - 300,000 milisegundos
         return true;
     }
 
@@ -172,8 +172,6 @@ public class PedidoController {
         ABC abc = new ABC();
         Mapa.cargarVehiculosDiaDia(Mapa.finSimulacion, velocidad);
         Mapa.inicioSimulacion = Mapa.finSimulacion;
-        System.out.println("INICIO SIMULACION");
-        System.out.println(Mapa.inicioSimulacion);
         abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
         System.out.println("¡Rutas actualizadas!");
         return true;
