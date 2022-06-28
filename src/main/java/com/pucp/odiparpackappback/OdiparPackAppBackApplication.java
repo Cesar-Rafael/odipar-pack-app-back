@@ -18,6 +18,6 @@ public class OdiparPackAppBackApplication {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         String formattedDateTime = now.format(formatter);
-        pedidoController.ejecutarABCDiaDia(formattedDateTime);
+        //pedidoController.ejecutarABCDiaDia(formattedDateTime);
     }
 }

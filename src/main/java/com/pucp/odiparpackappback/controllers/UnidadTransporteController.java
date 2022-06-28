@@ -19,9 +19,14 @@ class UnidadTransporteController {
         this.unidadTransporteRepository = unidadTransporteRepository;
     }
 
-    @GetMapping("/UnidadTransporte/")
+    @GetMapping("/UnidadTransporte/Listar/Operaciones")
     List<UnidadTransporteModel> listarUnidadesTransporte() {
         return (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
+    }
+
+    @GetMapping("/UnidadTransporte/Listar/Simulacion")
+    List<UnidadTransporteModel> listarUnidadesTransporteSimulacion() {
+        return Mapa.vehiculosSimulacion;
     }
 
     @GetMapping("/UnidadTransporte/idRuta")
