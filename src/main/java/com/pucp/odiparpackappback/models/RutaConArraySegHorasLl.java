@@ -6,15 +6,17 @@ public class RutaConArraySegHorasLl {
     private Long idRuta;
     private Long idUnidadTransporte;
     private ArrayList<Integer> arraySeguimiento;
+    private ArrayList<String> nombreProvincias;
     private ArrayList<Long> arrayHorasLlegada;
     private String codigoPlaca;
     private ArrayList<PedidoModel> pedidos;
 
-    public RutaConArraySegHorasLl(Long id, Long idRuta, Long idUnidadTransporte, ArrayList<Integer> arraySeguimiento, ArrayList<Long> arrayHorasLlegada, String codigoPlaca, ArrayList<PedidoModel> pedidos) {
+    public RutaConArraySegHorasLl(Long id, Long idRuta, Long idUnidadTransporte, ArrayList<Integer> arraySeguimiento, ArrayList<String> nombreProvincias, ArrayList<Long> arrayHorasLlegada, String codigoPlaca, ArrayList<PedidoModel> pedidos) {
         this.id = id;
         this.idRuta = idRuta;
         this.idUnidadTransporte = idUnidadTransporte;
         this.arraySeguimiento = arraySeguimiento;
+        this.nombreProvincias = nombreProvincias;
         this.arrayHorasLlegada = arrayHorasLlegada;
         this.codigoPlaca = codigoPlaca;
         this.pedidos = pedidos;
@@ -67,5 +69,12 @@ public class RutaConArraySegHorasLl {
     }
     public void setCodigoPlaca(String codigoPlaca) {
         this.codigoPlaca = codigoPlaca;
+    }
+
+    public ArrayList<String> getNombreProvincias() {
+        return nombreProvincias;
+    }
+    public void setNombreProvincias(ArrayList<String> nombreProvincias) {
+        this.nombreProvincias = nombreProvincias;
     }
 }
