@@ -36,6 +36,7 @@ public class ABC {
                     pedidos.add(p);
                 }
             }
+            pedidos = Mapa.pedidosSimulacion;
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));
@@ -253,14 +254,14 @@ public class ABC {
             Region auxRegion = Mapa.oficinas.get(0).getRegion();
             if (!bool) {
                 // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen según lo establecido?
-                for(int z = 0; z < Mapa.oficinas.size(); z++){
-                    if(Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()){
+                for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                    if (Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()) {
                         auxRegion = Mapa.oficinas.get(z).getRegion();
                         break;
                     }
                 }
                 ZoneId zoneId = ZoneId.systemDefault();
-                if (Mapa.finSimulacion.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), ZoneId.systemDefault()).plusDays(auxRegion.getCode()+1))) {
+                if (Mapa.finSimulacion.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), ZoneId.systemDefault()).plusDays(auxRegion.getCode() + 1))) {
                     // Local Principal más cercano al destino del Pedido
                     ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(0 + 1, pedido.getIdCiudadDestino(), null);
                     // Si alcanza tiempo, asignar a Vehiculo más cercano cuyo fin de ruta sea el inicio de la recien creada
@@ -356,14 +357,14 @@ public class ABC {
             boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
             if (!bool) {
                 // No hay camiones para asignar más pedidos, pero... ¿Alcanza tiempo para que lleguen según lo establecido?
-                for(int z = 0; z < Mapa.oficinas.size(); z++){
-                    if(Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()){
+                for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                    if (Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()) {
                         auxRegion = Mapa.oficinas.get(z).getRegion();
                         break;
                     }
                 }
                 ZoneId zoneId = ZoneId.systemDefault();
-                if (Mapa.finSimulacion.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), ZoneId.systemDefault()).plusDays(auxRegion.getCode()+1))) {
+                if (Mapa.finSimulacion.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), ZoneId.systemDefault()).plusDays(auxRegion.getCode() + 1))) {
                     // Local Principal más cercano al destino del Pedido
                     ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(0 + 1, pedido.getIdCiudadDestino(), null);
                     // Si alcanza tiempo, asignar a Vehiculo más cercano cuyo fin de ruta sea el inicio de la recien creada
@@ -452,7 +453,7 @@ public class ABC {
         ArrayList<Long> horasLlegadaLong = new ArrayList<>();
         ZoneId zoneId = ZoneId.systemDefault();
         LocalDateTime inicio;
-        if(opcion == 0) inicio = Mapa.inicioSimulacion;
+        if (opcion == 0) inicio = Mapa.inicioSimulacion;
         else inicio = Mapa.finDiaDia;
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
@@ -571,8 +572,8 @@ public class ABC {
                             System.out.println(ex);
                         }
                         int indiceAux = -1;
-                        for(int indice = 0; indice < auxAI.size(); indice++){
-                            if (auxAI.get(indice)==pedido.getIdCiudadDestino()) {
+                        for (int indice = 0; indice < auxAI.size(); indice++) {
+                            if (auxAI.get(indice) == pedido.getIdCiudadDestino()) {
                                 indiceAux = indice;
                             }
                         }
