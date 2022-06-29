@@ -26,15 +26,17 @@ public class ABC {
         if (opcion == 0) {
             LocalDateTime fin = Mapa.inicioSimulacion;
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
-            fin = fin.plusMinutes(5 * velocidad * 288 * 7);
+            fin = fin.plusHours(6);
+            //fin = fin.plusMinutes(5 * velocidad * 288 * 7);
             Date fechaFin = obtenerFecha(fin);
+            // Rango de Pedidos
             for (PedidoModel p : Mapa.pedidosSimulacion) {
                 if (fechaInicio.compareTo(p.getFechaHoraCreacion()) <= 0 && p.getFechaHoraCreacion().compareTo(fechaFin) <= 0) {
+                    System.out.println("ID DEL PEDIDO ARRAY");
+                    System.out.println(p.getId());
                     pedidos.add(p);
                 }
             }
-            // "pedidos" se utilizará para el algoritmo
-            pedidos = Mapa.pedidosSimulacion;
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));

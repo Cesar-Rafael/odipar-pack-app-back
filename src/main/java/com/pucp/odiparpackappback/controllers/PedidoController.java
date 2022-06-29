@@ -114,6 +114,7 @@ public class PedidoController {
     @PostMapping("/ABCS")
     Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
+
         // Carga de Pedidos
         Mapa.pedidosSimulacion = simulation.pedidos;
 
@@ -123,15 +124,23 @@ public class PedidoController {
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
 
-        // Rango de Simulación
+        // Rango de Simulación - Mapa.inicioSimulacion es la ingresada por FRONTEND
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
 
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
-        // Reporte Interno
+
+        // Ejecución de los siguientes rangos
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                //ejecutarABCS2(simulation.velocidad);
+            }
+        }, 1000, 1000);
+
+        // REPORTE INTERNO
         System.out.println("REPORTE ABC SIMULACION:");
-        System.out.println("Cantidad Pedidos:");
-        System.out.println(Mapa.pedidosSimulacion.size());
         for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
             System.out.println("IdRuta:");
             System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
@@ -146,6 +155,7 @@ public class PedidoController {
             }
             System.out.println();
         }
+
         //reporte
         HashMap<Long, Long> pedidos = new HashMap<>();
         Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
@@ -182,10 +192,34 @@ public class PedidoController {
 
     boolean ejecutarABCS2(int velocidad) {
         ABC abc = new ABC();
-        Mapa.cargarVehiculosDiaDia(Mapa.finSimulacion, velocidad);
-        Mapa.inicioSimulacion = Mapa.finSimulacion;
-        abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
-        System.out.println("¡Rutas actualizadas!");
+
+        // Ejecución del Algoritmo
+        // El algoritmo debe ejecutarse 28 veces, cada uno con un rango de 6 horas
+        for(int zzz = 0; zzz < 7; zzz++){
+            abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
+            Mapa.inicioSimulacion = Mapa.finSimulacion;
+            System.out.println("¡Rutas actualizadas!");
+        }
+
+        // REPORTE INTERNO
+        System.out.println("REPORTE ABC SIMULACION:");
+        System.out.println("Cantidad Pedidos:");
+        System.out.println(Mapa.pedidosSimulacion.size());
+        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+            System.out.println("IdRuta:");
+            System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
+            System.out.println("IdUnidadTransporte:");
+            System.out.println(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte());
+            System.out.println("Seguimiento:");
+            System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
+            System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
+            System.out.println("Pedidos Parciales:");
+            for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
+                System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
+            }
+            System.out.println();
+        }
+
         return true;
     }
 
