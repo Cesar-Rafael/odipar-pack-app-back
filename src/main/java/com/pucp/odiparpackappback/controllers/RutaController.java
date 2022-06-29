@@ -34,7 +34,7 @@ public class RutaController {
                 for(int zz=0; zz < auxAI.size(); zz++){
                     for(int z=0; z<Mapa.oficinas.size(); z++){
                         if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
-                            auxNombreProvincias.add(Mapa.oficinas.get(z).getProvincia());
+                            auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
                         }
                     }
                 }
@@ -128,7 +128,7 @@ public class RutaController {
                 for(int zz=0; zz < auxAI.size(); zz++){
                     for(int z=0; z<Mapa.oficinas.size(); z++){
                         if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
-                            auxNombreProvincias.add(Mapa.oficinas.get(z).getProvincia());
+                            auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
                         }
                     }
                 }
