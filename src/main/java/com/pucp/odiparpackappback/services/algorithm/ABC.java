@@ -23,9 +23,6 @@ public class ABC {
         // Opcion 1 - DiaDia
 
         ArrayList<PedidoModel> pedidos = new ArrayList<>();
-
-        // VarAux
-
         if (opcion == 0) {
             LocalDateTime fin = Mapa.inicioSimulacion;
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
@@ -41,14 +38,15 @@ public class ABC {
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));
+            // "pedidos" se utilizará para el algoritmo
             pedidos = Mapa.pedidosDiaDia;
         }
 
-        // Mensaje
         if (pedidos.size() == 0) {
             System.out.println("No hay pedidos que asignar...");
             return;
         }
+
         // Inicio ABC
         int contador = 0;
         // Etapa: Generación de la Población Inicial
@@ -63,39 +61,6 @@ public class ABC {
                 contador++;
                 if (contador == pedidos.size()) {
                     break;
-                }
-            }
-        }
-
-        // Etapa: Mejora de la Población Inicial de acuerdo al número de generaciones
-        for (int a = 0; a < numGen; a++) {
-            if (opcion == 0) {
-                // Abeja Obrera
-                for (int b = 0; b < numAbejasObr; b++) {
-                    int i = generarNumeroEnteroAleatorio(Mapa.rutasSimulacion.size());
-                    // Abeja Observadora
-                    for (int c = 0; b < numAbejasObs; b++) {
-                        //Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                        //Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutasSimulacion.get(i), c + 1, null, opcion);
-                        //Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
-                        //if (auxRuta.getFitness() > Mapa.rutasSimulacion.get(i).getFitness()) {
-                        //    Mapa.rutasSimulacion.set(i, auxRuta);
-                        //}
-                    }
-                }
-            } else {
-                // Abeja Obrera
-                for (int b = 0; b < numAbejasObr; b++) {
-                    int i = generarNumeroEnteroAleatorio(Mapa.rutasDiaDia.size());
-                    // Abeja Observadora
-                    for (int c = 0; b < numAbejasObs; b++) {
-                        //Se buscará numAbejasObs vecinas a la ruta i, en caso algún vecino tenga mejor fitness, este lo reemplazará en el arreglo de rutas
-                        //Ruta auxRuta = kShortestPathRoutingRuta(Mapa.rutasDiaDia.get(i), c + 1, null, opcion);
-                        //Si la ruta vecina tiene un mejor fitness, lo reemplazará, si no pasamos al siguiente
-                        //if (auxRuta.getFitness() > Mapa.rutasDiaDia.get(i).getFitness()) {
-                        //    Mapa.rutasDiaDia.set(i, auxRuta);
-                        //}
-                    }
                 }
             }
         }
