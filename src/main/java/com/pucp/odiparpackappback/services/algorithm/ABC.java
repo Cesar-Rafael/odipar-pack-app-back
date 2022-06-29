@@ -95,50 +95,11 @@ public class ABC {
 
                 ArrayList<Long> list = Mapa.rutasDiaDia.get(rm).getHorasDeLlegada();
 
-                //regreso a oficina
-                List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutasDiaDia.get(rm).getTramos().get(Mapa.rutasDiaDia.get(rm).getTramos().size() - 1).getIdCiudadJ());
-                int ganador = 1;
-                for (int p = 0; p < shortestPath.size(); p++) {
-                    if (shortestPath.get(p).getWeight() < shortestPath.get(ganador).getWeight()) ganador = p;
-                }
-                shortestPath.get(ganador).getVertexList().remove(0).toString();
-                String rutaRegreso = shortestPath.get(ganador).getVertexList().toString();
-                //System.out.println("regreso");
-                //System.out.println(rutaRegreso);
-                //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
-                List<BaseVertex> oficinas = shortestPath.get(ganador).getVertexList();
-                ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
-                ZoneId zoneId = ZoneId.systemDefault();
-                for (int i = 0; i < oficinas.size(); i++) {
-                    double tiempoViaje;
-                    if (i != 0) tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
-                    else
-                        tiempoViaje = findTiempoViaje(Mapa.rutasDiaDia.get(rm).getTramos().get(Mapa.rutasDiaDia.get(rm).getTramos().size() - 1).getIdCiudadJ(), oficinas.get(i).getId());
-                    int horas = (int) Math.floor(tiempoViaje);
-                    int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
-                    LocalDateTime horaLlegada;
-                    horaLlegada = Mapa.finDiaDia.plusHours(horas);
-                    horaLlegada = horaLlegada.plusMinutes(minutos);
-                    list.add(horaLlegada.atZone(zoneId).toEpochSecond());
-                    horasLlegada.add(horaLlegada);
-                }
-                Mapa.rutasDiaDia.get(rm).setHorasDeLlegada(list);
-                if (rutaRegreso.startsWith("[")) {
-                    rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso.replace('[', ' ');
-                } else {
-                    rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']';
-                    Mapa.rutasDiaDia.get(rm).setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']');
-                }
-                rutaAux.setSeguimiento(rutaRegreso);
-                Mapa.rutasDiaDia.get(rm).setSeguimiento(rutaRegreso);
                 StringBuilder listString = new StringBuilder();
                 for (int i = 0; i < list.size(); i++) {
                     listString.append(list.get(i));
                     if (i != list.size() - 1) listString.append(",");
                 }
-                rutaAux.setArrayHorasLlegada(listString.toString());
-                ArrayList<TramoModel> tramos = Mapa.listarTramos(rutaRegreso);
-                Mapa.rutasDiaDia.get(rm).setTramos(tramos);
                 rutasAux.add(rutaAux);
             }
 
