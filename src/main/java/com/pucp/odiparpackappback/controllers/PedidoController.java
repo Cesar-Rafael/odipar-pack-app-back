@@ -50,7 +50,7 @@ public class PedidoController {
         return pedidoRepository.save(pedidoModel);
     }
 
-    @PostMapping("/Pedido/PostPedidos")
+    @PostMapping("/Pedido/Insertar/Masivo")
     boolean InsertarListaPedidos(@RequestBody List<PedidoModel> pedidosModel) {
         try {
             pedidoRepository.saveAll(pedidosModel);
