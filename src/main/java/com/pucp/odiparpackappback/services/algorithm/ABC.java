@@ -236,8 +236,8 @@ public class ABC {
                         } catch (Exception ex) {
                             System.out.println(ex);
                         }
-                        // Si el último UBIGEO del seguimiento es igual al origen de la ruta del pedido
-                        if (listaSeg.get(0).equals(listaSeg2.get(0))) {
+                        // Si el último UBIGEO del seguimiento es igual al origen de la ruta del pedido y ... el Vehiculo puede ser asignado: NO ESTÁ RESERVADO
+                        if (listaSeg.get(0).equals(listaSeg2.get(0)) && !(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).getEstado().getCode() == 1 )) {
                             if (iPrimero == false) {
                                 iMenor = i;
                             } else {
@@ -288,6 +288,7 @@ public class ABC {
                         }
                     }
                     Mapa.rutasSimulacion.get(iMenor).setFlagTerminado(true);
+                    Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
                     // SE CREA UNA NUEVA RUTA
                     Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
                     Mapa.rutasSimulacion.add(rutaAux);
