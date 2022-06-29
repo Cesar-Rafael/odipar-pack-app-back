@@ -26,6 +26,7 @@ class UnidadTransporteController {
 
     @GetMapping("/UnidadTransporte/Listar/Simulacion")
     List<UnidadTransporteModel> listarUnidadesTransporteSimulacion() {
+        Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         return Mapa.vehiculosSimulacion;
     }
 

@@ -15,22 +15,23 @@ import java.util.Objects;
 public class OficinaController {
 
     private final OficinaRepository oficinaRepository;
-    OficinaController(OficinaRepository oficinaRepository){
+
+    OficinaController(OficinaRepository oficinaRepository) {
         this.oficinaRepository = oficinaRepository;
     }
 
-    @GetMapping("/Oficina/")
-    List<OficinaModel> listarOficinas(){
+    @GetMapping("/Oficina/Listar")
+    List<OficinaModel> listarOficinas() {
         return (List<OficinaModel>) oficinaRepository.findAll();
     }
 
     @GetMapping("/Oficina/provincia")
     @ResponseBody
-    List<OficinaModel> ListarOficinasxProvincia(@RequestParam(required = false) String provincia){
+    List<OficinaModel> ListarOficinasxProvincia(@RequestParam(required = false) String provincia) {
         List<OficinaModel> oficinasAux = (List<OficinaModel>) oficinaRepository.findAll();
         List<OficinaModel> oficinas = new ArrayList<>();
-        for(int i = 0; i < oficinasAux.size(); i++){
-            if(Objects.equals(oficinasAux.get(i).getProvincia(), provincia)){
+        for (int i = 0; i < oficinasAux.size(); i++) {
+            if (Objects.equals(oficinasAux.get(i).getProvincia(), provincia)) {
                 oficinas.add(oficinasAux.get(i));
             }
         }

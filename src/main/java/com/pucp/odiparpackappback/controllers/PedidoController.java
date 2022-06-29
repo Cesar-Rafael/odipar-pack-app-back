@@ -14,14 +14,10 @@ import java.util.*;
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
+    Timer timer;
 
     public PedidoController(PedidoRepository pedidoRepository) {
         this.pedidoRepository = pedidoRepository;
-    }
-
-    @GetMapping("/Pedido/Listar")
-    public List<PedidoModel> listarPedidos() {
-        return (List<PedidoModel>) pedidoRepository.findAll();
     }
 
     /*
@@ -37,6 +33,11 @@ public class PedidoController {
         }
         return pedidos;
     }*/
+
+    @GetMapping("/Pedido/Listar")
+    public List<PedidoModel> listarPedidos() {
+        return (List<PedidoModel>) pedidoRepository.findAll();
+    }
 
     @GetMapping("/Pedido/{id}")
     @ResponseBody
@@ -110,8 +111,6 @@ public class PedidoController {
         return true;
     }
 
-    Timer timer;
-
     @PostMapping("/ABCS")
     Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
@@ -152,32 +151,29 @@ public class PedidoController {
         Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
         Double tiempo = 0.0;
         Double numPedidos = Mapa.pedidosSimulacion.size() + 0.0;
-        for(int i = 0; i< Mapa.rutasSimulacion.size(); i++){
-            for(int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++){
-                if(pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())){
-                    if(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
+        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+            for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
+                if (pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())) {
+                    if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
                         pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
-                }
-                else{
+                } else {
                     pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
                 }
             }
         }
-        for(int i = 0; i< Mapa.pedidosSimulacion.size(); i++){
-            if(pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())){
+        for (int i = 0; i < Mapa.pedidosSimulacion.size(); i++) {
+            if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())) {
                 //System.out.println("entrega");
                 //System.out.println(pedidos.get(Mapa.pedidosSimulacion.get(i).getId()));
                 //System.out.println("inicio");
                 //System.out.println(Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime()/1000);
-                tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime()/1000;
+                tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
                 //System.out.println("tiempo");
                 //System.out.println(tiempo);
-            }
-
-            else numPedidos--;
+            } else numPedidos--;
         }
 
-        Double promTiempo = tiempo/numPedidos;
+        Double promTiempo = tiempo / numPedidos;
         HashMap<String, Double> map = new HashMap<>();
         map.put("cantRutas", numRutas);
         map.put("promTiempo", promTiempo);
@@ -195,7 +191,7 @@ public class PedidoController {
 
     @GetMapping("/simulacion/detener")
     boolean pararSimulacion() {
-        timer.cancel();
+        //timer.cancel();
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
         return true;
