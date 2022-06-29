@@ -118,7 +118,6 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/simulacion/listar")
-    @ResponseBody
     public List<RutaConArraySegHorasLl> ListarRutasSimulacion() {
         try {
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
@@ -127,7 +126,7 @@ public class RutaController {
                 String codigoPlaca = null;
                 ArrayList<String> auxNombreProvincias = new ArrayList<>();
                 for(int z=0; z<Mapa.oficinas.size(); z++){
-                    for(int zz=0; z < auxAI.size(); zz++){
+                    for(int zz=0; zz < auxAI.size(); zz++){
                         if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
                             auxNombreProvincias.add(Mapa.oficinas.get(z).getProvincia());
                         }
