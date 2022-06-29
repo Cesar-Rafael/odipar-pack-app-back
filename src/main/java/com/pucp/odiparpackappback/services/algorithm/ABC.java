@@ -27,6 +27,7 @@ public class ABC {
             LocalDateTime fin = Mapa.inicioSimulacion;
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
             fin = fin.plusHours(6);
+            Mapa.finSimulacion = fin;
             //fin = fin.plusMinutes(5 * velocidad * 288 * 7);
             Date fechaFin = obtenerFecha(fin);
             // Rango de Pedidos
@@ -212,7 +213,7 @@ public class ABC {
                     }
                     if (iMenor == -1) {
                         // Ninguna fin de ruta coincide con la mejor ruta que puede tomar el pedido
-                        System.out.println("¡Hay pedidos pendientes de entrega!");
+                        System.out.println("Hay pedidos pendientes de entrega...");
                         return false;
                     }
                     // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará

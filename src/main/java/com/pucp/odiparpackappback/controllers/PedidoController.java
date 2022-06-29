@@ -135,12 +135,12 @@ public class PedidoController {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                //ejecutarABCS2(simulation.velocidad);
+                ejecutarABCS2(simulation.velocidad);
             }
-        }, 1000, 1000);
+        }, 30000, 30000);
 
         // REPORTE INTERNO
-        System.out.println("REPORTE ABC SIMULACION:");
+        System.out.println("REPORTE ABC SIMULACION 0:");
         for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
             System.out.println("IdRuta:");
             System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
@@ -195,29 +195,26 @@ public class PedidoController {
 
         // Ejecución del Algoritmo
         // El algoritmo debe ejecutarse 28 veces, cada uno con un rango de 6 horas
-        for(int zzz = 0; zzz < 7; zzz++){
-            abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
+        for(int zzz = 0; zzz < 27; zzz++){
             Mapa.inicioSimulacion = Mapa.finSimulacion;
-            System.out.println("¡Rutas actualizadas!");
-        }
-
-        // REPORTE INTERNO
-        System.out.println("REPORTE ABC SIMULACION:");
-        System.out.println("Cantidad Pedidos:");
-        System.out.println(Mapa.pedidosSimulacion.size());
-        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-            System.out.println("IdRuta:");
-            System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
-            System.out.println("IdUnidadTransporte:");
-            System.out.println(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte());
-            System.out.println("Seguimiento:");
-            System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
-            System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
-            System.out.println("Pedidos Parciales:");
-            for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
-                System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
+            abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
+            System.out.println("Las Rutas han sido actualizadas...");
+            // REPORTE INTERNO
+            System.out.println("REPORTE ABC SIMULACION: " + zzz);
+            for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+                System.out.println("IdRuta:");
+                System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
+                System.out.println("IdUnidadTransporte:");
+                System.out.println(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte());
+                System.out.println("Seguimiento:");
+                System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
+                System.out.println("Pedidos Parciales:");
+                for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
+                    System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
+                }
+                System.out.println();
             }
-            System.out.println();
         }
 
         return true;
