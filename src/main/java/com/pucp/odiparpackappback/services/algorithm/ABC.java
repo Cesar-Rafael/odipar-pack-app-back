@@ -73,50 +73,11 @@ public class ABC {
                 rutaAux.setSeguimiento(Mapa.rutasSimulacion.get(rm).getSeguimiento());
                 rutaAux.setIdUnidadTransporte(Mapa.rutasSimulacion.get(rm).getIdUnidadTransporte());
                 ArrayList<Long> list = Mapa.rutasSimulacion.get(rm).getHorasDeLlegada();
-                //regreso a oficina
-                List<Path> shortestPath = YenTopKShortestPathsAlg.getShortestPathsReturn(Mapa.rutasSimulacion.get(rm).getTramos().get(Mapa.rutasSimulacion.get(rm).getTramos().size() - 1).getIdCiudadJ());
-                int ganador = 1;
-                for (int p = 0; p < shortestPath.size(); p++) {
-                    if (shortestPath.get(p).getWeight() < shortestPath.get(ganador).getWeight()) ganador = p;
-                }
-                shortestPath.get(ganador).getVertexList().remove(0).toString();
-                String rutaRegreso = shortestPath.get(ganador).getVertexList().toString();
-                //System.out.println("regreso");
-                //System.out.println(rutaRegreso);
-                //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
-                List<BaseVertex> oficinas = shortestPath.get(ganador).getVertexList();
-                ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
-                ZoneId zoneId = ZoneId.systemDefault();
-                for (int i = 0; i < oficinas.size(); i++) {
-                    LocalDateTime horaLlegada = LocalDateTime.ofInstant(Instant.ofEpochSecond(list.get(list.size() - 1)), zoneId);
-                    double tiempoViaje;
-                    if (i != 0) tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
-                    else
-                        tiempoViaje = findTiempoViaje(Mapa.rutasSimulacion.get(rm).getTramos().get(Mapa.rutasSimulacion.get(rm).getTramos().size() - 1).getIdCiudadJ(), oficinas.get(i).getId());
-                    int horas = (int) Math.floor(tiempoViaje);
-                    int minutos = (int) (tiempoViaje - 1.0 * horas) * 60;
-                    horaLlegada = horaLlegada.plusHours(horas + 1);
-                    horaLlegada = horaLlegada.plusMinutes(minutos);
-                    list.add(horaLlegada.atZone(zoneId).toEpochSecond());
-                    horasLlegada.add(horaLlegada);
-                }
-                Mapa.rutasSimulacion.get(rm).setHorasDeLlegada(list);
-                if (rutaRegreso.startsWith("[")) {
-                    rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso.replace('[', ' ');
-                } else {
-                    rutaRegreso = rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']';
-                    Mapa.rutasSimulacion.get(rm).setSeguimiento(rutaAux.getSeguimiento().replace(']', ',') + rutaRegreso + ']');
-                }
-                rutaAux.setSeguimiento(rutaRegreso);
-                Mapa.rutasSimulacion.get(rm).setSeguimiento(rutaRegreso);
                 StringBuilder listString = new StringBuilder();
                 for (int i = 0; i < list.size(); i++) {
                     listString.append(list.get(i));
                     if (i != list.size() - 1) listString.append(",");
                 }
-                rutaAux.setArrayHorasLlegada(listString.toString());
-                ArrayList<TramoModel> tramos = Mapa.listarTramos(rutaRegreso);
-                Mapa.rutasSimulacion.get(rm).setTramos(tramos);
                 rutasAux.add(rutaAux);
             }
             Mapa.cargarRutas(rutasAux);
@@ -404,15 +365,32 @@ public class ABC {
         if (opcion == 0) {
             // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
             ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k + 1, pedido.getIdCiudadDestino(), null);
-            // Parámetros
             Long idRuta = Long.valueOf(Mapa.rutasSimulacion.size());
             if (rutasPath.size() == 0) {
                 System.out.println("pedido id: " + pedido.getId());
             }
-            String seguimiento = rutasPath.get(k).getVertexList().toString();
+
+            //Regreso
+            List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(k).getVertexList().get(rutasPath.get(k).getVertexList().size()-1).getId());
+            int ganador = 1;
+            for (int p = 0; p < regresoPath.size(); p++) {
+                if (regresoPath.get(p).getWeight() < regresoPath.get(ganador).getWeight()) ganador = p;
+            }
+            regresoPath.get(ganador).getVertexList().remove(0);
+            //System.out.println("regreso");
+            //System.out.println(rutaRegreso);
+            //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
+            List<BaseVertex> oficinasRegreso = regresoPath.get(ganador).getVertexList();
+
+            // Parámetros
+            List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
+            for(int or = 0; or < oficinasRegreso.size(); or++){
+                oficinas.add(oficinasRegreso.get(or));
+            }
+            String seguimiento = oficinas.toString();
             ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
 
-            List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
+
             ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
             ArrayList<Long> horasLlegadaLong = new ArrayList<>();
             ZoneId zoneId = ZoneId.systemDefault();
