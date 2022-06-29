@@ -258,8 +258,6 @@ public class ABC {
                     Long idRuta = Long.valueOf(Mapa.rutasSimulacion.size());
                     ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
                     // CREACION DE PEDIDO PARCIAL
-                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), 0L, idRuta);
-                    pedidosParciales.add(pedidoParcial);
                     double fitness = rutasPath.get(0).getWeight();
                     ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                     ArrayList<Long> horasLlegadaLong = new ArrayList<>();
@@ -289,6 +287,20 @@ public class ABC {
                     }
                     Mapa.rutasSimulacion.get(iMenor).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
+                    ArrayList<Integer> auxAI = new ArrayList<>();
+                    try {
+                        auxAI = new ObjectMapper().reader(List.class).readValue(seguimiento);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                    int indiceAux = -1;
+                    for (int indice = 0; indice < auxAI.size(); indice++) {
+                        if (auxAI.get(indice) == pedido.getIdCiudadDestino()) {
+                            indiceAux = indice;
+                        }
+                    }
+                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), horasLlegadaLong.get(indiceAux), idRuta);
+                    pedidosParciales.add(pedidoParcial);
                     // SE CREA UNA NUEVA RUTA
                     Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
                     Mapa.rutasSimulacion.add(rutaAux);
