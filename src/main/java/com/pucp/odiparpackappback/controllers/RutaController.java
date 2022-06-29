@@ -32,7 +32,7 @@ public class RutaController {
                 ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(rutas.get(i).getSeguimiento());
                 ArrayList<String> auxNombreProvincias = new ArrayList<>();
                 for(int z=0; z<Mapa.oficinas.size(); z++){
-                    for(int zz=0; z < auxAI.size(); zz++){
+                    for(int zz=0; zz < auxAI.size(); zz++){
                         if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
                             auxNombreProvincias.add(Mapa.oficinas.get(z).getProvincia());
                         }
@@ -85,10 +85,10 @@ public class RutaController {
                 if (Mapa.rutasSimulacion.get(i).getIdUnidadTransporte() == idVehiculo) {
                     ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
                     ArrayList<String> auxNombreProvincias = new ArrayList<>();
-                    for(int z=0; z<Mapa.oficinas.size(); z++){
-                        for(int zz=0; z < auxAI.size(); zz++){
+                    for(int zz=0; zz < auxAI.size(); zz++){
+                        for(int z=0; z<Mapa.oficinas.size(); z++){
                             if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
-                                auxNombreProvincias.add(Mapa.oficinas.get(z).getProvincia());
+                                auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
                             }
                         }
                     }
