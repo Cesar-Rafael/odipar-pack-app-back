@@ -241,6 +241,7 @@ public class ABC {
                             indiceAux = indice;
                         }
                     }
+                    pedido.setEstado(EstadoPedido.EN_PROCESO);
                     PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), horasLlegadaLong.get(indiceAux), idRuta);
                     pedidosParciales.add(pedidoParcial);
                     // SE CREA UNA NUEVA RUTA
