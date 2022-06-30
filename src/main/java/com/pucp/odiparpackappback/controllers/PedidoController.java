@@ -201,7 +201,7 @@ public class PedidoController {
             abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
             System.out.println("Las Rutas han sido actualizadas...");
             // REPORTE INTERNO
-            System.out.println("REPORTE ABC SIMULACION: " + zzz);
+            System.out.println("REPORTE ABC SIMULACION: " + (zzz+1));
             for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
                 System.out.println("IdRuta:");
                 System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
