@@ -184,10 +184,27 @@ public class ABC {
                     ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
                     // CREACION DE PEDIDO PARCIAL
                     double fitness = rutasPath.get(0).getWeight();
-                    ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
+
                     ArrayList<Long> horasLlegadaLong = new ArrayList<>();
                     List<BaseVertex> oficinas = rutasPath.get(0).getVertexList();
                     ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
+
+                    //Regreso
+                    List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(0).getVertexList().get(rutasPath.get(0).getVertexList().size()-1).getId());
+                    int ganador = 1;
+                    for (int p = 0; p < regresoPath.size(); p++) {
+                        if (regresoPath.get(p).getWeight() < regresoPath.get(ganador).getWeight()) ganador = p;
+                    }
+                    regresoPath.get(ganador).getVertexList().remove(0);
+                    //System.out.println("regreso");
+                    //System.out.println(rutaRegreso);
+                    //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
+                    List<BaseVertex> oficinasRegreso = regresoPath.get(ganador).getVertexList();
+                    for(int or = 0; or < oficinasRegreso.size(); or++){
+                        oficinas.add(oficinasRegreso.get(or));
+                    }
+                    seguimiento = oficinas.toString();
+                    ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
 
                     for (int i = 0; i < oficinas.size(); i++) {
                         if (i == 0) {
@@ -478,10 +495,26 @@ public class ABC {
             if (rutasPath.size() == 0) {
                 System.out.println("pedido id: " + pedido.getId());
             }
-            String seguimiento = rutasPath.get(k).getVertexList().toString();
+            //Regreso
+            List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(k).getVertexList().get(rutasPath.get(k).getVertexList().size()-1).getId());
+            int ganador = 1;
+            for (int p = 0; p < regresoPath.size(); p++) {
+                if (regresoPath.get(p).getWeight() < regresoPath.get(ganador).getWeight()) ganador = p;
+            }
+            regresoPath.get(ganador).getVertexList().remove(0);
+            //System.out.println("regreso");
+            //System.out.println(rutaRegreso);
+            //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
+            List<BaseVertex> oficinasRegreso = regresoPath.get(ganador).getVertexList();
+
+            // Parámetros
+            List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
+            for(int or = 0; or < oficinasRegreso.size(); or++){
+                oficinas.add(oficinasRegreso.get(or));
+            }
+            String seguimiento = oficinas.toString();
             ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
 
-            List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
             ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
             ArrayList<Long> horasLlegadaLong = new ArrayList<>();
             ZoneId zoneId = ZoneId.systemDefault();
