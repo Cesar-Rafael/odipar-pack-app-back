@@ -8,7 +8,9 @@ import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -126,13 +128,30 @@ public class PedidoController {
         Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
 
         // Rango de Simulación - Mapa.inicioSimulacion es la ingresada por FRONTEND
-        Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
+        //Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
+
+        LocalDate fechaActual = simulation.inicioSimulacion.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        /*
+        ArrayList<LocalDateTime> rangosTiempoEjecucion = new ArrayList<>();
+        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(0, 0)));
+        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(6, 0)));
+        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(12, 0)));
+        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(18, 0)));*/
+
+        LocalDateTime inicioSimulacion = LocalDateTime.of(fechaActual, LocalTime.of(0, 0));
+
+        for (int time = 0; time < 28; time++) {
+            Mapa.inicioSimulacion = inicioSimulacion;
+            Mapa.finSimulacion = inicioSimulacion.plusHours(6);
+            abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
+            inicioSimulacion = inicioSimulacion.plusHours(6);
+        }
 
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
 
         // REPORTE INTERNO
-        System.out.println("REPORTE ABC SIMULACION 0:");
+        System.out.println("REPORTE ABC SIMULACION:");
         for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
             Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
             System.out.println("IdRuta:");
@@ -150,6 +169,7 @@ public class PedidoController {
         }
 
         // Ejecución de los siguientes rangos
+        /*
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -157,9 +177,9 @@ public class PedidoController {
                 ejecutarABCS2(simulation.velocidad);
                 timer.cancel();
             }
-        }, 15000, 15000);
+        }, 15000, 15000);*/
 
-        //reporte
+        // Reporte
         HashMap<Long, Long> pedidos = new HashMap<>();
         Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
         Double tiempo = 0.0;
@@ -198,12 +218,12 @@ public class PedidoController {
 
         // Ejecución del Algoritmo
         // El algoritmo debe ejecutarse 28 veces, cada uno con un rango de 6 horas
-        for(int zzz = 0; zzz < 27; zzz++){
+        for (int zzz = 0; zzz < 27; zzz++) {
             Mapa.inicioSimulacion = Mapa.finSimulacion;
             abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
             System.out.println("Las Rutas han sido actualizadas...");
             // REPORTE INTERNO
-            System.out.println("REPORTE ABC SIMULACION: " + (zzz+1));
+            System.out.println("REPORTE ABC SIMULACION: " + (zzz + 1));
             for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
                 Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                 System.out.println("IdRuta:");

@@ -24,17 +24,19 @@ public class ABC {
 
         ArrayList<PedidoModel> pedidos = new ArrayList<>();
         if (opcion == 0) {
-            LocalDateTime fin = Mapa.inicioSimulacion;
+            /*LocalDateTime fin = Mapa.inicioSimulacion;
             Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
             fin = fin.plusHours(6);
             Mapa.finSimulacion = fin;
-            //fin = fin.plusMinutes(5 * velocidad * 288 * 7);
-            Date fechaFin = obtenerFecha(fin);
+            fin = fin.plusMinutes(5 * velocidad * 288 * 7);
+            Date fechaFin = obtenerFecha(fin);*/
+
+            Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
+            Date fechaFin = obtenerFecha(Mapa.finSimulacion);
+
             // Rango de Pedidos
             for (PedidoModel p : Mapa.pedidosSimulacion) {
                 if (fechaInicio.compareTo(p.getFechaHoraCreacion()) <= 0 && p.getFechaHoraCreacion().compareTo(fechaFin) <= 0) {
-                    System.out.println("ID DEL PEDIDO ARRAY");
-                    System.out.println(p.getId());
                     pedidos.add(p);
                 }
             }
@@ -84,7 +86,7 @@ public class ABC {
                 rutasAux.add(rutaAux);
             }
             Mapa.cargarRutas(rutasAux);
-            Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(5 * velocidad * 288);
+            //Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(5 * velocidad * 288);
         } else {
             // Llamado a InsertarListaRutas
             ArrayList<RutaModel> rutasAux = new ArrayList<>();
@@ -105,7 +107,7 @@ public class ABC {
             }
 
             Mapa.cargarRutas(rutasAux);
-            Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(5 * velocidad * 288);
+            //Mapa.inicioSimulacion = Mapa.inicioSimulacion.plusMinutes(5 * velocidad * 288);
         }
     }
 
@@ -162,7 +164,7 @@ public class ABC {
                             System.out.println(ex);
                         }
                         // Si el último UBIGEO del seguimiento es igual al origen de la ruta del pedido y ... el Vehiculo puede ser asignado: NO ESTÁ RESERVADO
-                        if (listaSeg.get(0).equals(listaSeg2.get(0)) && !(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).getEstado().getCode() == 1 )) {
+                        if (listaSeg.get(0).equals(listaSeg2.get(0)) && !(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).getEstado().getCode() == 1)) {
                             if (iPrimero == false) {
                                 iMenor = i;
                             } else {
@@ -190,7 +192,7 @@ public class ABC {
                     ArrayList<LocalDateTime> horasLlegada = new ArrayList<>();
 
                     //Regreso
-                    List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(0).getVertexList().get(rutasPath.get(0).getVertexList().size()-1).getId());
+                    List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(0).getVertexList().get(rutasPath.get(0).getVertexList().size() - 1).getId());
                     int ganador = 1;
                     for (int p = 0; p < regresoPath.size(); p++) {
                         if (regresoPath.get(p).getWeight() < regresoPath.get(ganador).getWeight()) ganador = p;
@@ -200,7 +202,7 @@ public class ABC {
                     //System.out.println(rutaRegreso);
                     //cambiar parametros(seguimiento, tramos, horasLlegadaLong);
                     List<BaseVertex> oficinasRegreso = regresoPath.get(ganador).getVertexList();
-                    for(int or = 0; or < oficinasRegreso.size(); or++){
+                    for (int or = 0; or < oficinasRegreso.size(); or++) {
                         oficinas.add(oficinasRegreso.get(or));
                     }
                     seguimiento = oficinas.toString();
@@ -208,8 +210,8 @@ public class ABC {
 
                     for (int i = 0; i < oficinas.size(); i++) {
                         if (i == 0) {
-                            horasLlegadaLong.add(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size()-1)+3600);
-                            horasLlegada.add(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size()-1)+3600), zoneId));
+                            horasLlegadaLong.add(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size() - 1) + 3600);
+                            horasLlegada.add(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(iMenor).getHorasDeLlegada().size() - 1) + 3600), zoneId));
                         } else {
                             double tiempoViaje = findTiempoViaje(oficinas.get(i - 1).getId(), oficinas.get(i).getId());
                             int horas = (int) Math.floor(tiempoViaje);
@@ -365,7 +367,7 @@ public class ABC {
             }
 
             //Regreso
-            List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(k).getVertexList().get(rutasPath.get(k).getVertexList().size()-1).getId());
+            List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(k).getVertexList().get(rutasPath.get(k).getVertexList().size() - 1).getId());
             int ganador = 1;
             for (int p = 0; p < regresoPath.size(); p++) {
                 if (regresoPath.get(p).getWeight() < regresoPath.get(ganador).getWeight()) ganador = p;
@@ -378,7 +380,7 @@ public class ABC {
 
             // Parámetros
             List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
-            for(int or = 0; or < oficinasRegreso.size(); or++){
+            for (int or = 0; or < oficinasRegreso.size(); or++) {
                 oficinas.add(oficinasRegreso.get(or));
             }
             String seguimiento = oficinas.toString();
@@ -497,7 +499,7 @@ public class ABC {
                 System.out.println("pedido id: " + pedido.getId());
             }
             //Regreso
-            List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(k).getVertexList().get(rutasPath.get(k).getVertexList().size()-1).getId());
+            List<Path> regresoPath = YenTopKShortestPathsAlg.getShortestPathsReturn(rutasPath.get(k).getVertexList().get(rutasPath.get(k).getVertexList().size() - 1).getId());
             int ganador = 1;
             for (int p = 0; p < regresoPath.size(); p++) {
                 if (regresoPath.get(p).getWeight() < regresoPath.get(ganador).getWeight()) ganador = p;
@@ -510,7 +512,7 @@ public class ABC {
 
             // Parámetros
             List<BaseVertex> oficinas = rutasPath.get(k).getVertexList();
-            for(int or = 0; or < oficinasRegreso.size(); or++){
+            for (int or = 0; or < oficinasRegreso.size(); or++) {
                 oficinas.add(oficinasRegreso.get(or));
             }
             String seguimiento = oficinas.toString();
@@ -689,8 +691,7 @@ public class ABC {
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(0);
                     pedido.setCantPaquetesNoAsignado(faltante);
                     return false;
-                }
-                else{
+                } else {
                     return false;
                 }
             }
