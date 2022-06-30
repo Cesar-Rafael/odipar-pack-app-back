@@ -2,6 +2,7 @@ package com.pucp.odiparpackappback.controllers;
 
 import com.pucp.odiparpackappback.Repositories.PedidoRepository;
 import com.pucp.odiparpackappback.dto.Simulation;
+import com.pucp.odiparpackappback.models.EstadoUnidadTransporte;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
@@ -130,19 +131,10 @@ public class PedidoController {
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
 
-        // Ejecución de los siguientes rangos
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                ejecutarABCS2(simulation.velocidad);
-                timer.cancel();
-            }
-        }, 15000, 15000);
-
         // REPORTE INTERNO
         System.out.println("REPORTE ABC SIMULACION 0:");
         for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+            Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
             System.out.println("IdRuta:");
             System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
             System.out.println("IdUnidadTransporte:");
@@ -156,6 +148,16 @@ public class PedidoController {
             }
             System.out.println();
         }
+
+        // Ejecución de los siguientes rangos
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                ejecutarABCS2(simulation.velocidad);
+                timer.cancel();
+            }
+        }, 15000, 15000);
 
         //reporte
         HashMap<Long, Long> pedidos = new HashMap<>();
@@ -203,6 +205,7 @@ public class PedidoController {
             // REPORTE INTERNO
             System.out.println("REPORTE ABC SIMULACION: " + (zzz+1));
             for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+                Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                 System.out.println("IdRuta:");
                 System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
                 System.out.println("IdUnidadTransporte:");

@@ -636,8 +636,8 @@ public class ABC {
                 // Si la ruta no tiene el destino, no es asignado
                 return false;
             } else {
-                // Se verifica si hay capacidad disponible suficiente en el vehículo asignado a esa ruta
-                if (Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) {
+                // Se verifica si hay capacidad disponible suficiente en el vehículo asignado a esa ruta y no esté en transito
+                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getEstado().getCode() == 2)) {
                     // Hay capacidad suficiente, se asigna el pedido a la ruta...
                     ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
                     String seguimiento = ruta.getSeguimiento();
@@ -663,7 +663,7 @@ public class ABC {
                     pedido.setCantPaquetesNoAsignado(0);
                     pedido.setEstado(EstadoPedido.EN_PROCESO);
                     return true;
-                } else {
+                } else if (!(Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getEstado().getCode() == 2)) {
                     // No hay capacidad suficiente, se asigna el pedido a la ruta y luego se busca otra para completar el pedido
                     int faltante = pedido.getCantPaquetesNoAsignado() - Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible();
                     // Asignación parcial
@@ -688,6 +688,9 @@ public class ABC {
                     // Se actualiza la capacidad disponible en el vehículo, o sea cero
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(0);
                     pedido.setCantPaquetesNoAsignado(faltante);
+                    return false;
+                }
+                else{
                     return false;
                 }
             }
