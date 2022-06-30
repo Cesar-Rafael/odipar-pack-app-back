@@ -136,6 +136,7 @@ public class PedidoController {
             @Override
             public void run() {
                 ejecutarABCS2(simulation.velocidad);
+                timer.cancel();
             }
         }, 30000, 30000);
 
