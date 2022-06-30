@@ -138,7 +138,7 @@ public class PedidoController {
                 ejecutarABCS2(simulation.velocidad);
                 timer.cancel();
             }
-        }, 30000, 30000);
+        }, 15000, 15000);
 
         // REPORTE INTERNO
         System.out.println("REPORTE ABC SIMULACION 0:");

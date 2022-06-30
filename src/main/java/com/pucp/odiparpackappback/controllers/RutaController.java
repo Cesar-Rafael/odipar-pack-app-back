@@ -95,7 +95,7 @@ public class RutaController {
                     String codigoPlaca = null;
                     for (int b = 0; b < Mapa.vehiculosSimulacion.size(); b++) {
                         if (Mapa.vehiculosSimulacion.get(b).getId() == Mapa.rutasSimulacion.get(i).getIdUnidadTransporte()) {
-                            codigoPlaca = Mapa.vehiculosSimulacion.get(i).getCodigo();
+                            codigoPlaca = Mapa.vehiculosSimulacion.get(b).getCodigo();
                         }
                     }
                     ArrayList<PedidoModel> pedidos = new ArrayList<>();
@@ -106,7 +106,7 @@ public class RutaController {
                             }
                         }
                     }
-                    RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl(Ruta.getId(), Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
+                    RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
                     auxRutasG.add(auxRutaG);
                 }
             }
