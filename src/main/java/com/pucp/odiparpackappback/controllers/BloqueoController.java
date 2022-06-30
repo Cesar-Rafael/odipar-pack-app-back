@@ -42,6 +42,7 @@ public class BloqueoController {
             block.setUbigeoInicio(bloqueos.get(i).getUbigeoInicio());
             block.setOficinaInicio(oficinas.get(bloqueos.get(i).getUbigeoInicio()));
             block.setOficinaFin(oficinas.get(bloqueos.get(i).getUbigeoFin()));
+            respuesta.add(block);
         }
 
         return respuesta;
