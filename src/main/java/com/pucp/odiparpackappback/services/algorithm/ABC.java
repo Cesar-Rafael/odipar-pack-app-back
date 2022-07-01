@@ -24,22 +24,8 @@ public class ABC {
 
         ArrayList<PedidoModel> pedidos = new ArrayList<>();
         if (opcion == 0) {
-            /*LocalDateTime fin = Mapa.inicioSimulacion;
-            Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
-            fin = fin.plusHours(6);
-            Mapa.finSimulacion = fin;
-            fin = fin.plusMinutes(5 * velocidad * 288 * 7);
-            Date fechaFin = obtenerFecha(fin);*/
-
-            Date fechaInicio = obtenerFecha(Mapa.inicioSimulacion);
-            Date fechaFin = obtenerFecha(Mapa.finSimulacion);
-
-            // Rango de Pedidos
-            for (PedidoModel p : Mapa.pedidosSimulacion) {
-                if (fechaInicio.compareTo(p.getFechaHoraCreacion()) <= 0 && p.getFechaHoraCreacion().compareTo(fechaFin) <= 0) {
-                    pedidos.add(p);
-                }
-            }
+            // "pedidos" se utilizará para el algoritmo
+            pedidos = Mapa.pedidosSimulacion;
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));
