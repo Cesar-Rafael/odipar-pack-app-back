@@ -40,6 +40,10 @@ public class ABC {
                     pedidos.add(p);
                 }
             }
+
+            Mapa.inicioSimulacion = Mapa.finSimulacion;
+            Mapa.finSimulacion = Mapa.inicioSimulacion.plusHours(6);
+
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
             Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));
