@@ -118,37 +118,18 @@ public class PedidoController {
     Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
 
-        // Carga de Pedidos
-        Mapa.pedidosSimulacion = simulation.pedidos;
-
         // Lectura de Datos
         Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
         Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
 
-        // Rango de Simulación - Mapa.inicioSimulacion es la ingresada por FRONTEND
-        //Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
-
-        LocalDate fechaActual = simulation.inicioSimulacion.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        /*
-        ArrayList<LocalDateTime> rangosTiempoEjecucion = new ArrayList<>();
-        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(0, 0)));
-        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(6, 0)));
-        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(12, 0)));
-        rangosTiempoEjecucion.add(LocalDateTime.of(fechaActual, LocalTime.of(18, 0)));*/
-
-        LocalDateTime inicioSimulacion = LocalDateTime.of(fechaActual, LocalTime.of(0, 0));
-
-        for (int time = 0; time < 28; time++) {
-            Mapa.inicioSimulacion = inicioSimulacion;
-            Mapa.finSimulacion = inicioSimulacion.plusHours(6);
-            abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
-            inicioSimulacion = inicioSimulacion.plusHours(6);
-        }
+        // Carga de Pedidos
+        Mapa.pedidosSimulacion = simulation.pedidos;
 
         // Ejecución del Algoritmo
+        Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
+        abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
 
         // REPORTE INTERNO
         System.out.println("REPORTE ABC SIMULACION:");
@@ -168,16 +149,6 @@ public class PedidoController {
             System.out.println();
         }
 
-        // Ejecución de los siguientes rangos
-        /*
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                ejecutarABCS2(simulation.velocidad);
-                timer.cancel();
-            }
-        }, 15000, 15000);*/
 
         // Reporte
         HashMap<Long, Long> pedidos = new HashMap<>();
