@@ -9,5 +9,5 @@ import java.util.Date;
 public class Simulation {
     public ArrayList<PedidoModel> pedidos;
     public Date inicioSimulacion;
-    public int velocidad;
+    public boolean primero;
 }
