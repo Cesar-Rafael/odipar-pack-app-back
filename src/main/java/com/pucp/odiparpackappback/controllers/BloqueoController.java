@@ -2,10 +2,12 @@ package com.pucp.odiparpackappback.controllers;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.pucp.odiparpackappback.Repositories.BloqueoRepository;
+import com.pucp.odiparpackappback.Repositories.OficinaRepository;
 import com.pucp.odiparpackappback.dto.BloqueoBody;
 import com.pucp.odiparpackappback.models.Bloqueo;
 import com.pucp.odiparpackappback.models.BloqueoModel;
 import com.pucp.odiparpackappback.models.Mapa;
+import com.pucp.odiparpackappback.models.OficinaModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,16 +22,19 @@ import java.util.List;
 public class BloqueoController {
 
     private final BloqueoRepository bloqueoRepository;
+    private static OficinaRepository oficinaRepository;
 
-    public BloqueoController(BloqueoRepository bloqueoRepository) {
+    public BloqueoController(BloqueoRepository bloqueoRepository, OficinaRepository oficinaRepository) {
         this.bloqueoRepository = bloqueoRepository;
+        this.oficinaRepository = oficinaRepository;
     }
 
     @GetMapping("/Bloqueo/")
     List<Bloqueo> listarBloqueos() {
+        List<OficinaModel> oficinasT = (List<OficinaModel>) oficinaRepository.findAll();
         HashMap<Integer, String> oficinas = new HashMap<>();
-        for(int i = 0; i< Mapa.oficinas.size(); i++){
-            oficinas.put(Mapa.oficinas.get(i).getUbigeo(), Mapa.oficinas.get(i).getProvincia());
+        for(int i = 0; i< oficinasT.size(); i++){
+            oficinas.put(oficinasT.get(i).getUbigeo(), oficinasT.get(i).getProvincia());
         }
         List<Bloqueo> respuesta = new ArrayList<>();
         List<BloqueoModel> bloqueos = (List<BloqueoModel>) bloqueoRepository.findAll();

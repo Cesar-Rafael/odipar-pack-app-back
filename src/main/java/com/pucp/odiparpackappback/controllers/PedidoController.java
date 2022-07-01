@@ -23,20 +23,6 @@ public class PedidoController {
         this.pedidoRepository = pedidoRepository;
     }
 
-    /*
-    @GetMapping("/Pedido/id")
-    @ResponseBody
-    List<PedidoModel> ListarPedidoxId(@RequestParam(required = false) Long id) {
-        List<PedidoModel> pedidosAux = (List<PedidoModel>) pedidoRepository.findAll();
-        List<PedidoModel> pedidos = new ArrayList<>();
-        for (int i = 0; i < pedidosAux.size(); i++) {
-            if (Objects.equals(pedidosAux.get(i).getId(), id)) {
-                pedidos.add(pedidosAux.get(i));
-            }
-        }
-        return pedidos;
-    }*/
-
     @GetMapping("/Pedido/Listar")
     public List<PedidoModel> listarPedidos() {
         return (List<PedidoModel>) pedidoRepository.findAll();
