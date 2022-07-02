@@ -8,16 +8,13 @@ import com.pucp.odiparpackappback.models.PedidoModel;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.*;
 
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
-    Timer timer;
 
     public PedidoController(PedidoRepository pedidoRepository) {
         this.pedidoRepository = pedidoRepository;
@@ -29,7 +26,6 @@ public class PedidoController {
     }
 
     @GetMapping("/Pedido/{id}")
-    @ResponseBody
     Optional<PedidoModel> ListarPedidoxId(@PathVariable("id") long id) {
         return pedidoRepository.findById(id);
     }
@@ -50,13 +46,14 @@ public class PedidoController {
     }
 
     @PostMapping("/ABCDD")
-    public boolean ejecutarABCDiaDia(@RequestParam String inicioSimulacionAux) {
+    public boolean ejecutarABCDiaDia() {
         ABC abc = new ABC();
 
         // Lectura desde BD
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosDiaDia(Mapa.inicioDiaDia, 1);
+        Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
 
         // Rango de Simulación
         Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);
@@ -65,7 +62,7 @@ public class PedidoController {
         // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(1);
 
-        // Reporte Interno
+        // REPORTE INTERNO
         System.out.println("REPORTE ABC DIA A DIA:");
         System.out.println("Cantidad Pedidos:");
         System.out.println(Mapa.pedidosDiaDia.size());
@@ -79,6 +76,7 @@ public class PedidoController {
             System.out.println(Mapa.rutasDiaDia.get(i).getHorasDeLlegada());
             System.out.println();
         }
+
         // Actualización
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -95,6 +93,8 @@ public class PedidoController {
         // Rango de Simulación
         Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);
         Mapa.finDiaDia = LocalDateTime.now();
+
+        // Ejecución del Algoritmo
         abc.algoritmoAbejasVPRTW(1);
         System.out.println("¡Rutas actualizadas!");
         return true;
@@ -203,7 +203,6 @@ public class PedidoController {
 
     @GetMapping("/simulacion/detener")
     boolean pararSimulacion() {
-        //timer.cancel();
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
         return true;
