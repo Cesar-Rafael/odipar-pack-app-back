@@ -105,10 +105,12 @@ public class PedidoController {
         ABC abc = new ABC();
 
         // Lectura de Datos
-        Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
-        Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
-        Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
-        Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
+        if (simulation.primero) {
+            Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
+            Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
+            Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
+            Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
+        }
 
         // Carga de Pedidos
         Mapa.pedidosSimulacion = simulation.pedidos;
@@ -117,57 +119,54 @@ public class PedidoController {
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         abc.algoritmoAbejasVPRTW(0);
 
-        // REPORTE INTERNO
-        System.out.println("REPORTE ABC SIMULACION:");
-        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-            Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
-            System.out.println("IdRuta:");
-            System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
-            System.out.println("IdUnidadTransporte:");
-            System.out.println(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte());
-            System.out.println("Seguimiento:");
-            System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
-            System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
-            System.out.println("Pedidos Parciales:");
-            for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
-                System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
+        if (simulation.finalizado) {
+            // REPORTE INTERNO
+            System.out.println("REPORTE ABC SIMULACION:");
+            for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+                Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
+                System.out.println("IdRuta:");
+                System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
+                System.out.println("IdUnidadTransporte:");
+                System.out.println(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte());
+                System.out.println("Seguimiento:");
+                System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
+                System.out.println("Pedidos Parciales:");
+                for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
+                    System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
+                }
+                System.out.println();
             }
-            System.out.println();
-        }
 
-
-        // Reporte
-        HashMap<Long, Long> pedidos = new HashMap<>();
-        Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
-        Double tiempo = 0.0;
-        Double numPedidos = Mapa.pedidosSimulacion.size() + 0.0;
-        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-            for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
-                if (pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())) {
-                    if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
+            // REPORTE EXTERNO
+            HashMap<Long, Long> pedidos = new HashMap<>();
+            Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
+            Double tiempo = 0.0;
+            Double numPedidos = Mapa.pedidosSimulacion.size() + 0.0;
+            for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+                for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
+                    if (pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())) {
+                        if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
+                            pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
+                    } else {
                         pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
-                } else {
-                    pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
+                    }
                 }
             }
-        }
-        for (int i = 0; i < Mapa.pedidosSimulacion.size(); i++) {
-            if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())) {
-                //System.out.println("entrega");
-                //System.out.println(pedidos.get(Mapa.pedidosSimulacion.get(i).getId()));
-                //System.out.println("inicio");
-                //System.out.println(Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime()/1000);
-                tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
-                //System.out.println("tiempo");
-                //System.out.println(tiempo);
-            } else numPedidos--;
+            for (int i = 0; i < Mapa.pedidosSimulacion.size(); i++) {
+                if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())) {
+                    tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
+                } else numPedidos--;
+            }
+
+            Double promTiempo = tiempo / numPedidos;
+            HashMap<String, Double> map = new HashMap<>();
+            map.put("cantRutas", numRutas);
+            map.put("promTiempo", promTiempo);
+            return map;
         }
 
-        Double promTiempo = tiempo / numPedidos;
-        HashMap<String, Double> map = new HashMap<>();
-        map.put("cantRutas", numRutas);
-        map.put("promTiempo", promTiempo);
-        return map;
+        return null;
     }
 
     boolean ejecutarABCS2(int velocidad) {
