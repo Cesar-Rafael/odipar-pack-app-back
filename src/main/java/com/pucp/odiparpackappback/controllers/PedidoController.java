@@ -53,7 +53,7 @@ public class PedidoController {
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosDiaDia(Mapa.inicioDiaDia, 1);
-        Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
+        Mapa.cargarBloqueosDiaDia();
 
         // Rango de Simulación
         Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);

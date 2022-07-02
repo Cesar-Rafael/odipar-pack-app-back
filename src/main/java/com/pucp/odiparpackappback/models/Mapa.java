@@ -339,4 +339,8 @@ public class Mapa {
     public static List<RutaModel> cargarRutas(ArrayList<RutaModel> rutasAux) {
         return (List<RutaModel>) rutaRepository.saveAll(rutasAux);
     }
+
+    public static void cargarBloqueosDiaDia() {
+        bloqueosDiaDia = (ArrayList<BloqueoModel>) bloqueoRepository.findAll();
+    }
 }
