@@ -63,7 +63,7 @@ public class PedidoController {
         Mapa.finDiaDia = LocalDateTime.now();
 
         // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
+        abc.algoritmoAbejasVPRTW(1);
 
         // Reporte Interno
         System.out.println("REPORTE ABC DIA A DIA:");
@@ -95,7 +95,7 @@ public class PedidoController {
         // Rango de Simulación
         Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);
         Mapa.finDiaDia = LocalDateTime.now();
-        abc.algoritmoAbejasVPRTW(10, 5, 5, 1, 1);
+        abc.algoritmoAbejasVPRTW(1);
         System.out.println("¡Rutas actualizadas!");
         return true;
     }
@@ -115,7 +115,7 @@ public class PedidoController {
 
         // Ejecución del Algoritmo
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
-        abc.algoritmoAbejasVPRTW(5, 2, 2, 0, simulation.velocidad);
+        abc.algoritmoAbejasVPRTW(0);
 
         // REPORTE INTERNO
         System.out.println("REPORTE ABC SIMULACION:");
@@ -177,7 +177,7 @@ public class PedidoController {
         // El algoritmo debe ejecutarse 28 veces, cada uno con un rango de 6 horas
         for (int zzz = 0; zzz < 27; zzz++) {
             Mapa.inicioSimulacion = Mapa.finSimulacion;
-            abc.algoritmoAbejasVPRTW(5, 2, 2, 0, velocidad);
+            abc.algoritmoAbejasVPRTW(0);
             System.out.println("Las Rutas han sido actualizadas...");
             // REPORTE INTERNO
             System.out.println("REPORTE ABC SIMULACION: " + (zzz + 1));

@@ -18,7 +18,7 @@ import java.util.Random;
 
 public class ABC {
 
-    public void algoritmoAbejasVPRTW(int numAbejasObr, int numAbejasObs, int numGen, int opcion, int velocidad) {
+    public void algoritmoAbejasVPRTW(int opcion) {
         // Opcion 0 - Simulacion
         // Opcion 1 - DiaDia
 
