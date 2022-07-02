@@ -15,6 +15,7 @@ import java.util.*;
 @RestController
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
+
     public PedidoController(PedidoRepository pedidoRepository) {
         this.pedidoRepository = pedidoRepository;
     }
@@ -118,7 +119,7 @@ public class PedidoController {
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         abc.algoritmoAbejasVPRTW(0);
 
-        if(simulation.primero){
+        if (simulation.finalizado) {
             // REPORTE INTERNO
             System.out.println("REPORTE ABC SIMULACION:");
             for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
@@ -164,6 +165,7 @@ public class PedidoController {
             map.put("promTiempo", promTiempo);
             return map;
         }
+
         return null;
     }
 
