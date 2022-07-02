@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -120,6 +121,11 @@ public class RutaController {
     @GetMapping("/ruta/simulacion/listar")
     public List<RutaConArraySegHorasLl> ListarRutasSimulacion() {
         try {
+            List<OficinaModel> oficinasT = Mapa.oficinas;
+            HashMap<Integer, String> oficinas = new HashMap<>();
+            for(int i = 0; i< oficinasT.size(); i++){
+                oficinas.put(oficinasT.get(i).getUbigeo(), oficinasT.get(i).getProvincia());
+            }
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
             for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
                 ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
@@ -141,6 +147,7 @@ public class RutaController {
                 for (int c = 0; c < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); c++) {
                     for (int d = 0; d < Mapa.pedidosSimulacion.size(); d++) {
                         if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
+                            Mapa.pedidosSimulacion.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()));
                             pedidos.add(Mapa.pedidosSimulacion.get(d));
                         }
                     }
