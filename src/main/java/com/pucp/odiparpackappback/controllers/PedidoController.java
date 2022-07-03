@@ -204,6 +204,7 @@ public class PedidoController {
     boolean pararSimulacion() {
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
+        Mapa.vehiculosSimulacion.clear();
         return true;
     }
 
@@ -212,6 +213,7 @@ public class PedidoController {
         Mapa.setFlag(false);
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
+        Mapa.vehiculosDiaDia.clear();
         return true;
     }
 }
