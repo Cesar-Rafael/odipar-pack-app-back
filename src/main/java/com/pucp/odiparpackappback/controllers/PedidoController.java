@@ -21,21 +21,25 @@ public class PedidoController {
     }
 
     @GetMapping("/Pedido/Listar")
+    @CrossOrigin
     public List<PedidoModel> listarPedidos() {
         return (List<PedidoModel>) pedidoRepository.findAll();
     }
 
     @GetMapping("/Pedido/{id}")
+    @CrossOrigin
     Optional<PedidoModel> ListarPedidoxId(@PathVariable("id") long id) {
         return pedidoRepository.findById(id);
     }
 
     @PostMapping("/Pedido/Insertar")
+    @CrossOrigin
     PedidoModel InsertarPedido(@RequestBody PedidoModel pedidoModel) {
         return pedidoRepository.save(pedidoModel);
     }
 
     @PostMapping("/Pedido/Insertar/Masivo")
+    @CrossOrigin
     boolean InsertarListaPedidos(@RequestBody List<PedidoModel> pedidosModel) {
         try {
             pedidoRepository.saveAll(pedidosModel);
@@ -46,6 +50,7 @@ public class PedidoController {
     }
 
     @PostMapping("/ABCDD")
+    @CrossOrigin
     public boolean ejecutarABCDiaDia() {
         ABC abc = new ABC();
 
@@ -78,18 +83,8 @@ public class PedidoController {
         return true;
     }
 
-    boolean ejecutarABCDD2() {
-        ABC abc = new ABC();
-        // Rango de Simulación
-        Mapa.finDiaDia = LocalDateTime.now();
-
-        // Ejecución del Algoritmo
-        abc.algoritmoAbejasVPRTW(1);
-        System.out.println("¡Rutas actualizadas!");
-        return true;
-    }
-
     @PostMapping("/ABCS")
+    @CrossOrigin
     Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
 
@@ -152,38 +147,8 @@ public class PedidoController {
         return null;
     }
 
-    boolean ejecutarABCS2(int velocidad) {
-        ABC abc = new ABC();
-
-        // Ejecución del Algoritmo
-        // El algoritmo debe ejecutarse 28 veces, cada uno con un rango de 6 horas
-        for (int zzz = 0; zzz < 27; zzz++) {
-            Mapa.inicioSimulacion = Mapa.finSimulacion;
-            abc.algoritmoAbejasVPRTW(0);
-            System.out.println("Las Rutas han sido actualizadas...");
-            // REPORTE INTERNO
-            System.out.println("REPORTE ABC SIMULACION: " + (zzz + 1));
-            for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-                Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
-                System.out.println("IdRuta:");
-                System.out.println(Mapa.rutasSimulacion.get(i).getIdRuta());
-                System.out.println("IdUnidadTransporte:");
-                System.out.println(Mapa.rutasSimulacion.get(i).getIdUnidadTransporte());
-                System.out.println("Seguimiento:");
-                System.out.println(Mapa.rutasSimulacion.get(i).getSeguimiento());
-                System.out.println(Mapa.rutasSimulacion.get(i).getHorasDeLlegada());
-                System.out.println("Pedidos Parciales:");
-                for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
-                    System.out.println(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j));
-                }
-                System.out.println();
-            }
-        }
-
-        return true;
-    }
-
     @GetMapping("/simulacion/reiniciar")
+    @CrossOrigin
     boolean pararSimulacion() {
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
@@ -192,6 +157,7 @@ public class PedidoController {
     }
 
     @PostMapping("/PararDiaDia")
+    @CrossOrigin
     boolean pararDiaDia() {
         Mapa.setFlag(false);
         Mapa.pedidosSimulacion.clear();

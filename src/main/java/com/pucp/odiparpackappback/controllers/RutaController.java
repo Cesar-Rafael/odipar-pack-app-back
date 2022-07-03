@@ -19,11 +19,13 @@ public class RutaController {
     }
 
     @GetMapping("/Ruta/")
+    @CrossOrigin
     public List<RutaModel> listarRutas() {
         return (List<RutaModel>) rutaRepository.findAll();
     }
 
     @GetMapping("/ruta/ListarRutasxIdVehiculoDiaDia/{idVehiculo}")
+    @CrossOrigin
     @ResponseBody
     public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoDiaDia(@PathVariable("idVehiculo") long idVehiculo) {
         try {
@@ -78,6 +80,7 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/ListarRutasxIdVehiculoSimulacion/{idVehiculo}")
+    @CrossOrigin
     @ResponseBody
     public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoSimulacion(@PathVariable("idVehiculo") long idVehiculo) {
         try {
@@ -119,6 +122,7 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/simulacion/listar")
+    @CrossOrigin
     public List<RutaConArraySegHorasLl> ListarRutasSimulacion() {
         try {
             List<OficinaModel> oficinasT = Mapa.oficinas;
@@ -163,6 +167,7 @@ public class RutaController {
     }
 
     @PostMapping("/Ruta/PostRutas")
+    @CrossOrigin
     public boolean InsertarListaRutas(@RequestBody List<RutaModel> rutasModel) {
         try {
             rutaRepository.saveAll(rutasModel);

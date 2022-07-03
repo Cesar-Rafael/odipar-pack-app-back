@@ -8,10 +8,7 @@ import com.pucp.odiparpackappback.models.Bloqueo;
 import com.pucp.odiparpackappback.models.BloqueoModel;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.OficinaModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +27,7 @@ public class BloqueoController {
     }
 
     @GetMapping("/Bloqueo/")
+    @CrossOrigin
     List<Bloqueo> listarBloqueos() {
         List<OficinaModel> oficinasT = (List<OficinaModel>) oficinaRepository.findAll();
         HashMap<Integer, String> oficinas = new HashMap<>();
@@ -54,6 +52,7 @@ public class BloqueoController {
     }
 
     @PostMapping("/Bloqueo/PostBloqueos")
+    @CrossOrigin
     boolean InsertarListaBloqueos(@RequestBody List<BloqueoModel> bloqueosModel) {
         try {
             bloqueoRepository.saveAll(bloqueosModel);
@@ -64,6 +63,7 @@ public class BloqueoController {
     }
 
     @PostMapping("/bloqueo/listar_por_fechas")
+    @CrossOrigin
     List<BloqueoModel> ListarBloqueosEntreFechas(@RequestBody BloqueoBody bloqueoBody) {
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         //Date fechaInicioDate = sdf.parse(fechaInicio);

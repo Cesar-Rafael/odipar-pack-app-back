@@ -2,10 +2,7 @@ package com.pucp.odiparpackappback.controllers;
 
 import com.pucp.odiparpackappback.Repositories.OficinaRepository;
 import com.pucp.odiparpackappback.models.OficinaModel;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +18,13 @@ public class OficinaController {
     }
 
     @GetMapping("/Oficina/Listar")
+    @CrossOrigin
     List<OficinaModel> listarOficinas() {
         return (List<OficinaModel>) oficinaRepository.findAll();
     }
 
     @GetMapping("/Oficina/provincia")
+    @CrossOrigin
     @ResponseBody
     List<OficinaModel> ListarOficinasxProvincia(@RequestParam(required = false) String provincia) {
         List<OficinaModel> oficinasAux = (List<OficinaModel>) oficinaRepository.findAll();

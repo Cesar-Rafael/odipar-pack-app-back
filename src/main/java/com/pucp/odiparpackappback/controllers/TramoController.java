@@ -3,6 +3,7 @@ package com.pucp.odiparpackappback.controllers;
 import com.pucp.odiparpackappback.Repositories.TramoRepository;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.TramoModel;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,11 +19,13 @@ public class TramoController {
     }
 
     @GetMapping("/Tramo/")
+    @CrossOrigin
     List<TramoModel> listarTramos() {
         return (List<TramoModel>) tramoRepository.findAll();
     }
 
     @GetMapping("/TramosUsados/")
+    @CrossOrigin
     List<TramoModel> listarTramosUsados() {
         List<TramoModel> tramosAux = (List<TramoModel>) tramoRepository.findAll();
         List<TramoModel> tramos = new ArrayList<>();
@@ -35,10 +38,10 @@ public class TramoController {
                 for (int k = 0; k < tramosAux.size(); k++) {
                     if (tramosAux.get(k).getIdCiudadI() == idCiudadI && tramosAux.get(k).getIdCiudadJ() == idCiudadJ) {
                         tramos.add(tramosAux.get(k));
-                        //idTramo = tramosAux.get(k).getId();
+                        idTramo = tramosAux.get(k).getId();
                     }
                 }
-                //tramosUsados.add(idTramo);
+                tramosUsados.add(idTramo);
             }
         }
         return tramos;
