@@ -84,7 +84,7 @@ public class PedidoController {
             public void run() {
                 ejecutarABCDD2();
             }
-        }, 18000000, 18000000); // Siempre se ejecuta después de 5 horas minutos - 18,000,000 segundos
+        }, 18000000, 18000000); // Siempre se ejecuta después de 5 horas - 18,000,000 segundos
         return true;
     }
 
