@@ -76,15 +76,6 @@ public class PedidoController {
             System.out.println(Mapa.rutasDiaDia.get(i).getHorasDeLlegada());
             System.out.println();
         }
-
-        // Actualización
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                ejecutarABCDD2();
-            }
-        }, 18000000, 18000000); // Siempre se ejecuta después de 5 horas - 18,000,000 segundos
         return true;
     }
 

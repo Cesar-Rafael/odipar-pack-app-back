@@ -31,7 +31,6 @@ public class OdiparPackAppBackApplication {
 
     @Scheduled(cron = "0 0 0,6,12,18 * * *")
     public void diadia(){
-        System.out.println("diadia");
         // Inicio de la simulación Dia a Dia
         PedidoController pedidoController = new PedidoController(Mapa.pedidoRepository);
         pedidoController.ejecutarABCDiaDia();
