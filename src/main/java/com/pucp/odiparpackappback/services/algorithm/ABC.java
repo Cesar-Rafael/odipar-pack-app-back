@@ -67,6 +67,7 @@ public class ABC {
                 rutasAux.add(rutaAux);
             }
             Mapa.cargarRutas(rutasAux);
+            Mapa.pedidosSimulacion = pedidos;
         } else {
             // Llamado a InsertarListaRutas
             ArrayList<RutaModel> rutasAux = new ArrayList<>();
@@ -78,6 +79,7 @@ public class ABC {
                 rutasAux.add(rutaAux);
             }
             Mapa.cargarRutas(rutasAux);
+            Mapa.pedidosDiaDia = pedidos;
         }
     }
 
