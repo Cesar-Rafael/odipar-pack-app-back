@@ -227,21 +227,12 @@ public class Mapa {
         tramos = (ArrayList<TramoModel>) tramoRepository.findAll();
     }
 
-    public static void cargarVehiculosDiaDia(LocalDateTime inicioSimulacion, int velocidad) {
-        ArrayList<UnidadTransporteModel> aux = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
-        ArrayList<UnidadTransporteModel> retorno = new ArrayList<>();
-        for(int i = 0; i < aux.size(); i++){
-            if(!aux.get(i).getFechaMantenimiento().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().plusDays(1).isBefore(inicioSimulacion.plusDays((long) velocidad))){
-                retorno.add(aux.get(i));
-            }
-        }
-        vehiculosDiaDia = retorno;
+    public static void cargarVehiculosDiaDia() {
+        vehiculosDiaDia = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
     }
 
-    public static void cargarPedidosDiaDia(Date fechaInicio, Date fechaFin) {
-        System.out.println(fechaInicio);
-        System.out.println(fechaFin);
-        pedidosDiaDia = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByFechaHoraCreacionBetween(fechaInicio, fechaFin);
+    public static void cargarPedidosDiaDia() {
+        pedidosDiaDia = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByEstadoIs(EstadoPedido.NO_ASIGNADO);
     }
 
     public static void cargarPedidosSimulacion(String rutaArchivo, Date fechaInicio, Date fechaFin) {

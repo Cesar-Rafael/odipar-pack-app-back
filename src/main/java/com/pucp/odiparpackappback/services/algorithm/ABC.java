@@ -28,7 +28,7 @@ public class ABC {
             pedidos = Mapa.pedidosSimulacion;
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
-            Mapa.cargarPedidosDiaDia(obtenerFecha(Mapa.inicioDiaDia), obtenerFecha(Mapa.finDiaDia));
+            Mapa.cargarPedidosDiaDia();
             // "pedidos" se utilizará para el algoritmo
             pedidos = Mapa.pedidosDiaDia;
         }

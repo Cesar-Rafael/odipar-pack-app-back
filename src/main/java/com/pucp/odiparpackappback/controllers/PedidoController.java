@@ -52,11 +52,10 @@ public class PedidoController {
         // Lectura desde BD
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
-        Mapa.cargarVehiculosDiaDia(Mapa.inicioDiaDia, 1);
+        Mapa.cargarVehiculosDiaDia();
         Mapa.cargarBloqueosDiaDia();
 
         // Rango de Simulación
-        Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);
         Mapa.finDiaDia = LocalDateTime.now();
 
         // Ejecución del Algoritmo
@@ -82,7 +81,6 @@ public class PedidoController {
     boolean ejecutarABCDD2() {
         ABC abc = new ABC();
         // Rango de Simulación
-        Mapa.inicioDiaDia = LocalDateTime.now().minusDays(3);
         Mapa.finDiaDia = LocalDateTime.now();
 
         // Ejecución del Algoritmo
