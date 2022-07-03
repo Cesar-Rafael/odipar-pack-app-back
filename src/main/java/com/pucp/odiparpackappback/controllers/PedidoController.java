@@ -105,7 +105,9 @@ public class PedidoController {
         ABC abc = new ABC();
 
         // Carga de Pedidos
-        Mapa.pedidosSimulacion = simulation.pedidos;
+        for(int i=0; i<simulation.pedidos.size();i++){
+            Mapa.pedidosSimulacion.add(simulation.pedidos.get(i));
+        }
 
         // Ejecución del Algoritmo
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
