@@ -6,6 +6,7 @@ import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
+import org.hibernate.dialect.SybaseAnywhereDialect;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -38,19 +39,20 @@ public class ABC {
             return;
         }
 
-        // Inicio ABC
-        int contador = 0;
         // Etapa: Generación de la Población Inicial
-        while (true) {
+        boolean entrar = true;
+        while (entrar) {
+            entrar = false;
+            for(int z=0; z<pedidos.size(); z++){
+                if(pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO){
+                    entrar = true;
+                }
+            }
             int i = generarNumeroEnteroAleatorio(pedidos.size());
             // En caso el pedido escogido al azar no esté asignado...
             if (pedidos.get(i).getEstado() == EstadoPedido.NO_ASIGNADO) {
                 boolean estado = asignarPedidoPoblacionInicial(pedidos.get(i), opcion);
                 if (!estado) {
-                    break;
-                }
-                contador++;
-                if (contador == pedidos.size()) {
                     break;
                 }
             }
