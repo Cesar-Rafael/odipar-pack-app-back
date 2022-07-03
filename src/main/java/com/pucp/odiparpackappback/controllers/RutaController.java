@@ -166,6 +166,51 @@ public class RutaController {
         return null;
     }
 
+    @GetMapping("/ruta/DiaDia/listar")
+    @CrossOrigin
+    public List<RutaConArraySegHorasLl> ListarRutasDiaDia() {
+        try {
+            List<OficinaModel> oficinasT = Mapa.oficinas;
+            HashMap<Integer, String> oficinas = new HashMap<>();
+            for(int i = 0; i< oficinasT.size(); i++){
+                oficinas.put(oficinasT.get(i).getUbigeo(), oficinasT.get(i).getProvincia());
+            }
+            List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
+            for (int i = 0; i < Mapa.rutasDiaDia.size(); i++) {
+                ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasDiaDia.get(i).getSeguimiento());
+                String codigoPlaca = null;
+                ArrayList<String> auxNombreProvincias = new ArrayList<>();
+                for(int zz=0; zz < auxAI.size(); zz++){
+                    for(int z=0; z<Mapa.oficinas.size(); z++){
+                        if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
+                            auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
+                        }
+                    }
+                }
+                for (int b = 0; b < Mapa.vehiculosDiaDia.size(); b++) {
+                    if (Mapa.vehiculosDiaDia.get(b).getId() == Mapa.rutasDiaDia.get(i).getIdUnidadTransporte()) {
+                        codigoPlaca = Mapa.vehiculosDiaDia.get(b).getCodigo();
+                    }
+                }
+                ArrayList<PedidoModel> pedidos = new ArrayList<>();
+                for (int c = 0; c < Mapa.rutasDiaDia.get(i).getPedidosParciales().size(); c++) {
+                    for (int d = 0; d < Mapa.pedidosDiaDia.size(); d++) {
+                        if (Mapa.rutasDiaDia.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
+                            Mapa.pedidosDiaDia.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosDiaDia.get(d).getIdCiudadDestino()));
+                            pedidos.add(Mapa.pedidosDiaDia.get(d));
+                        }
+                    }
+                }
+                RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) i, Mapa.rutasDiaDia.get(i).getIdRuta(), Mapa.rutasDiaDia.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasDiaDia.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
+                auxRutasG.add(auxRutaG);
+            }
+            return auxRutasG;
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return null;
+    }
+
     @PostMapping("/Ruta/PostRutas")
     @CrossOrigin
     public boolean InsertarListaRutas(@RequestBody List<RutaModel> rutasModel) {
