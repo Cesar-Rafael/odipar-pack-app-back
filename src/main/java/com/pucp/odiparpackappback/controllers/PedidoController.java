@@ -104,14 +104,6 @@ public class PedidoController {
     Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
 
-        // Lectura de Datos
-        if (simulation.primero) {
-            Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
-            Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
-            Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
-            Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
-        }
-
         // Carga de Pedidos
         Mapa.pedidosSimulacion = simulation.pedidos;
 
@@ -200,11 +192,11 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/simulacion/detener")
+    @GetMapping("/simulacion/reiniciar")
     boolean pararSimulacion() {
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
-        Mapa.vehiculosSimulacion.clear();
+        Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         return true;
     }
 

@@ -19,5 +19,10 @@ public class OdiparPackAppBackApplication {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         String formattedDateTime = now.format(formatter);
         //pedidoController.ejecutarABCDiaDia(formattedDateTime);
+
+        Mapa.cargarOficinasSimulacion("src/main/resources/static/oficina_model.csv");
+        Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
+        Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
+        Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
     }
 }
