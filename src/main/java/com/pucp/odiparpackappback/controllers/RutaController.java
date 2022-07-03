@@ -140,7 +140,7 @@ public class RutaController {
                 }
                 for (int b = 0; b < Mapa.vehiculosSimulacion.size(); b++) {
                     if (Mapa.vehiculosSimulacion.get(b).getId() == Mapa.rutasSimulacion.get(i).getIdUnidadTransporte()) {
-                        codigoPlaca = Mapa.vehiculosSimulacion.get(i).getCodigo();
+                        codigoPlaca = Mapa.vehiculosSimulacion.get(b).getCodigo();
                     }
                 }
                 ArrayList<PedidoModel> pedidos = new ArrayList<>();
