@@ -239,6 +239,7 @@ public class ABC {
             } else {
                 // Si no alcanza tiempo, es colapso logístico
                 System.out.println("¡Colapso Logistico!");
+                Mapa.flagColapso = true;
                 return false;
             }
         }

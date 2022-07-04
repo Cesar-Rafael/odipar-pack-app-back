@@ -37,6 +37,7 @@ public class Mapa {
 
     // Variables solo para Simulacion
     public static boolean flag = true;
+    public static boolean flagColapso = false;
 
     public static double k = 0.0;
     public static LocalDateTime inicioSimulacion = LocalDateTime.of(2022, 1, 1, 0, 50, 0);
