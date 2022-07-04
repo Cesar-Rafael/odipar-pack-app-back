@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
@@ -52,14 +55,12 @@ public class PedidoController {
         return true;
     }
 
-    @PostMapping("/ABCDD")
+    @GetMapping("/ABCDD")
     @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     public boolean ejecutarABCDiaDia() {
         ABC abc = new ABC();
 
         // Lectura desde BD
-        Mapa.cargarOficinasDiaDia();
-        Mapa.cargarTramosDiaDia();
         Mapa.cargarVehiculosDiaDia();
         Mapa.cargarBloqueosDiaDia();
 
@@ -83,6 +84,7 @@ public class PedidoController {
             System.out.println(Mapa.rutasDiaDia.get(i).getHorasDeLlegada());
             System.out.println();
         }
+
         return true;
     }
 
@@ -92,7 +94,7 @@ public class PedidoController {
         ABC abc = new ABC();
 
         // Carga de Pedidos
-        for(int i=0; i<simulation.pedidos.size();i++){
+        for (int i = 0; i < simulation.pedidos.size(); i++) {
             Mapa.pedidosSimulacion.add(simulation.pedidos.get(i));
         }
 

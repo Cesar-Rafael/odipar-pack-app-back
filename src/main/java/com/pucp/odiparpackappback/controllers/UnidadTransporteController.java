@@ -1,7 +1,6 @@
 package com.pucp.odiparpackappback.controllers;
 
 import com.pucp.odiparpackappback.Repositories.UnidadTransporteRepository;
-import com.pucp.odiparpackappback.models.EstadoUnidadTransporte;
 import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.UnidadTransporteModel;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
@@ -24,6 +24,12 @@ class UnidadTransporteController {
     @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<UnidadTransporteModel> listarUnidadesTransporte() {
         return (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
+    }
+
+    @GetMapping("/UnidadTransporte/Obtener/{id}")
+    @CrossOrigin
+    Optional<UnidadTransporteModel> listarUnidadTransporte(@PathVariable("id") long id) {
+        return unidadTransporteRepository.findById(id);
     }
 
     @GetMapping("/UnidadTransporte/Listar/Simulacion")

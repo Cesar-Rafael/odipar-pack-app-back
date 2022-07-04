@@ -28,10 +28,13 @@ public class OdiparPackAppBackApplication {
         Mapa.cargarTramosSimulacion("src/main/resources/static/tramo_model.csv");
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         Mapa.cargarBloqueosSimulacion("src/main/resources/static/bloqueo_model.csv");
+
+        Mapa.cargarOficinasDiaDia();
+        Mapa.cargarTramosDiaDia();
     }
 
     @Scheduled(cron = "0 0 0,6,12,18 * * *")
-    public void diadia(){
+    public void diadia() {
         // Inicio de la simulación Dia a Dia
         PedidoController pedidoController = new PedidoController(Mapa.pedidoRepository);
         pedidoController.ejecutarABCDiaDia();

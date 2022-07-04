@@ -5,7 +5,6 @@ import com.pucp.odiparpackappback.Repositories.RutaRepository;
 import com.pucp.odiparpackappback.models.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,47 +30,34 @@ public class RutaController {
     public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoDiaDia(@PathVariable("idVehiculo") long idVehiculo) {
         try {
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
-            List<RutaModel> rutas = rutaRepository.findByIdUnidadTransporte(idVehiculo);
-            for (int i = 0; i < rutas.size(); i++) {
-                ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(rutas.get(i).getSeguimiento());
-                ArrayList<String> auxNombreProvincias = new ArrayList<>();
-                for(int zz=0; zz < auxAI.size(); zz++){
-                    for(int z=0; z<Mapa.oficinas.size(); z++){
-                        if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
-                            auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
-                        }
-                    }
-                }
-                StringBuilder sb = new StringBuilder(rutas.get(i).getArrayHorasLlegada());
-                sb.insert(0, '[');
-                sb.insert(rutas.get(i).getArrayHorasLlegada().length(), ']');
-                ArrayList<Integer> auxAIantesL = new ObjectMapper().reader(List.class).readValue(sb.toString());
-                ArrayList<Long> auxAL = new ArrayList<Long>();
-                for (int a = 0; a < auxAIantesL.size(); a++) {
-                    auxAL.add(auxAIantesL.get(a).longValue());
-                }
-                String codigoPlaca = null;
-                for (int b = 0; b < Mapa.vehiculosDiaDia.size(); b++) {
-                    if (Mapa.vehiculosDiaDia.get(b).getId() == rutas.get(i).getIdUnidadTransporte()) {
-                        codigoPlaca = Mapa.vehiculosDiaDia.get(i).getCodigo();
-                    }
-                }
-                ArrayList<PedidoModel> pedidos = new ArrayList<>();
-                for (int j = 0; j < Mapa.rutasDiaDia.size(); j++) {
-                    if (Mapa.rutasDiaDia.get(j).getIdUnidadTransporte() == idVehiculo) {
-                        for (int c = 0; c < Mapa.rutasDiaDia.get(j).getPedidosParciales().size(); c++) {
-                            for (int d = 0; d < Mapa.pedidosDiaDia.size(); d++) {
-                                System.out.println("Si me imprimo");
-                                if (Mapa.rutasDiaDia.get(j).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
-                                    System.out.println("Aqui si");
-                                    pedidos.add(Mapa.pedidosDiaDia.get(d));
-                                }
+            for (int i = 0; i < Mapa.rutasDiaDia.size(); i++) {
+                if (Mapa.rutasDiaDia.get(i).getIdUnidadTransporte() == idVehiculo) {
+                    ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                    ArrayList<String> auxNombreProvincias = new ArrayList<>();
+                    for (int zz = 0; zz < auxAI.size(); zz++) {
+                        for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                            if (Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)) {
+                                auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
                             }
                         }
                     }
+                    String codigoPlaca = null;
+                    for (int b = 0; b < Mapa.vehiculosDiaDia.size(); b++) {
+                        if (Mapa.vehiculosDiaDia.get(b).getId() == Mapa.rutasDiaDia.get(i).getIdUnidadTransporte()) {
+                            codigoPlaca = Mapa.vehiculosDiaDia.get(b).getCodigo();
+                        }
+                    }
+                    ArrayList<PedidoModel> pedidos = new ArrayList<>();
+                    for (int c = 0; c < Mapa.rutasDiaDia.get(i).getPedidosParciales().size(); c++) {
+                        for (int d = 0; d < Mapa.pedidosDiaDia.size(); d++) {
+                            if (Mapa.rutasDiaDia.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
+                                pedidos.add(Mapa.pedidosDiaDia.get(d));
+                            }
+                        }
+                    }
+                    RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasDiaDia.get(i).getIdRuta(), Mapa.rutasDiaDia.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasDiaDia.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
+                    auxRutasG.add(auxRutaG);
                 }
-                RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl(rutas.get(i).getId(), rutas.get(i).getIdRuta(), rutas.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias,auxAL, codigoPlaca, pedidos);
-                auxRutasG.add(auxRutaG);
             }
             return auxRutasG;
         } catch (Exception ex) {
@@ -90,9 +76,9 @@ public class RutaController {
                 if (Mapa.rutasSimulacion.get(i).getIdUnidadTransporte() == idVehiculo) {
                     ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
                     ArrayList<String> auxNombreProvincias = new ArrayList<>();
-                    for(int zz=0; zz < auxAI.size(); zz++){
-                        for(int z=0; z<Mapa.oficinas.size(); z++){
-                            if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
+                    for (int zz = 0; zz < auxAI.size(); zz++) {
+                        for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                            if (Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)) {
                                 auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
                             }
                         }
@@ -128,7 +114,7 @@ public class RutaController {
         try {
             List<OficinaModel> oficinasT = Mapa.oficinas;
             HashMap<Integer, String> oficinas = new HashMap<>();
-            for(int i = 0; i< oficinasT.size(); i++){
+            for (int i = 0; i < oficinasT.size(); i++) {
                 oficinas.put(oficinasT.get(i).getUbigeo(), oficinasT.get(i).getProvincia());
             }
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
@@ -136,9 +122,9 @@ public class RutaController {
                 ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
                 String codigoPlaca = null;
                 ArrayList<String> auxNombreProvincias = new ArrayList<>();
-                for(int zz=0; zz < auxAI.size(); zz++){
-                    for(int z=0; z<Mapa.oficinas.size(); z++){
-                        if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
+                for (int zz = 0; zz < auxAI.size(); zz++) {
+                    for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                        if (Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)) {
                             auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
                         }
                     }
@@ -173,7 +159,7 @@ public class RutaController {
         try {
             List<OficinaModel> oficinasT = Mapa.oficinas;
             HashMap<Integer, String> oficinas = new HashMap<>();
-            for(int i = 0; i< oficinasT.size(); i++){
+            for (int i = 0; i < oficinasT.size(); i++) {
                 oficinas.put(oficinasT.get(i).getUbigeo(), oficinasT.get(i).getProvincia());
             }
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
@@ -181,9 +167,9 @@ public class RutaController {
                 ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasDiaDia.get(i).getSeguimiento());
                 String codigoPlaca = null;
                 ArrayList<String> auxNombreProvincias = new ArrayList<>();
-                for(int zz=0; zz < auxAI.size(); zz++){
-                    for(int z=0; z<Mapa.oficinas.size(); z++){
-                        if(Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)){
+                for (int zz = 0; zz < auxAI.size(); zz++) {
+                    for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                        if (Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)) {
                             auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
                         }
                     }
