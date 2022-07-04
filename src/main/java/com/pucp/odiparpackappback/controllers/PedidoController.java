@@ -142,13 +142,13 @@ public class PedidoController {
             HashMap<String, Double> map = new HashMap<>();
             map.put("cantRutas", numRutas);
             map.put("promTiempo", promTiempo);
-            if(Mapa.flag){
+            if(Mapa.flagColapso){
                 map.put("colasoLogistico", 1.0);
             }
             else{
                 map.put("colasoLogistico", 0.0);
             }
-            
+
             return map;
         }
 

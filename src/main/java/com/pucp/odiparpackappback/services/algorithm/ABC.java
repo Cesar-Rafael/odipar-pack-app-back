@@ -40,21 +40,9 @@ public class ABC {
         }
 
         // Etapa: Generación de la Población Inicial
-        boolean entrar = true;
-        while (entrar) {
-            entrar = false;
-            for(int z=0; z<pedidos.size(); z++){
-                if(pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO){
-                    entrar = true;
-                }
-            }
-            int i = generarNumeroEnteroAleatorio(pedidos.size());
-            // En caso el pedido escogido al azar no esté asignado...
-            if (pedidos.get(i).getEstado() == EstadoPedido.NO_ASIGNADO) {
-                boolean estado = asignarPedidoPoblacionInicial(pedidos.get(i), opcion);
-                if (!estado) {
-                    break;
-                }
+        for(int z=0; z<pedidos.size(); z++){
+            if(pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO){
+                asignarPedidoPoblacionInicial(pedidos.get(z), opcion);
             }
         }
 
