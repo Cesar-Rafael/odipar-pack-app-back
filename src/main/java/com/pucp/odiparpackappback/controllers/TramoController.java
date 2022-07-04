@@ -26,9 +26,9 @@ public class TramoController {
         return (List<TramoModel>) tramoRepository.findAll();
     }
 
-    @GetMapping("/TramosUsados/")
+    @GetMapping("/TramosUsadosSimulacion/")
     @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
-    List<TramoModel> listarTramosUsados() {
+    List<TramoModel> TramosUsadosSimulacion() {
         List<TramoModel> tramosAux = (List<TramoModel>) tramoRepository.findAll();
         List<TramoModel> tramos = new ArrayList<>();
         Long idTramo = Long.valueOf(0);
@@ -37,6 +37,29 @@ public class TramoController {
             for (int j = 0; j < Mapa.rutasSimulacion.get(i).getTramos().size(); j++) {
                 int idCiudadI = Mapa.rutasSimulacion.get(i).getTramos().get(j).getIdCiudadI();
                 int idCiudadJ = Mapa.rutasSimulacion.get(i).getTramos().get(j).getIdCiudadJ();
+                for (int k = 0; k < tramosAux.size(); k++) {
+                    if (tramosAux.get(k).getIdCiudadI() == idCiudadI && tramosAux.get(k).getIdCiudadJ() == idCiudadJ) {
+                        tramos.add(tramosAux.get(k));
+                        idTramo = tramosAux.get(k).getId();
+                    }
+                }
+                tramosUsados.add(idTramo);
+            }
+        }
+        return tramos;
+    }
+
+    @GetMapping("/TramosUsadosDiaDia/")
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    List<TramoModel> TramosUsadosDiaDia() {
+        List<TramoModel> tramosAux = (List<TramoModel>) tramoRepository.findAll();
+        List<TramoModel> tramos = new ArrayList<>();
+        Long idTramo = Long.valueOf(0);
+        List<Long> tramosUsados = new ArrayList<>();
+        for (int i = 0; i < Mapa.rutasDiaDia.size(); i++) {
+            for (int j = 0; j < Mapa.rutasDiaDia.get(i).getTramos().size(); j++) {
+                int idCiudadI = Mapa.rutasDiaDia.get(i).getTramos().get(j).getIdCiudadI();
+                int idCiudadJ = Mapa.rutasDiaDia.get(i).getTramos().get(j).getIdCiudadJ();
                 for (int k = 0; k < tramosAux.size(); k++) {
                     if (tramosAux.get(k).getIdCiudadI() == idCiudadI && tramosAux.get(k).getIdCiudadJ() == idCiudadJ) {
                         tramos.add(tramosAux.get(k));
