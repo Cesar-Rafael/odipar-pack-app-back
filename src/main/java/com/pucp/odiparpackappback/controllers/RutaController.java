@@ -19,13 +19,13 @@ public class RutaController {
     }
 
     @GetMapping("/Ruta/")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     public List<RutaModel> listarRutas() {
         return (List<RutaModel>) rutaRepository.findAll();
     }
 
     @GetMapping("/ruta/ListarRutasxIdVehiculoDiaDia/{idVehiculo}")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoDiaDia(@PathVariable("idVehiculo") long idVehiculo) {
         try {
@@ -80,7 +80,7 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/ListarRutasxIdVehiculoSimulacion/{idVehiculo}")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoSimulacion(@PathVariable("idVehiculo") long idVehiculo) {
         try {
@@ -122,7 +122,7 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/simulacion/listar")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     public List<RutaConArraySegHorasLl> ListarRutasSimulacion() {
         try {
             List<OficinaModel> oficinasT = Mapa.oficinas;
@@ -167,7 +167,7 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/DiaDia/listar")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     public List<RutaConArraySegHorasLl> ListarRutasDiaDia() {
         try {
             List<OficinaModel> oficinasT = Mapa.oficinas;
@@ -212,7 +212,7 @@ public class RutaController {
     }
 
     @PostMapping("/Ruta/PostRutas")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     public boolean InsertarListaRutas(@RequestBody List<RutaModel> rutasModel) {
         try {
             rutaRepository.saveAll(rutasModel);

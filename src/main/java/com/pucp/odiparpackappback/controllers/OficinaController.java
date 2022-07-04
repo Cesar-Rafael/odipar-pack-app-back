@@ -18,13 +18,13 @@ public class OficinaController {
     }
 
     @GetMapping("/Oficina/Listar")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<OficinaModel> listarOficinas() {
         return (List<OficinaModel>) oficinaRepository.findAll();
     }
 
     @GetMapping("/Oficina/provincia")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     List<OficinaModel> ListarOficinasxProvincia(@RequestParam(required = false) String provincia) {
         List<OficinaModel> oficinasAux = (List<OficinaModel>) oficinaRepository.findAll();

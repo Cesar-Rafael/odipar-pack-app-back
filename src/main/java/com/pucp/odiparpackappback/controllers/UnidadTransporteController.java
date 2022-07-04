@@ -20,20 +20,20 @@ class UnidadTransporteController {
     }
 
     @GetMapping("/UnidadTransporte/Listar/Operaciones")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<UnidadTransporteModel> listarUnidadesTransporte() {
         return (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
     }
 
     @GetMapping("/UnidadTransporte/Listar/Simulacion")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<UnidadTransporteModel> listarUnidadesTransporteSimulacion() {
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         return Mapa.vehiculosSimulacion;
     }
 
     @GetMapping("/UnidadTransporte/idRuta")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
     List<UnidadTransporteModel> listarUnidadesTransportexIdRuta(@RequestParam(required = false) int idRuta) {
         List<UnidadTransporteModel> unidadesTransporteAux = (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
@@ -47,7 +47,7 @@ class UnidadTransporteController {
     }
 
     @GetMapping("/UnidadTransporte/codigo")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<UnidadTransporteModel> listarUnidadesTransportexCodigo(@RequestParam(required = false) String codigo) {
         List<UnidadTransporteModel> unidadesTransporteAux = (List<UnidadTransporteModel>) unidadTransporteRepository.findAll();
         List<UnidadTransporteModel> unidadesTransporte = new ArrayList<>();

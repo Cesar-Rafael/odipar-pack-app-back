@@ -5,6 +5,7 @@ import com.pucp.odiparpackappback.models.Mapa;
 import com.pucp.odiparpackappback.models.TramoModel;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -19,13 +20,13 @@ public class TramoController {
     }
 
     @GetMapping("/Tramo/")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<TramoModel> listarTramos() {
         return (List<TramoModel>) tramoRepository.findAll();
     }
 
     @GetMapping("/TramosUsados/")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<TramoModel> listarTramosUsados() {
         List<TramoModel> tramosAux = (List<TramoModel>) tramoRepository.findAll();
         List<TramoModel> tramos = new ArrayList<>();

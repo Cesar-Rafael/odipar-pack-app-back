@@ -21,25 +21,25 @@ public class PedidoController {
     }
 
     @GetMapping("/Pedido/Listar")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     public List<PedidoModel> listarPedidos() {
         return (List<PedidoModel>) pedidoRepository.findAll();
     }
 
     @GetMapping("/Pedido/{id}")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     Optional<PedidoModel> ListarPedidoxId(@PathVariable("id") long id) {
         return pedidoRepository.findById(id);
     }
 
     @PostMapping("/Pedido/Insertar")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     PedidoModel InsertarPedido(@RequestBody PedidoModel pedidoModel) {
         return pedidoRepository.save(pedidoModel);
     }
 
     @PostMapping("/Pedido/Insertar/Masivo")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     boolean InsertarListaPedidos(@RequestBody List<PedidoModel> pedidosModel) {
         try {
             pedidoRepository.saveAll(pedidosModel);
@@ -50,7 +50,7 @@ public class PedidoController {
     }
 
     @PostMapping("/ABCDD")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     public boolean ejecutarABCDiaDia() {
         ABC abc = new ABC();
 
@@ -84,7 +84,7 @@ public class PedidoController {
     }
 
     @PostMapping("/ABCS")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
 
@@ -148,7 +148,7 @@ public class PedidoController {
     }
 
     @GetMapping("/simulacion/reiniciar")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     boolean pararSimulacion() {
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
@@ -157,7 +157,7 @@ public class PedidoController {
     }
 
     @PostMapping("/PararDiaDia")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     boolean pararDiaDia() {
         Mapa.setFlag(false);
         Mapa.pedidosSimulacion.clear();

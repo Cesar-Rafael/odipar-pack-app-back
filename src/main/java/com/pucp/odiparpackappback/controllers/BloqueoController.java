@@ -27,7 +27,7 @@ public class BloqueoController {
     }
 
     @GetMapping("/Bloqueo/")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<Bloqueo> listarBloqueos() {
         List<OficinaModel> oficinasT = (List<OficinaModel>) oficinaRepository.findAll();
         HashMap<Integer, String> oficinas = new HashMap<>();
@@ -52,7 +52,7 @@ public class BloqueoController {
     }
 
     @PostMapping("/Bloqueo/PostBloqueos")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     boolean InsertarListaBloqueos(@RequestBody List<BloqueoModel> bloqueosModel) {
         try {
             bloqueoRepository.saveAll(bloqueosModel);
@@ -63,7 +63,7 @@ public class BloqueoController {
     }
 
     @PostMapping("/bloqueo/listar_por_fechas")
-    @CrossOrigin
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
     List<BloqueoModel> ListarBloqueosEntreFechas(@RequestBody BloqueoBody bloqueoBody) {
         //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         //Date fechaInicioDate = sdf.parse(fechaInicio);
