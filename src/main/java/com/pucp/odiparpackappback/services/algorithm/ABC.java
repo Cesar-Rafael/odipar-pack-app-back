@@ -6,7 +6,6 @@ import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
-import org.hibernate.dialect.SybaseAnywhereDialect;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -40,8 +39,8 @@ public class ABC {
         }
 
         // Etapa: Generación de la Población Inicial
-        for(int z=0; z<pedidos.size(); z++){
-            if(pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO){
+        for (int z = 0; z < pedidos.size(); z++) {
+            if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO) {
                 asignarPedidoPoblacionInicial(pedidos.get(z), opcion);
             }
         }
@@ -82,11 +81,11 @@ public class ABC {
         ArrayList<Ruta> rutas;
         ArrayList<UnidadTransporteModel> vehiculos;
         LocalDateTime fin;
-        if(opcion == 0){
+        if (opcion == 0) {
             rutas = Mapa.rutasSimulacion;
             vehiculos = Mapa.vehiculosSimulacion;
             fin = Mapa.inicioSimulacion;
-        }else{
+        } else {
             rutas = Mapa.rutasDiaDia;
             vehiculos = Mapa.vehiculosDiaDia;
             fin = Mapa.finDiaDia;
@@ -196,10 +195,10 @@ public class ABC {
                         horasLlegada.add(horaLlegada);
                     }
                 }
-                if(opcion == 0){
+                if (opcion == 0) {
                     Mapa.rutasSimulacion.get(iMenor).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
-                }else {
+                } else {
                     Mapa.rutasDiaDia.get(iMenor).setFlagTerminado(true);
                     Mapa.vehiculosDiaDia.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
                 }
@@ -221,7 +220,7 @@ public class ABC {
                 pedidosParciales.add(pedidoParcial);
                 // SE CREA UNA NUEVA RUTA
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
-                if(opcion == 0) Mapa.rutasSimulacion.add(rutaAux);
+                if (opcion == 0) Mapa.rutasSimulacion.add(rutaAux);
                 else Mapa.rutasDiaDia.add(rutaAux);
                 return true;
             } else {
@@ -239,12 +238,11 @@ public class ABC {
         ArrayList<Ruta> rutas;
         ArrayList<UnidadTransporteModel> vehiculos;
         LocalDateTime inicio;
-        if(opcion == 0){
+        if (opcion == 0) {
             rutas = Mapa.rutasSimulacion;
             inicio = Mapa.inicioSimulacion;
             vehiculos = Mapa.vehiculosSimulacion;
-        }
-        else {
+        } else {
             rutas = Mapa.rutasDiaDia;
             inicio = Mapa.finDiaDia;
             vehiculos = Mapa.vehiculosDiaDia;
@@ -307,12 +305,11 @@ public class ABC {
                 // ¿Hay capacidad disponible suficiente?
                 if (vehiculos.get(i).getCapacidadDisponible() >= pedido.getCantPaquetesNoAsignado()) {
                     // Sí hay capacidad disponible suficiente
-                    if(opcion == 0){
+                    if (opcion == 0) {
                         Mapa.vehiculosSimulacion.get(i).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                         Mapa.vehiculosSimulacion.get(i).setIdRuta(idRuta);
                         Mapa.vehiculosSimulacion.get(i).setCapacidadDisponible(vehiculos.get(i).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
-                    }
-                    else{
+                    } else {
                         Mapa.vehiculosDiaDia.get(i).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                         Mapa.vehiculosDiaDia.get(i).setIdRuta(idRuta);
                         Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(vehiculos.get(i).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
@@ -342,17 +339,17 @@ public class ABC {
                         tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                    if(opcion == 0)Mapa.rutasSimulacion.add(auxRuta);
+                    if (opcion == 0) Mapa.rutasSimulacion.add(auxRuta);
                     else Mapa.rutasDiaDia.add(auxRuta);
                     return true;
                 } else {
                     // Actualización en Pedido
                     int faltante = pedido.getCantPaquetesNoAsignado() - vehiculos.get(i).getCapacidadDisponible();
                     // No hay capacidad disponible suficiente
-                    if(opcion == 0){
+                    if (opcion == 0) {
                         Mapa.vehiculosSimulacion.get(i).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                         Mapa.vehiculosSimulacion.get(i).setIdRuta(idRuta);
-                    } else{
+                    } else {
                         Mapa.vehiculosDiaDia.get(i).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                         Mapa.vehiculosDiaDia.get(i).setIdRuta(idRuta);
                     }
@@ -374,7 +371,7 @@ public class ABC {
                     PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, vehiculos.get(i).getCapacidadDisponible(), horasLlegadaLong.get(indiceAux), idRuta);
                     pedidosParciales.add(pedidoParcial);
                     // Pedido
-                    if(opcion == 0) Mapa.vehiculosSimulacion.get(i).setCapacidadDisponible(0);
+                    if (opcion == 0) Mapa.vehiculosSimulacion.get(i).setCapacidadDisponible(0);
                     else Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(0);
                     pedido.setCantPaquetesNoAsignado(faltante);
                     pedido.setEstado(EstadoPedido.EN_PROCESO);
@@ -384,7 +381,7 @@ public class ABC {
                         tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                    if(opcion == 0) Mapa.rutasSimulacion.add(auxRuta);
+                    if (opcion == 0) Mapa.rutasSimulacion.add(auxRuta);
                     else Mapa.rutasDiaDia.add(auxRuta);
                     return kShortestPathRoutingPedido(pedido, 0, opcion);
                 }
@@ -395,9 +392,9 @@ public class ABC {
 
     public boolean asignarPedidoRutaVehiculo(PedidoModel pedido, Ruta ruta, int opcion) {
         ArrayList<UnidadTransporteModel> vehiculos;
-        if(opcion == 0) {
+        if (opcion == 0) {
             vehiculos = Mapa.vehiculosSimulacion;
-        }else{
+        } else {
             vehiculos = Mapa.vehiculosDiaDia;
         }
 
@@ -435,8 +432,10 @@ public class ABC {
                 pedidosParciales.add(pedidoParcial);
                 ruta.setPedidosParciales(pedidosParciales);
                 // Se actualiza la capacidad disponible en el vehículo
-                if(opcion == 0) Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
-                else Mapa.vehiculosDiaDia.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosDiaDia.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
+                if (opcion == 0)
+                    Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
+                else
+                    Mapa.vehiculosDiaDia.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosDiaDia.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
                 // Se actualiza la cantidad de paquetes no asignados
                 pedido.setCantPaquetesNoAsignado(0);
                 pedido.setEstado(EstadoPedido.EN_PROCESO);
@@ -464,7 +463,8 @@ public class ABC {
                 pedidosParciales.add(pedidoParcial);
                 ruta.setPedidosParciales(pedidosParciales);
                 // Se actualiza la capacidad disponible en el vehículo, o sea cero
-                if(opcion == 0) Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(0);
+                if (opcion == 0)
+                    Mapa.vehiculosSimulacion.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(0);
                 else Mapa.vehiculosDiaDia.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(0);
                 pedido.setCantPaquetesNoAsignado(faltante);
                 return false;
