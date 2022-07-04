@@ -51,6 +51,13 @@ public class RutaController {
                     for (int c = 0; c < Mapa.rutasDiaDia.get(i).getPedidosParciales().size(); c++) {
                         for (int d = 0; d < Mapa.pedidosDiaDia.size(); d++) {
                             if (Mapa.rutasDiaDia.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
+                                //
+                                for(int zzz=0; zzz<Mapa.oficinas.size();zzz++){
+                                    if(Mapa.oficinas.get(zzz).getUbigeo() == Mapa.pedidosDiaDia.get(d).getIdCiudadDestino()){
+                                        Mapa.pedidosDiaDia.get(d).setCiudadDestino(Mapa.oficinas.get(zzz).getProvincia());
+                                    }
+                                }
+                                //
                                 pedidos.add(Mapa.pedidosDiaDia.get(d));
                             }
                         }
@@ -93,6 +100,13 @@ public class RutaController {
                     for (int c = 0; c < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); c++) {
                         for (int d = 0; d < Mapa.pedidosSimulacion.size(); d++) {
                             if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
+                                //
+                                for(int zzz=0; zzz<Mapa.oficinas.size();zzz++){
+                                    if(Mapa.oficinas.get(zzz).getUbigeo() == Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()){
+                                        Mapa.pedidosSimulacion.get(d).setCiudadDestino(Mapa.oficinas.get(zzz).getProvincia());
+                                    }
+                                }
+                                //
                                 pedidos.add(Mapa.pedidosSimulacion.get(d));
                             }
                         }
