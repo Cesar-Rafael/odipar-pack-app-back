@@ -167,13 +167,41 @@ public class PedidoController {
         return true;
     }
 
-    @GetMapping("/Pedido/ListarRutasxIdPedido/{idPedido}")
+    @GetMapping("/Pedido/ListarRutasSimulacionxIdPedido/{idPedido}")
     @ResponseBody
     @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
-    public List<RutaConArraySegHorasLl> ListarRutasxIdPedido(@PathVariable("idPedido") long idPedido) {
+    public List<RutaConArraySegHorasLl> ListarRutasSimulacionxIdPedido(@PathVariable("idPedido") long idPedido) {
         try {
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
-
+            for(int i=0; i<Mapa.rutasSimulacion.size(); i++){
+                for(int j=0; j<Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++){
+                    if(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido() == idPedido){
+                        ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                        ArrayList<String> auxNombreProvincias = new ArrayList<>();
+                        for (int zz = 0; zz < auxAI.size(); zz++) {
+                            for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                                if (Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)) {
+                                    auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
+                                }
+                            }
+                        }
+                        String codigoPlaca = null;
+                        for (int b = 0; b < Mapa.vehiculosSimulacion.size(); b++) {
+                            if (Mapa.vehiculosSimulacion.get(b).getId() == Mapa.rutasSimulacion.get(i).getIdUnidadTransporte()) {
+                                codigoPlaca = Mapa.vehiculosSimulacion.get(b).getCodigo();
+                            }
+                        }
+                        ArrayList<PedidoModel> pedidos = new ArrayList<>();
+                        for (int c = 0; c < Mapa.pedidosSimulacion.size(); c++) {
+                            if(Mapa.pedidosSimulacion.get(c).getId() == idPedido){
+                                pedidos.add(Mapa.pedidosSimulacion.get(c));
+                            }
+                        }
+                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
+                        auxRutasG.add(auxRutaG);
+                    }
+                }
+            }
             return auxRutasG;
         } catch (Exception ex) {
             System.out.println(ex);
