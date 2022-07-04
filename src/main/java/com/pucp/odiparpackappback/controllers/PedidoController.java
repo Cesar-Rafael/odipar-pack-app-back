@@ -84,9 +84,48 @@ public class PedidoController {
         return true;
     }
 
+    @GetMapping("/SimulacionReporte")
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    Map<String, Double> SimulacionReporte() {
+        // REPORTE EXTERNO
+        HashMap<Long, Long> pedidos = new HashMap<>();
+        Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
+        Double tiempo = 0.0;
+        Double numPedidos = Mapa.pedidosSimulacion.size() + 0.0;
+        for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
+            for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
+                if (pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())) {
+                    if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
+                        pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
+                } else {
+                    pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
+                }
+            }
+        }
+        for (int i = 0; i < Mapa.pedidosSimulacion.size(); i++) {
+            if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())) {
+                tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
+            } else numPedidos--;
+        }
+
+        Double promTiempo = tiempo / numPedidos;
+        HashMap<String, Double> map = new HashMap<>();
+        map.put("cantRutas", numRutas);
+        map.put("promTiempo", promTiempo);
+        if(Mapa.flagColapso){
+            map.put("colasoLogistico", 1.0);
+        }
+        else{
+            map.put("colasoLogistico", 0.0);
+        }
+
+        return map;
+    }
+
+
     @PostMapping("/ABCS")
     @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
-    Map<String, Double> ejecutarABCSimulacion(@RequestBody Simulation simulation) {
+    boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
 
         // Carga de Pedidos
@@ -116,43 +155,13 @@ public class PedidoController {
                 }
                 System.out.println();
             }
-
-            // REPORTE EXTERNO
-            HashMap<Long, Long> pedidos = new HashMap<>();
-            Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
-            Double tiempo = 0.0;
-            Double numPedidos = Mapa.pedidosSimulacion.size() + 0.0;
-            for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-                for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
-                    if (pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())) {
-                        if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
-                            pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
-                    } else {
-                        pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
-                    }
-                }
-            }
-            for (int i = 0; i < Mapa.pedidosSimulacion.size(); i++) {
-                if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())) {
-                    tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
-                } else numPedidos--;
-            }
-
-            Double promTiempo = tiempo / numPedidos;
-            HashMap<String, Double> map = new HashMap<>();
-            map.put("cantRutas", numRutas);
-            map.put("promTiempo", promTiempo);
-            if(Mapa.flagColapso){
-                map.put("colasoLogistico", 1.0);
-            }
-            else{
-                map.put("colasoLogistico", 0.0);
-            }
-
-            return map;
         }
-
-        return null;
+        if(Mapa.flagColapso){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 
     @GetMapping("/simulacion/reiniciar")
