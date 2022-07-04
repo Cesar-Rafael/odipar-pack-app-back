@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 class UnidadTransporteController {
 
     private final UnidadTransporteRepository unidadTransporteRepository;

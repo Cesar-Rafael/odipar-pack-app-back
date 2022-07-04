@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 public class PedidoController {
     private final PedidoRepository pedidoRepository;
 

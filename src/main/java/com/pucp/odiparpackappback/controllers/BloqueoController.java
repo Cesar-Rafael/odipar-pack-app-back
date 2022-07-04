@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 public class BloqueoController {
 
     private final BloqueoRepository bloqueoRepository;
