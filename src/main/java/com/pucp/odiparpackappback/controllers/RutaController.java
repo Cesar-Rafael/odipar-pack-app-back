@@ -32,7 +32,7 @@ public class RutaController {
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
             for (int i = 0; i < Mapa.rutasDiaDia.size(); i++) {
                 if (Mapa.rutasDiaDia.get(i).getIdUnidadTransporte() == idVehiculo) {
-                    ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                    ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasDiaDia.get(i).getSeguimiento());
                     ArrayList<String> auxNombreProvincias = new ArrayList<>();
                     for (int zz = 0; zz < auxAI.size(); zz++) {
                         for (int z = 0; z < Mapa.oficinas.size(); z++) {
