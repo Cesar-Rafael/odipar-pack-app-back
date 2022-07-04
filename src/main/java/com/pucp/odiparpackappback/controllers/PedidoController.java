@@ -1,10 +1,9 @@
 package com.pucp.odiparpackappback.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pucp.odiparpackappback.Repositories.PedidoRepository;
 import com.pucp.odiparpackappback.dto.Simulation;
-import com.pucp.odiparpackappback.models.EstadoUnidadTransporte;
-import com.pucp.odiparpackappback.models.Mapa;
-import com.pucp.odiparpackappback.models.PedidoModel;
+import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.algorithm.ABC;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
@@ -12,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
@@ -169,5 +165,19 @@ public class PedidoController {
         Mapa.rutasSimulacion.clear();
         Mapa.vehiculosDiaDia.clear();
         return true;
+    }
+
+    @GetMapping("/Pedido/ListarRutasxIdPedido/{idPedido}")
+    @ResponseBody
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    public List<RutaConArraySegHorasLl> ListarRutasxIdPedido(@PathVariable("idPedido") long idPedido) {
+        try {
+            List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
+
+            return auxRutasG;
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+        return null;
     }
 }
