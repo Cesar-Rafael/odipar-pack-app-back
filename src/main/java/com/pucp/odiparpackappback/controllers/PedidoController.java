@@ -199,6 +199,7 @@ public class PedidoController {
                             }
                         }
                         ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
+                        ArrayList<PedidoModel> pedidos = new ArrayList<>();
                         for (int c = 0; c < Mapa.pedidosSimulacion.size(); c++) {
                             if(Mapa.pedidosSimulacion.get(c).getId() == idPedido){
                                 //
@@ -208,6 +209,7 @@ public class PedidoController {
                                     }
                                 }
                                 //
+                                pedidos.add(Mapa.pedidosSimulacion.get(c));
                                 for(int contador = 0; contador < Mapa.rutasSimulacion.size(); contador++){
                                     for(int contador2 = 0; contador2 < Mapa.rutasSimulacion.get(contador).getPedidosParciales().size(); contador2++){
                                         if(Mapa.rutasSimulacion.get(contador).getPedidosParciales().get(contador2).getIdPedido() == idPedido){
@@ -217,7 +219,7 @@ public class PedidoController {
                                 }
                             }
                         }
-                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidosParciales);
+                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos, pedidosParciales);
                         auxRutasG.add(auxRutaG);
                     }
                 }
@@ -254,9 +256,11 @@ public class PedidoController {
                             }
                         }
                         ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
+                        ArrayList<PedidoModel> pedidos = new ArrayList<>();
                         for (int c = 0; c < Mapa.pedidosDiaDia.size(); c++) {
                             if(Mapa.pedidosDiaDia.get(c).getId() == idPedido){
                                 //
+                                pedidos.add(Mapa.pedidosDiaDia.get(c));
                                 for(int zzz=0; zzz<Mapa.oficinas.size();zzz++){
                                     if(Mapa.oficinas.get(zzz).getUbigeo() == Mapa.pedidosDiaDia.get(c).getIdCiudadDestino()){
                                         Mapa.pedidosDiaDia.get(c).setCiudadDestino(Mapa.oficinas.get(zzz).getProvincia());
@@ -272,7 +276,7 @@ public class PedidoController {
                                 }
                             }
                         }
-                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasDiaDia.get(i).getIdRuta(), Mapa.rutasDiaDia.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasDiaDia.get(i).getHorasDeLlegada(), codigoPlaca, pedidosParciales);
+                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasDiaDia.get(i).getIdRuta(), Mapa.rutasDiaDia.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasDiaDia.get(i).getHorasDeLlegada(), codigoPlaca, pedidos, pedidosParciales);
                         auxRutasG.add(auxRutaG);
                     }
                 }

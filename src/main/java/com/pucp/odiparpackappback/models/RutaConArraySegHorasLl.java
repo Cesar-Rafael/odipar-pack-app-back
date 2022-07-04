@@ -9,9 +9,10 @@ public class RutaConArraySegHorasLl {
     private ArrayList<String> nombreProvincias;
     private ArrayList<Long> arrayHorasLlegada;
     private String codigoPlaca;
+    private ArrayList<PedidoModel> pedidos;
     private ArrayList<PedidoParcialModel> pedidosParciales;
 
-    public RutaConArraySegHorasLl(Long id, Long idRuta, Long idUnidadTransporte, ArrayList<Integer> arraySeguimiento, ArrayList<String> nombreProvincias, ArrayList<Long> arrayHorasLlegada, String codigoPlaca, ArrayList<PedidoParcialModel> pedidosParciales) {
+    public RutaConArraySegHorasLl(Long id, Long idRuta, Long idUnidadTransporte, ArrayList<Integer> arraySeguimiento, ArrayList<String> nombreProvincias, ArrayList<Long> arrayHorasLlegada, String codigoPlaca, ArrayList<PedidoModel> pedidos, ArrayList<PedidoParcialModel> pedidosParciales) {
         this.id = id;
         this.idRuta = idRuta;
         this.idUnidadTransporte = idUnidadTransporte;
@@ -19,6 +20,7 @@ public class RutaConArraySegHorasLl {
         this.nombreProvincias = nombreProvincias;
         this.arrayHorasLlegada = arrayHorasLlegada;
         this.codigoPlaca = codigoPlaca;
+        this.pedidos = pedidos;
         this.pedidosParciales = pedidosParciales;
     }
 
@@ -76,5 +78,12 @@ public class RutaConArraySegHorasLl {
     }
     public void setPedidosParciales(ArrayList<PedidoParcialModel> pedidosParciales) {
         this.pedidosParciales = pedidosParciales;
+    }
+
+    public ArrayList<PedidoModel> getPedidos() {
+        return pedidos;
+    }
+    public void setPedidos(ArrayList<PedidoModel> pedidos) {
+        this.pedidos = pedidos;
     }
 }
