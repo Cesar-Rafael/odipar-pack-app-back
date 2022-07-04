@@ -72,11 +72,6 @@ public class ABC {
         }
     }
 
-    public int generarNumeroEnteroAleatorio(int max) {
-        Random random = new Random();
-        return random.nextInt(max);
-    }
-
     public boolean asignarPedidoPoblacionInicial(PedidoModel pedido, int opcion) {
         ArrayList<Ruta> rutas;
         ArrayList<UnidadTransporteModel> vehiculos;
