@@ -198,7 +198,7 @@ public class PedidoController {
                                 codigoPlaca = Mapa.vehiculosSimulacion.get(b).getCodigo();
                             }
                         }
-                        ArrayList<PedidoModel> pedidos = new ArrayList<>();
+                        ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
                         for (int c = 0; c < Mapa.pedidosSimulacion.size(); c++) {
                             if(Mapa.pedidosSimulacion.get(c).getId() == idPedido){
                                 //
@@ -208,10 +208,16 @@ public class PedidoController {
                                     }
                                 }
                                 //
-                                pedidos.add(Mapa.pedidosSimulacion.get(c));
+                                for(int contador = 0; contador < Mapa.rutasSimulacion.size(); contador++){
+                                    for(int contador2 = 0; contador2 < Mapa.rutasSimulacion.get(contador).getPedidosParciales().size(); contador2++){
+                                        if(Mapa.rutasSimulacion.get(contador).getPedidosParciales().get(contador2).getIdPedido() == idPedido){
+                                            pedidosParciales.add(Mapa.rutasSimulacion.get(contador).getPedidosParciales().get(contador2));
+                                        }
+                                    }
+                                }
                             }
                         }
-                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
+                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidosParciales);
                         auxRutasG.add(auxRutaG);
                     }
                 }
@@ -247,7 +253,7 @@ public class PedidoController {
                                 codigoPlaca = Mapa.vehiculosDiaDia.get(b).getCodigo();
                             }
                         }
-                        ArrayList<PedidoModel> pedidos = new ArrayList<>();
+                        ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
                         for (int c = 0; c < Mapa.pedidosDiaDia.size(); c++) {
                             if(Mapa.pedidosDiaDia.get(c).getId() == idPedido){
                                 //
@@ -257,10 +263,16 @@ public class PedidoController {
                                     }
                                 }
                                 //
-                                pedidos.add(Mapa.pedidosDiaDia.get(c));
+                                for(int contador = 0; contador < Mapa.rutasDiaDia.size(); contador++){
+                                    for(int contador2 = 0; contador2 < Mapa.rutasDiaDia.get(contador).getPedidosParciales().size(); contador2++){
+                                        if(Mapa.rutasDiaDia.get(contador).getPedidosParciales().get(contador2).getIdPedido() == idPedido){
+                                            pedidosParciales.add(Mapa.rutasDiaDia.get(contador).getPedidosParciales().get(contador2));
+                                        }
+                                    }
+                                }
                             }
                         }
-                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasDiaDia.get(i).getIdRuta(), Mapa.rutasDiaDia.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasDiaDia.get(i).getHorasDeLlegada(), codigoPlaca, pedidos);
+                        RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) auxRutasG.size(), Mapa.rutasDiaDia.get(i).getIdRuta(), Mapa.rutasDiaDia.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasDiaDia.get(i).getHorasDeLlegada(), codigoPlaca, pedidosParciales);
                         auxRutasG.add(auxRutaG);
                     }
                 }
