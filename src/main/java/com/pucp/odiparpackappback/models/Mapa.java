@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -70,6 +69,7 @@ public class Mapa {
     public static boolean isFlag() {
         return flag;
     }
+
     public static void setFlag(boolean flag) {
         Mapa.flag = flag;
     }
@@ -77,6 +77,7 @@ public class Mapa {
     public static double getFitnessSolucion() {
         return fitnessSolucion;
     }
+
     public static void setFitnessSolucion(double fitnessSolucion) {
         Mapa.fitnessSolucion = fitnessSolucion;
     }
@@ -185,6 +186,7 @@ public class Mapa {
         File archivoPedidos;
         FileReader fr = null;
         BufferedReader br;
+        Mapa.vehiculosSimulacion = new ArrayList<>();
         try {
             archivoPedidos = new File(rutaVehiculos);
             fr = new FileReader(archivoPedidos);
