@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class RutaController {
     private final RutaRepository rutaRepository;
 
@@ -19,13 +19,13 @@ public class RutaController {
     }
 
     @GetMapping("/Ruta/")
-    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     public List<RutaModel> listarRutas() {
         return (List<RutaModel>) rutaRepository.findAll();
     }
 
     @GetMapping("/ruta/ListarRutasxIdVehiculoDiaDia/{idVehiculo}")
-    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoDiaDia(@PathVariable("idVehiculo") long idVehiculo) {
         try {
@@ -53,8 +53,8 @@ public class RutaController {
                         for (int d = 0; d < Mapa.pedidosDiaDia.size(); d++) {
                             if (Mapa.rutasDiaDia.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
                                 //
-                                for(int zzz=0; zzz<Mapa.oficinas.size();zzz++){
-                                    if(Mapa.oficinas.get(zzz).getUbigeo() == Mapa.pedidosDiaDia.get(d).getIdCiudadDestino()){
+                                for (int zzz = 0; zzz < Mapa.oficinas.size(); zzz++) {
+                                    if (Mapa.oficinas.get(zzz).getUbigeo() == Mapa.pedidosDiaDia.get(d).getIdCiudadDestino()) {
                                         Mapa.pedidosDiaDia.get(d).setCiudadDestino(Mapa.oficinas.get(zzz).getProvincia());
                                     }
                                 }
@@ -75,14 +75,14 @@ public class RutaController {
         return null;
     }
 
-    @GetMapping("/ruta/ListarRutasxIdVehiculoSimulacion/{idVehiculo}")
-    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    @GetMapping("/ruta/ListarRutasxIdVehiculoSimulacion")
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoSimulacion(@PathVariable("idVehiculo") long idVehiculo) {
+    public List<RutaConArraySegHorasLl> ListarRutasxIdVehiculoSimulacion(@RequestParam long idVehiculo, @RequestParam long fechaLimite) {
         try {
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
             for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-                if (Mapa.rutasSimulacion.get(i).getIdUnidadTransporte() == idVehiculo) {
+                if (Mapa.rutasSimulacion.get(i).getIdUnidadTransporte() == idVehiculo && Mapa.rutasSimulacion.get(i).getHorasDeLlegada().get(0) <= fechaLimite) {
                     ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
                     ArrayList<String> auxNombreProvincias = new ArrayList<>();
                     for (int zz = 0; zz < auxAI.size(); zz++) {
@@ -104,8 +104,8 @@ public class RutaController {
                         for (int d = 0; d < Mapa.pedidosSimulacion.size(); d++) {
                             if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
                                 //
-                                for(int zzz=0; zzz<Mapa.oficinas.size();zzz++){
-                                    if(Mapa.oficinas.get(zzz).getUbigeo() == Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()){
+                                for (int zzz = 0; zzz < Mapa.oficinas.size(); zzz++) {
+                                    if (Mapa.oficinas.get(zzz).getUbigeo() == Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()) {
                                         Mapa.pedidosSimulacion.get(d).setCiudadDestino(Mapa.oficinas.get(zzz).getProvincia());
                                     }
                                 }
@@ -127,8 +127,8 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/simulacion/listar")
-    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
-    public List<RutaConArraySegHorasLl> ListarRutasSimulacion() {
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+    public List<RutaConArraySegHorasLl> ListarRutasSimulacion(@RequestParam long fechaLimite) {
         try {
             List<OficinaModel> oficinasT = Mapa.oficinas;
             HashMap<Integer, String> oficinas = new HashMap<>();
@@ -137,34 +137,36 @@ public class RutaController {
             }
             List<RutaConArraySegHorasLl> auxRutasG = new ArrayList<>();
             for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
-                ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
-                String codigoPlaca = null;
-                ArrayList<String> auxNombreProvincias = new ArrayList<>();
-                for (int zz = 0; zz < auxAI.size(); zz++) {
-                    for (int z = 0; z < Mapa.oficinas.size(); z++) {
-                        if (Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)) {
-                            auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
+                if (Mapa.rutasSimulacion.get(i).getHorasDeLlegada().get(0) <= fechaLimite) {
+                    ArrayList<Integer> auxAI = new ObjectMapper().reader(List.class).readValue(Mapa.rutasSimulacion.get(i).getSeguimiento());
+                    String codigoPlaca = null;
+                    ArrayList<String> auxNombreProvincias = new ArrayList<>();
+                    for (int zz = 0; zz < auxAI.size(); zz++) {
+                        for (int z = 0; z < Mapa.oficinas.size(); z++) {
+                            if (Mapa.oficinas.get(z).getUbigeo() == auxAI.get(zz)) {
+                                auxNombreProvincias.add(zz, Mapa.oficinas.get(z).getProvincia());
+                            }
                         }
                     }
-                }
-                for (int b = 0; b < Mapa.vehiculosSimulacion.size(); b++) {
-                    if (Mapa.vehiculosSimulacion.get(b).getId() == Mapa.rutasSimulacion.get(i).getIdUnidadTransporte()) {
-                        codigoPlaca = Mapa.vehiculosSimulacion.get(b).getCodigo();
-                    }
-                }
-                ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
-                ArrayList<PedidoModel> pedidos = new ArrayList<>();
-                for (int c = 0; c < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); c++) {
-                    for (int d = 0; d < Mapa.pedidosSimulacion.size(); d++) {
-                        if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
-                            Mapa.pedidosSimulacion.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()));
-                            pedidos.add(Mapa.pedidosSimulacion.get(d));
-                            pedidosParciales.addAll(Mapa.rutasSimulacion.get(i).getPedidosParciales());
+                    for (int b = 0; b < Mapa.vehiculosSimulacion.size(); b++) {
+                        if (Mapa.vehiculosSimulacion.get(b).getId() == Mapa.rutasSimulacion.get(i).getIdUnidadTransporte()) {
+                            codigoPlaca = Mapa.vehiculosSimulacion.get(b).getCodigo();
                         }
                     }
+                    ArrayList<PedidoParcialModel> pedidosParciales = new ArrayList<>();
+                    ArrayList<PedidoModel> pedidos = new ArrayList<>();
+                    for (int c = 0; c < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); c++) {
+                        for (int d = 0; d < Mapa.pedidosSimulacion.size(); d++) {
+                            if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
+                                Mapa.pedidosSimulacion.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()));
+                                pedidos.add(Mapa.pedidosSimulacion.get(d));
+                                pedidosParciales.addAll(Mapa.rutasSimulacion.get(i).getPedidosParciales());
+                            }
+                        }
+                    }
+                    RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) i, Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos, pedidosParciales);
+                    auxRutasG.add(auxRutaG);
                 }
-                RutaConArraySegHorasLl auxRutaG = new RutaConArraySegHorasLl((long) i, Mapa.rutasSimulacion.get(i).getIdRuta(), Mapa.rutasSimulacion.get(i).getIdUnidadTransporte(), auxAI, auxNombreProvincias, Mapa.rutasSimulacion.get(i).getHorasDeLlegada(), codigoPlaca, pedidos, pedidosParciales);
-                auxRutasG.add(auxRutaG);
             }
             return auxRutasG;
         } catch (Exception ex) {
@@ -174,7 +176,7 @@ public class RutaController {
     }
 
     @GetMapping("/ruta/DiaDia/listar")
-    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     public List<RutaConArraySegHorasLl> ListarRutasDiaDia() {
         try {
             List<OficinaModel> oficinasT = Mapa.oficinas;
@@ -221,7 +223,7 @@ public class RutaController {
     }
 
     @PostMapping("/Ruta/PostRutas")
-    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     public boolean InsertarListaRutas(@RequestBody List<RutaModel> rutasModel) {
         try {
             rutaRepository.saveAll(rutasModel);
