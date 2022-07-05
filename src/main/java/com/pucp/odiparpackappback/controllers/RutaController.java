@@ -111,7 +111,7 @@ public class RutaController {
                                 }
                                 //
                                 pedidos.add(Mapa.pedidosSimulacion.get(d));
-                                pedidosParciales.addAll(Mapa.rutasSimulacion.get(i).getPedidosParciales());
+                                pedidosParciales.add(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c));
                             }
                         }
                     }
@@ -160,7 +160,7 @@ public class RutaController {
                             if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
                                 Mapa.pedidosSimulacion.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()));
                                 pedidos.add(Mapa.pedidosSimulacion.get(d));
-                                pedidosParciales.addAll(Mapa.rutasSimulacion.get(i).getPedidosParciales());
+                                pedidosParciales.add(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c));
                             }
                         }
                     }
