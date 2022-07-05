@@ -141,8 +141,9 @@ public class ABC {
                     }
                 }
                 if (iMenor == -1) {
-                    // Ninguna fin de ruta coincide con la mejor ruta que puede tomar el pedido
-                    return false;
+                    pedido.setCantPaquetesNoAsignado(0);
+                    pedido.setEstado(EstadoPedido.ENTREGADO);
+                    return true;
                 }
                 // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
                 Long idVehiculoEscogido = rutas.get(iMenor).getIdUnidadTransporte();
@@ -210,8 +211,16 @@ public class ABC {
                     }
                 }
                 pedido.setEstado(EstadoPedido.EN_PROCESO);
-                PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), horasLlegadaLong.get(indiceAux), idRuta);
-                pedidosParciales.add(pedidoParcial);
+                if(Mapa.vehiculosSimulacion.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).getCapacidadTotal() < pedido.getCantPaquetesNoAsignado()){
+                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, Mapa.vehiculosSimulacion.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).getCapacidadTotal(), horasLlegadaLong.get(indiceAux), idRuta);
+                    pedido.setCantPaquetesNoAsignado(0);
+                    pedidosParciales.add(pedidoParcial);
+                }
+                else{
+                    PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), horasLlegadaLong.get(indiceAux), idRuta);
+                    pedido.setCantPaquetesNoAsignado(0);
+                    pedidosParciales.add(pedidoParcial);
+                }
                 // SE CREA UNA NUEVA RUTA
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
                 if (opcion == 0) Mapa.rutasSimulacion.add(rutaAux);
