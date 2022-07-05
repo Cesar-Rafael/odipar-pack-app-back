@@ -142,7 +142,6 @@ public class ABC {
                 }
                 if (iMenor == -1) {
                     // Ninguna fin de ruta coincide con la mejor ruta que puede tomar el pedido
-                    System.out.println("Hay pedidos pendientes de entrega...");
                     return false;
                 }
                 // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
