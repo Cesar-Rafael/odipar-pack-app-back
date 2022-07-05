@@ -89,11 +89,20 @@ public class PedidoController {
     Map<String, Double> SimulacionReporte() {
         // REPORTE EXTERNO
         HashMap<Long, Long> pedidos = new HashMap<>();
+        HashMap<Integer, Integer> oficinas = new HashMap<>();
+        for(int i = 0; i < Mapa.oficinas.size(); i++){
+            oficinas.put(Mapa.oficinas.get(i).getUbigeo(), Mapa.oficinas.get(i).getRegion().getCode());
+        }
         Double numRutas = Mapa.rutasSimulacion.size() + 0.0;
         Double tiempo = 0.0;
+        Double pedidosParcialesxPedido = 0.0;
         Double numPedidos = Mapa.pedidosSimulacion.size() + 0.0;
+        int numCosta = 0;
+        int numSierra = 0;
+        int numSelva = 0;
         for (int i = 0; i < Mapa.rutasSimulacion.size(); i++) {
             for (int j = 0; j < Mapa.rutasSimulacion.get(i).getPedidosParciales().size(); j++) {
+                pedidosParcialesxPedido++;
                 if (pedidos.containsKey(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido())) {
                     if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega() > pedidos.get(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido()))
                         pedidos.put(Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getIdPedido(), Mapa.rutasSimulacion.get(i).getPedidosParciales().get(j).getFechaHoraEntrega());
@@ -103,6 +112,9 @@ public class PedidoController {
             }
         }
         for (int i = 0; i < Mapa.pedidosSimulacion.size(); i++) {
+            if(oficinas.get(Mapa.pedidosSimulacion.get(i).getIdCiudadDestino())  == 0) numCosta++;
+            else if(oficinas.get(Mapa.pedidosSimulacion.get(i).getIdCiudadDestino())  == 1) numSierra++;
+            else numSelva++;
             if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())) {
                 tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
             } else numPedidos--;
@@ -112,6 +124,10 @@ public class PedidoController {
         HashMap<String, Double> map = new HashMap<>();
         map.put("cantRutas", numRutas);
         map.put("promTiempo", promTiempo);
+        map.put("cantCosta", numCosta + 0.0);
+        map.put("cantSierra", numSierra + 0.0);
+        map.put("cantSelva", numSelva + 0.0);
+        map.put("pedidosParcialesxPedido", pedidosParcialesxPedido/numPedidos);
         if(Mapa.flagColapso){
             map.put("colasoLogistico", 1.0);
         }
