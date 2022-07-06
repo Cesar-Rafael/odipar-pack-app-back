@@ -335,7 +335,7 @@ public class ABC {
 
         for (int i = 0; i < vehiculos.size(); i++) {
             // El vehículo está disponible
-            if (vehiculos.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE) {
+            if (vehiculos.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE && vehiculos.get(i).getOficinaActual() == rutasPath.get(k).getVertexList().get(0).getId()) {
                 // ¿Hay capacidad disponible suficiente?
                 if (vehiculos.get(i).getCapacidadDisponible() >= pedido.getCantPaquetesNoAsignado()) {
                     // Sí hay capacidad disponible suficiente
@@ -451,7 +451,7 @@ public class ABC {
             return false;
         } else {
             // Se verifica si hay capacidad disponible suficiente en el vehículo asignado a esa ruta y no esté en transito
-            if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getEstado().getCode() == 2)) {
+            if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getEstado().getCode() == 2) ) {
                 // Hay capacidad suficiente, se asigna el pedido a la ruta...
                 ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
                 String seguimiento = ruta.getSeguimiento();
