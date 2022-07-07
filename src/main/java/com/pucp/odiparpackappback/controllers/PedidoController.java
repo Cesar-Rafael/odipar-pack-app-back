@@ -113,7 +113,7 @@ public class PedidoController {
             if (oficinas.get(Mapa.pedidosSimulacion.get(i).getIdCiudadDestino()) == 0) numCosta++;
             else if (oficinas.get(Mapa.pedidosSimulacion.get(i).getIdCiudadDestino()) == 1) numSierra++;
             else numSelva++;
-            if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId())) {
+            if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId()) && pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) > Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000 ) {
                 tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
             } else numPedidos--;
         }
@@ -125,7 +125,7 @@ public class PedidoController {
         map.put("cantCosta", numCosta + 0.0);
         map.put("cantSierra", numSierra + 0.0);
         map.put("cantSelva", numSelva + 0.0);
-        map.put("pedidosParcialesxPedido", pedidosParcialesxPedido / numPedidos);
+        map.put("pedidosParcialesxPedido", pedidosParcialesxPedido / (numCosta + numSierra + numSelva));
         if (Mapa.flagColapso) {
             map.put("colasoLogistico", 1.0);
         } else {
