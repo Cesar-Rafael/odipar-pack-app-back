@@ -177,6 +177,7 @@ public class PedidoController {
     boolean pararSimulacion() {
         Mapa.pedidosSimulacion.clear();
         Mapa.rutasSimulacion.clear();
+        Mapa.vehiculosSimulacion.clear();
         Mapa.cargarVehiculosSimulacion("src/main/resources/static/unidad_transporte_model.csv");
         return true;
     }

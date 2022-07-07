@@ -33,9 +33,6 @@ public class OdiparPackAppBackApplication {
 
         Mapa.cargarOficinasDiaDia();
         Mapa.cargarTramosDiaDia();
-
-
-
     }
 
     @Scheduled(cron = "0 0 0,6,12,18 * * *")
