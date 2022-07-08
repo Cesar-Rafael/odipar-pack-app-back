@@ -208,7 +208,7 @@ public class RutaController {
                         if (Mapa.rutasDiaDia.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
                             Mapa.pedidosDiaDia.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosDiaDia.get(d).getIdCiudadDestino()));
                             pedidos.add(Mapa.pedidosDiaDia.get(d));
-                            pedidosParciales.addAll(Mapa.rutasDiaDia.get(i).getPedidosParciales());
+                            pedidosParciales.add(Mapa.rutasDiaDia.get(i).getPedidosParciales().get(c));
                         }
                     }
                 }

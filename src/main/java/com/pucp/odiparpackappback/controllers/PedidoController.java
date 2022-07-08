@@ -23,7 +23,15 @@ public class PedidoController {
     @GetMapping("/Pedido/Listar")
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     public List<PedidoModel> listarPedidos() {
-        return (List<PedidoModel>) pedidoRepository.findAll();
+        List<PedidoModel> auxPedidos = (List<PedidoModel>) pedidoRepository.findAll();
+        for(int i=0; i<auxPedidos.size();i++){
+            for(int j=0; j<Mapa.pedidosDiaDia.size();j++){
+                if(auxPedidos.get(i).getId().equals(Mapa.pedidosDiaDia.get(j).getId())){
+                    auxPedidos.get(i).setEstado(Mapa.pedidosDiaDia.get(j).getEstado());
+                }
+            }
+        }
+        return auxPedidos;
     }
 
     @GetMapping("/Pedido/{id}")
