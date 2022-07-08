@@ -35,7 +35,7 @@ public class OdiparPackAppBackApplication {
         Mapa.cargarTramosDiaDia();
     }
 
-    @Scheduled(cron = "0 0 0,6,12,18 * * *")
+    @Scheduled(cron = "0 0 0,3,6,9,12,15,18,21 * * *")
     public void diadia() {
         // Inicio de la simulación Dia a Dia
         PedidoController pedidoController = new PedidoController(Mapa.pedidoRepository);
