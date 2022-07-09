@@ -18,6 +18,20 @@ public class PedidoModel {
     private Date fechaHoraCreacion;
     private EstadoPedido estado;
 
+    @Override
+    public String toString() {
+        return "PedidoModel{" +
+                "id=" + id +
+                ", rucCliente=" + rucCliente +
+                ", cantPaquetes=" + cantPaquetes +
+                ", cantPaquetesNoAsignado=" + cantPaquetesNoAsignado +
+                ", idCiudadDestino=" + idCiudadDestino +
+                ", ciudadDestino='" + ciudadDestino + '\'' +
+                ", fechaHoraCreacion=" + fechaHoraCreacion +
+                ", estado=" + estado +
+                '}';
+    }
+
     public PedidoModel() {
 
     }

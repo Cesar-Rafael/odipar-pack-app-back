@@ -64,7 +64,7 @@ public class ABC {
 
         // Etapa: Generación de la Población Inicial
         for (int z = 0; z < pedidos.size(); z++) {
-            if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO) {
+            if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO && (pedidos.get(z).getFechaHoraCreacion().after(Date.from(Mapa.inicioSimulacion.atZone(ZoneId.systemDefault()).toInstant())))) {
                 asignarPedidoPoblacionInicial(pedidos.get(z), opcion);
             }
         }
@@ -99,7 +99,6 @@ public class ABC {
     }
 
     public boolean asignarPedidoPoblacionInicial(PedidoModel pedido, int opcion) {
-
         ArrayList<Ruta> rutas;
         ArrayList<UnidadTransporteModel> vehiculos;
         LocalDateTime fin;

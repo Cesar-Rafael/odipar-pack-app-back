@@ -148,7 +148,8 @@ public class PedidoController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     boolean ejecutarABCSimulacion(@RequestBody Simulation simulation) {
         ABC abc = new ABC();
-
+        System.out.println(simulation.pedidos);
+        System.out.println("FIN");
         // Carga de Pedidos
         Mapa.pedidosSimulacion.addAll(simulation.pedidos);
 

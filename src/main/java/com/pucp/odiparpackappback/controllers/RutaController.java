@@ -130,6 +130,7 @@ public class RutaController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     public List<RutaConArraySegHorasLl> ListarRutasSimulacion(@RequestParam long fechaLimite) {
         try {
+            System.out.println(fechaLimite);
             List<OficinaModel> oficinasT = Mapa.oficinas;
             HashMap<Integer, String> oficinas = new HashMap<>();
             for (int i = 0; i < oficinasT.size(); i++) {
