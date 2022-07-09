@@ -64,7 +64,7 @@ public class ABC {
 
         // Etapa: Generación de la Población Inicial
         for (int z = 0; z < pedidos.size(); z++) {
-            if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO && (pedidos.get(z).getFechaHoraCreacion().after(Date.from(Mapa.inicioSimulacion.atZone(ZoneId.systemDefault()).toInstant())))) {
+            if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO && (pedidos.get(z).getFechaHoraCreacion().before(Date.from(Mapa.inicioSimulacion.atZone(ZoneId.systemDefault()).toInstant())))) {
                 asignarPedidoPoblacionInicial(pedidos.get(z), opcion);
             }
         }
