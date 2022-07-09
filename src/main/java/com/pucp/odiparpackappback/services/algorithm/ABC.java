@@ -116,13 +116,23 @@ public class ABC {
         ZoneId zoneId = ZoneId.systemDefault();
         for (int a = 0; a < rutas.size(); a++) {
             // Se verifica si termino
-            if (opcion == 0 && Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size() - 1) > Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond()) {
-                Mapa.rutasSimulacion.get(a).setFlagTerminado(false);
+            if (opcion == 0 && rutas.get(a).getHorasDeLlegada().get(rutas.get(a).getHorasDeLlegada().size() - 1) > fin.atZone(zoneId).toEpochSecond()) {
+                rutas.get(a).setFlagTerminado(true);
+                vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
             }
             // Se verifica si el pedido puede ser asignado a esa ruta
             asignado = asignarPedidoRutaVehiculo(pedido, rutas.get(a), opcion);
             if (asignado) {
                 // Fue asignado correctamente
+                if (opcion == 0) {
+                    Mapa.rutasSimulacion = rutas;
+                    Mapa.vehiculosSimulacion = vehiculos;
+                    Mapa.inicioSimulacion = fin;
+                } else {
+                    Mapa.rutasDiaDia = rutas;
+                    Mapa.vehiculosDiaDia = vehiculos;
+                    Mapa.finDiaDia = fin;
+                }
                 return true;
             }
             // Si no puede ser asignado, se revisa la siguiente ruta...
@@ -169,6 +179,15 @@ public class ABC {
                 if (iMenor == -1) {
                     pedido.setCantPaquetesNoAsignado(0);
                     pedido.setEstado(EstadoPedido.ENTREGADO);
+                    if (opcion == 0) {
+                        Mapa.rutasSimulacion = rutas;
+                        Mapa.vehiculosSimulacion = vehiculos;
+                        Mapa.inicioSimulacion = fin;
+                    } else {
+                        Mapa.rutasDiaDia = rutas;
+                        Mapa.vehiculosDiaDia = vehiculos;
+                        Mapa.finDiaDia = fin;
+                    }
                     return true;
                 }
                 // En este punto, tengo el vehiculo que voy a seleccionar y la ruta que se tomará
@@ -255,6 +274,15 @@ public class ABC {
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
                 if (opcion == 0) Mapa.rutasSimulacion.add(rutaAux);
                 else Mapa.rutasDiaDia.add(rutaAux);
+                if (opcion == 0) {
+                    Mapa.rutasSimulacion = rutas;
+                    Mapa.vehiculosSimulacion = vehiculos;
+                    Mapa.inicioSimulacion = fin;
+                } else {
+                    Mapa.rutasDiaDia = rutas;
+                    Mapa.vehiculosDiaDia = vehiculos;
+                    Mapa.finDiaDia = fin;
+                }
                 return true;
             } else {
                 // Si no alcanza tiempo, es colapso logístico
