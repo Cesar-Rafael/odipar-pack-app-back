@@ -24,9 +24,9 @@ public class PedidoController {
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
     public List<PedidoModel> listarPedidos() {
         List<PedidoModel> auxPedidos = (List<PedidoModel>) pedidoRepository.findAll();
-        for(int i=0; i<auxPedidos.size();i++){
-            for(int j=0; j<Mapa.pedidosDiaDia.size();j++){
-                if(auxPedidos.get(i).getId().equals(Mapa.pedidosDiaDia.get(j).getId())){
+        for (int i = 0; i < auxPedidos.size(); i++) {
+            for (int j = 0; j < Mapa.pedidosDiaDia.size(); j++) {
+                if (auxPedidos.get(i).getId().equals(Mapa.pedidosDiaDia.get(j).getId())) {
                     auxPedidos.get(i).setEstado(Mapa.pedidosDiaDia.get(j).getEstado());
                 }
             }
@@ -121,7 +121,7 @@ public class PedidoController {
             if (oficinas.get(Mapa.pedidosSimulacion.get(i).getIdCiudadDestino()) == 0) numCosta++;
             else if (oficinas.get(Mapa.pedidosSimulacion.get(i).getIdCiudadDestino()) == 1) numSierra++;
             else numSelva++;
-            if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId()) && pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) > Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000 ) {
+            if (pedidos.containsKey(Mapa.pedidosSimulacion.get(i).getId()) && pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) > Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000) {
                 tiempo += pedidos.get(Mapa.pedidosSimulacion.get(i).getId()) - Mapa.pedidosSimulacion.get(i).getFechaHoraCreacion().getTime() / 1000;
             } else numPedidos--;
         }
@@ -150,9 +150,7 @@ public class PedidoController {
         ABC abc = new ABC();
 
         // Carga de Pedidos
-        for (int i = 0; i < simulation.pedidos.size(); i++) {
-            Mapa.pedidosSimulacion.add(simulation.pedidos.get(i));
-        }
+        Mapa.pedidosSimulacion.addAll(simulation.pedidos);
 
         // Ejecución del Algoritmo
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
