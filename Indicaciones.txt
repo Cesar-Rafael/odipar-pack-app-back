@@ -1,2 +1,0 @@
-1. Ingresar al IDE Intellij.
-2. Ejecuctar el Back con Run 'OdiparPackAppBackApplication'
