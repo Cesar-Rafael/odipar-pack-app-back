@@ -281,11 +281,13 @@ public class ABC {
 
                 // SE CREA UNA NUEVA RUTA
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
-                if (opcion == 0){
+                if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
                     Mapa.rutasSimulacion.add(rutaAux);
                 }
                 else{
-                    Mapa.rutasDiaDia.add(rutaAux);
+                    if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                        Mapa.rutasDiaDia.add(rutaAux);
+                    }
                 }
 
                 // Actualización
@@ -427,8 +429,14 @@ public class ABC {
                         tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                    if (opcion == 0) Mapa.rutasSimulacion.add(auxRuta);
-                    else Mapa.rutasDiaDia.add(auxRuta);
+                    if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
+                        Mapa.rutasSimulacion.add(auxRuta);
+                    }
+                    else{
+                        if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                            Mapa.rutasDiaDia.add(auxRuta);
+                        }
+                    }
                     return true;
                 } else {
                     // Actualización en Pedido
@@ -472,8 +480,14 @@ public class ABC {
                         tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                     }
                     Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                    if (opcion == 0) Mapa.rutasSimulacion.add(auxRuta);
-                    else Mapa.rutasDiaDia.add(auxRuta);
+                    if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
+                        Mapa.rutasSimulacion.add(auxRuta);
+                    }
+                    else{
+                        if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                            Mapa.rutasDiaDia.add(auxRuta);
+                        }
+                    }
                     return kShortestPathRoutingPedido(pedido, 0, opcion);
                 }
             }
