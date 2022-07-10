@@ -90,6 +90,9 @@ public class ABC {
                     Mapa.vehiculosSimulacion.get(www).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                 }
             }
+            for(int yyy = 0; yyy < Mapa.rutasSimulacion.size(); yyy++){
+                Mapa.rutasSimulacion.get(yyy).setFlagTerminado(true);
+            }
         } else {
             ArrayList<RutaModel> rutasAux = new ArrayList<>();
             for (int rm = 0; rm < Mapa.rutasDiaDia.size(); rm++) {
@@ -673,8 +676,8 @@ public class ABC {
             // Si la ruta no tiene el destino, no es asignado
             return false;
         } else {
-            // Se verifica si hay capacidad disponible suficiente en el Vehículo asignado a esa ruta y está RESERVADO
-            if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && (vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getEstado().getCode() == 1) ) {
+            // Se verifica si hay capacidad disponible suficiente en el Vehículo asignado a esa ruta y la Ruta no está en tránsito
+            if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(ruta.isFlagTerminado()) ) {
                 // Hay capacidad suficiente, se asigna el pedido a la ruta...
                 ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
                 String seguimiento = ruta.getSeguimiento();
