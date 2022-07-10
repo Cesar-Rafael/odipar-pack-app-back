@@ -250,7 +250,6 @@ public class ABC {
                 if (opcion == 0) {
                     Mapa.rutasSimulacion.get(iMenor).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
-                    //timer.schedule(new task2(Mapa.vehiculosSimulacion.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte()))), horasLlegadaLong.get(horasLlegada.size()-1));
                 } else {
                     Mapa.rutasDiaDia.get(iMenor).setFlagTerminado(true);
                     Mapa.vehiculosDiaDia.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
