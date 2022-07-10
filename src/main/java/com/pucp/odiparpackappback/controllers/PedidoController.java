@@ -160,13 +160,6 @@ public class PedidoController {
         Mapa.inicioSimulacion = LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault());
         abc.algoritmoAbejasVPRTW(0);
 
-        System.out.println("IMPRIMIR REPORTE RUTAS TERMINADAS");
-        for(int i=0; i<Mapa.rutasSimulacion.size(); i++){
-            if(Mapa.rutasSimulacion.get(i).isFlagTerminado()){
-                System.out.println("IdVehiculoTerminado: " + Mapa.rutasSimulacion.get(i).getIdRuta());
-            }
-        }
-
         if (simulation.finalizado) {
             // REPORTE INTERNO
             System.out.println("REPORTE ABC SIMULACION:");

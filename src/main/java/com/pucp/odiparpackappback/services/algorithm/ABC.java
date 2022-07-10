@@ -654,7 +654,7 @@ public class ABC {
     }
 
     public boolean asignarPedidoRutaVehiculo(PedidoModel pedido, Ruta ruta, int opcion) {
-        // SE ASIGNA PEDIDO A RUTA YA CREADA, EL VEHÍCULO DE ESA RUTA DEBE ESTAR RESERVADO
+        // SE ASIGNA PEDIDO A RUTA YA CREADA, LA RUTA NO DEBE ESTAR TERMINADA
         ArrayList<UnidadTransporteModel> vehiculos;
         if (opcion == 0) {
             vehiculos = Mapa.vehiculosSimulacion;
@@ -678,6 +678,7 @@ public class ABC {
         } else {
             // Se verifica si hay capacidad disponible suficiente en el Vehículo asignado a esa ruta y la Ruta no está en tránsito
             if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(ruta.isFlagTerminado()) ) {
+                System.out.println("Pedido como Pedido Parcial: " + pedido.getId());
                 // Hay capacidad suficiente, se asigna el pedido a la ruta...
                 ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
                 String seguimiento = ruta.getSeguimiento();
