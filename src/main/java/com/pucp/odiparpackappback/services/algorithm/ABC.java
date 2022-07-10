@@ -67,7 +67,6 @@ public class ABC {
             // Actualización de Estado de Rutas
             for(int a = 0; a < Mapa.rutasSimulacion.size(); a++){
                 if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size() - 1) < Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond())) {
-                    System.out.println("CAMBIO ESTADO DISPONIBLE: " + Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId());
                     Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getCapacidadTotal());
@@ -678,7 +677,6 @@ public class ABC {
         } else {
             // Se verifica si hay capacidad disponible suficiente en el Vehículo asignado a esa ruta y la Ruta no está en tránsito
             if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(ruta.isFlagTerminado()) ) {
-                System.out.println("Pedido como Pedido Parcial: " + pedido.getId());
                 // Hay capacidad suficiente, se asigna el pedido a la ruta...
                 ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
                 String seguimiento = ruta.getSeguimiento();
@@ -711,7 +709,7 @@ public class ABC {
                     Mapa.vehiculosDiaDia = vehiculos;
                 }
                 return true;
-            } else if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getEstado().getCode() == 1)) {
+            } else if (!(ruta.isFlagTerminado())) {
                 // No hay capacidad suficiente, se asigna el pedido a la ruta y luego se busca otra para completar el pedido
                 int faltante = pedido.getCantPaquetesNoAsignado() - vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible();
                 // Asignación parcial
@@ -733,6 +731,11 @@ public class ABC {
                 PedidoParcialModel pedidoParcial = new PedidoParcialModel((long) pedidosParciales.size(), pedido.getId(), -1, pedido.getCantPaquetes() - faltante, horasLlegadaLong.get(indiceAux), ruta.getIdRuta());
                 pedidosParciales.add(pedidoParcial);
                 ruta.setPedidosParciales(pedidosParciales);
+                System.out.println();
+                System.out.println();
+                System.out.println("PEDIDO ASIGNADO PARCIALMENTE COMO INCOMPLETO: " + pedido.getId() + pedido.getCantPaquetes());
+                System.out.println();
+                System.out.println();
                 // Se actualiza la capacidad disponible en el vehículo, o sea cero
                 vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(0);
                 pedido.setCantPaquetesNoAsignado(faltante);
