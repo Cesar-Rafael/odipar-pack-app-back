@@ -139,7 +139,7 @@ public class ABC {
         // Si no puede ser asignado a alguna Ruta... se crea una nueva y se inserta al arreglo de rutas
         boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
         Region auxRegion = Mapa.oficinas.get(0).getRegion();
-        if (!bool) {
+        if (!bool && pedido.getCantPaquetesNoAsignado() > 0) {
             // Si el PEDIDO puede llegar aún a tiempo...
             if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode() + 1))) {
                 // Se obtiene el nombre de la región
@@ -183,6 +183,7 @@ public class ABC {
                 if (iMenor == -1) {
                     System.out.println();
                     System.out.println("HAY PEDIDOS PENDIENTES DE ENTREGA..." + pedido.getId());
+                    pedido.setEstado(EstadoPedido.NO_ASIGNADO);
                     System.out.println();
                     if (opcion == 0) {
                         Mapa.rutasSimulacion = rutas;
@@ -306,7 +307,11 @@ public class ABC {
                 return true;
             } else {
                 // Si no alcanza tiempo, es colapso logístico
+                System.out.println();
+                System.out.println();
                 System.out.println("¡Colapso Logistico!");
+                System.out.println();
+                System.out.println();
                 Mapa.flagColapso = true;
                 return false;
             }
