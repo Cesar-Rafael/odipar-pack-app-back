@@ -16,7 +16,7 @@ public class Ruta {
     private Long idUnidadTransporte;
     private UnidadTransporteModel vehiculo;
     private double fitness;
-    private boolean flagTerminado;
+    private boolean flagTerminado = false;
 
     public Ruta(){
     }
