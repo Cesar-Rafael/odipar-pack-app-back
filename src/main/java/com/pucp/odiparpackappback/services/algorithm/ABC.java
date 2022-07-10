@@ -136,6 +136,7 @@ public class ABC {
             }
             // Si no puede ser asignado, se revisa la siguiente ruta...
         }
+
         // Si no puede ser asignado a alguna ruta... se crea una nueva y se inserta al arreglo de rutas
         boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
         Region auxRegion = Mapa.oficinas.get(0).getRegion();
@@ -335,6 +336,7 @@ public class ABC {
         ArrayList<Long> horasLlegadaLong = new ArrayList<>();
         ZoneId zoneId = ZoneId.systemDefault();
 
+        System.out.println("LLEGA AL IF: "+ pedido.getId());
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
                 horasLlegadaLong.add(inicio.atZone(zoneId).toEpochSecond());
@@ -359,6 +361,7 @@ public class ABC {
 
         double fitness = rutasPath.get(k).getWeight();
 
+        // RECORRO LOS VEHICULOS
         for (int i = 0; i < vehiculos.size(); i++) {
             // El vehículo está disponible
             if (vehiculos.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE && vehiculos.get(i).getOficinaActual() == rutasPath.get(k).getVertexList().get(0).getId()) {
@@ -376,6 +379,7 @@ public class ABC {
                         Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(vehiculos.get(i).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
                         timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size()-1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
                     }
+
                     // Asignación Ruta
                     Long idUnidadTransporte = vehiculos.get(i).getId();
                     ArrayList<Integer> auxAI = new ArrayList<>();
