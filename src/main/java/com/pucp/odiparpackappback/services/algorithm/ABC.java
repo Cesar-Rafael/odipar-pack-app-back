@@ -62,6 +62,19 @@ public class ABC {
             return;
         }
 
+        ZoneId zoneId = ZoneId.systemDefault();
+        if(opcion == 0){
+            // Actualización de Estado de Rutas
+            for(int a = 0; a < Mapa.rutasSimulacion.size(); a++){
+                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size() - 1) < Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond())) {
+                    System.out.println("CAMBIO ESTADO DISPONIBLE: " + Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId());
+                    Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
+                    Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
+                    Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getCapacidadTotal());
+                }
+            }
+        }
+
         // Asignación de Pedidos
         for (int z = 0; z < pedidos.size(); z++) {
             if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO) {
@@ -112,14 +125,6 @@ public class ABC {
 
         // Para cada Ruta ya creada...
         for (int a = 0; a < rutas.size(); a++) {
-            // Actualización de Estado de Rutas
-            if (rutas.get(a).getHorasDeLlegada().get(rutas.get(a).getHorasDeLlegada().size() - 1) < fin.atZone(zoneId).toEpochSecond()) {
-                System.out.println("CAMBIO ESTADO DISPONIBLE: " + pedido.getId());
-                rutas.get(a).setFlagTerminado(true);
-                vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
-                vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).setCapacidadDisponible(vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).getCapacidadTotal());
-            }
-
             // Reasignación
             if (opcion == 0) {
                 Mapa.rutasSimulacion = rutas;
