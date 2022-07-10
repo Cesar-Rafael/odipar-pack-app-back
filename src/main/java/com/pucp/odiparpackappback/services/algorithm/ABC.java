@@ -181,8 +181,9 @@ public class ABC {
 
                 //
                 if (iMenor == -1) {
-                    pedido.setCantPaquetesNoAsignado(0);
-                    pedido.setEstado(EstadoPedido.ENTREGADO);
+                    System.out.println();
+                    System.out.println("HAY PEDIDOS PENDIENTES DE ENTREGA..." + pedido.getId());
+                    System.out.println();
                     if (opcion == 0) {
                         Mapa.rutasSimulacion = rutas;
                         Mapa.vehiculosSimulacion = vehiculos;
