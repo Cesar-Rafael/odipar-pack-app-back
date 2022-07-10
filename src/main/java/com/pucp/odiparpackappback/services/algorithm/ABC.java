@@ -118,7 +118,6 @@ public class ABC {
             // Se verifica si termino
             if (opcion == 0 && rutas.get(a).getHorasDeLlegada().get(rutas.get(a).getHorasDeLlegada().size() - 1) > fin.atZone(zoneId).toEpochSecond()) {
                 rutas.get(a).setFlagTerminado(false);
-                //vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
             }
             // Se verifica si el pedido puede ser asignado a esa ruta
             asignado = asignarPedidoRutaVehiculo(pedido, rutas.get(a), opcion);
