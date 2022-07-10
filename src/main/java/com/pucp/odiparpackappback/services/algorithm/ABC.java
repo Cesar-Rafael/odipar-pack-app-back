@@ -116,6 +116,7 @@ public class ABC {
             if (rutas.get(a).getHorasDeLlegada().get(rutas.get(a).getHorasDeLlegada().size() - 1) < fin.atZone(zoneId).toEpochSecond()) {
                 rutas.get(a).setFlagTerminado(true);
                 vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
+                vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).setCapacidadDisponible(vehiculos.get(Math.toIntExact(rutas.get(a).getIdUnidadTransporte())).getCapacidadTotal());
             }
 
             // Se verifica si el Pedido puede ser asignado a esa Ruta...
@@ -140,6 +141,7 @@ public class ABC {
         boolean bool = kShortestPathRoutingPedido(pedido, 0, opcion);
         Region auxRegion = Mapa.oficinas.get(0).getRegion();
         if (!bool && pedido.getCantPaquetesNoAsignado() > 0) {
+            System.out.println("idPedido NO_NORMAL:" + pedido.getId());
             // Si el PEDIDO puede llegar aún a tiempo...
             if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode() + 1))) {
                 // Se obtiene el nombre de la región
