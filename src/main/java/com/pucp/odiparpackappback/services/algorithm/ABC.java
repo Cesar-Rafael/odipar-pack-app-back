@@ -437,6 +437,7 @@ public class ABC {
         if(opcion == 0){
             for (int i = 0; i < Mapa.vehiculosSimulacion.size(); i++) {
                 // Sí el vehículo está disponible...
+                // ACTUAL, SIN CONFIRMAR QUE EL VEHICULO LLEGUE AL ALMACEN
                 if (Mapa.vehiculosSimulacion.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE && Mapa.vehiculosSimulacion.get(i).getOficinaActual() == rutasPath.get(k).getVertexList().get(0).getId()) {
                     // ¿Hay capacidad disponible suficiente?
                     if (Mapa.vehiculosSimulacion.get(i).getCapacidadDisponible() >= pedido.getCantPaquetesNoAsignado()) {
