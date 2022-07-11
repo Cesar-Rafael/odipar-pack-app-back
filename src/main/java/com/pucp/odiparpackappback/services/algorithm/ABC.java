@@ -434,10 +434,17 @@ public class ABC {
         }
 
         // Para cada Vehículo...
+        Ruta ruta = new Ruta();
         if(opcion == 0){
             for (int i = 0; i < Mapa.vehiculosSimulacion.size(); i++) {
+                for(int zzz = Mapa.rutasSimulacion.size()-1; zzz > -1; zzz--){
+                    if(Mapa.rutasSimulacion.get(zzz).getIdRuta() == Mapa.vehiculosSimulacion.get(i).getIdRuta()){
+                        ruta = Mapa.rutasSimulacion.get(zzz);
+                        break;
+                    }
+                }
                 // Sí el vehículo está disponible...
-                if (Mapa.vehiculosSimulacion.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE && Mapa.vehiculosSimulacion.get(i).getOficinaActual() == rutasPath.get(k).getVertexList().get(0).getId()) {
+                if (Mapa.vehiculosSimulacion.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE && Mapa.vehiculosSimulacion.get(i).getOficinaActual() == rutasPath.get(k).getVertexList().get(0).getId() && (ruta.getHorasDeLlegada().get(ruta.getHorasDeLlegada().size() - 1) < Mapa.finSimulacion.atZone(zoneId).toEpochSecond())) {
                     // ¿Hay capacidad disponible suficiente?
                     if (Mapa.vehiculosSimulacion.get(i).getCapacidadDisponible() >= pedido.getCantPaquetesNoAsignado()) {
                         // Sí hay capacidad disponible suficiente
