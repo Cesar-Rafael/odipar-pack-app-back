@@ -180,7 +180,6 @@ public class ABC {
         }
 
         if (!bool && pedido.getCantPaquetesNoAsignado() > 0) {
-            System.out.println("idPedido NO_NORMAL:" + pedido.getId());
             // Si el PEDIDO puede llegar aún a tiempo...
             if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode() + 1))) {
                 // Se obtiene el nombre de la región
@@ -222,8 +221,10 @@ public class ABC {
                 //
                 if (iMenor == -1) {
                     System.out.println();
+                    System.out.println();
                     System.out.println("HAY PEDIDOS PENDIENTES DE ENTREGA..." + pedido.getId());
                     pedido.setEstado(EstadoPedido.NO_ASIGNADO);
+                    System.out.println();
                     System.out.println();
                     if (opcion == 0) {
                         Mapa.rutasSimulacion = rutas;
@@ -348,7 +349,9 @@ public class ABC {
                 // Si no alcanza tiempo, es colapso logístico
                 System.out.println();
                 System.out.println();
+                System.out.println();
                 System.out.println("¡Colapso Logistico!");
+                System.out.println();
                 System.out.println();
                 System.out.println();
                 Mapa.flagColapso = true;
@@ -655,10 +658,13 @@ public class ABC {
     public boolean asignarPedidoRutaVehiculo(PedidoModel pedido, Ruta ruta, int opcion) {
         // SE ASIGNA PEDIDO A RUTA YA CREADA, LA RUTA NO DEBE ESTAR TERMINADA
         ArrayList<UnidadTransporteModel> vehiculos;
+        LocalDateTime fin;
         if (opcion == 0) {
             vehiculos = Mapa.vehiculosSimulacion;
+            fin = Mapa.inicioSimulacion;
         } else {
             vehiculos = Mapa.vehiculosDiaDia;
+            fin = Mapa.finDiaDia;
         }
 
         // Se verifica si la Ruta tiene la ciudad de destino deseado...
@@ -671,12 +677,13 @@ public class ABC {
         }
 
         // ¿La Ruta tiene la misma Ciudad de Destino?
+        ZoneId zoneId = ZoneId.systemDefault();
         if (!encontrado) {
             // Si la ruta no tiene el destino, no es asignado
             return false;
         } else {
-            // Se verifica si hay capacidad disponible suficiente en el Vehículo asignado a esa ruta y la Ruta no está en tránsito
-            if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(ruta.isFlagTerminado()) ) {
+            // Se verifica si hay capacidad disponible suficiente en el Vehículo asignado a esa ruta y la Ruta no está en tránsito Y EL VEHICULO YA LLEGÓ A SU ALMACÉN
+            if ((vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible() > pedido.getCantPaquetesNoAsignado()) && !(ruta.isFlagTerminado()) && (ruta.getHorasDeLlegada().get(ruta.getHorasDeLlegada().size() - 1) < fin.atZone(zoneId).toEpochSecond())) {
                 // Hay capacidad suficiente, se asigna el pedido a la ruta...
                 ArrayList<PedidoParcialModel> pedidosParciales = ruta.getPedidosParciales();
                 String seguimiento = ruta.getSeguimiento();
@@ -709,7 +716,7 @@ public class ABC {
                     Mapa.vehiculosDiaDia = vehiculos;
                 }
                 return true;
-            } else if (!(ruta.isFlagTerminado())) {
+            } else if (!(ruta.isFlagTerminado()) && (ruta.getHorasDeLlegada().get(ruta.getHorasDeLlegada().size() - 1) < fin.atZone(zoneId).toEpochSecond())) {
                 // No hay capacidad suficiente, se asigna el pedido a la ruta y luego se busca otra para completar el pedido
                 int faltante = pedido.getCantPaquetesNoAsignado() - vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).getCapacidadDisponible();
                 // Asignación parcial
@@ -731,11 +738,6 @@ public class ABC {
                 PedidoParcialModel pedidoParcial = new PedidoParcialModel((long) pedidosParciales.size(), pedido.getId(), -1, pedido.getCantPaquetes() - faltante, horasLlegadaLong.get(indiceAux), ruta.getIdRuta());
                 pedidosParciales.add(pedidoParcial);
                 ruta.setPedidosParciales(pedidosParciales);
-                System.out.println();
-                System.out.println();
-                System.out.println("PEDIDO ASIGNADO PARCIALMENTE COMO INCOMPLETO: " + pedido.getId() + pedido.getCantPaquetes());
-                System.out.println();
-                System.out.println();
                 // Se actualiza la capacidad disponible en el vehículo, o sea cero
                 vehiculos.get(Math.toIntExact(ruta.getIdUnidadTransporte())).setCapacidadDisponible(0);
                 pedido.setCantPaquetesNoAsignado(faltante);
