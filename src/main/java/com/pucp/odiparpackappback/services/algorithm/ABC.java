@@ -77,9 +77,6 @@ public class ABC {
         // Asignación de Pedidos
         for (int z = 0; z < pedidos.size(); z++) {
             if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO) {
-                if(pedidos.get(z).getCantPaquetes() == 77){
-                    Mapa.flagColapso = true;
-                }
                 asignarPedidoPoblacionInicial(pedidos.get(z), opcion);
             }
         }
