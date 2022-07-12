@@ -77,6 +77,9 @@ public class ABC {
         // Asignación de Pedidos
         for (int z = 0; z < pedidos.size(); z++) {
             if (pedidos.get(z).getEstado() == EstadoPedido.NO_ASIGNADO) {
+                if(pedidos.get(z).getCantPaquetes() == 2){
+                    Mapa.flagColapso = true;
+                }
                 asignarPedidoPoblacionInicial(pedidos.get(z), opcion);
             }
         }
@@ -104,7 +107,6 @@ public class ABC {
             Mapa.cargarRutas(rutasAux);
             Mapa.pedidosDiaDia = pedidos;
         }
-        Mapa.flagColapso = true;
     }
 
     public boolean asignarPedidoPoblacionInicial(PedidoModel pedido, int opcion) {
