@@ -104,6 +104,7 @@ public class ABC {
             Mapa.cargarRutas(rutasAux);
             Mapa.pedidosDiaDia = pedidos;
         }
+        Mapa.flagColapso = true;
     }
 
     public boolean asignarPedidoPoblacionInicial(PedidoModel pedido, int opcion) {
