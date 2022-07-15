@@ -171,11 +171,6 @@ public class RutaController {
                                         }
                                     }
                                 }
-                                for (int xyz = 0; xyz < pedidos.size(); xyz++) {
-                                    if (Mapa.pedidosSimulacion.get(d).getId() != pedidos.get(xyz).getId()) {
-                                        pedidos.add(Mapa.pedidosSimulacion.get(d));
-                                    }
-                                }
                             }
                         }
                     }
@@ -230,11 +225,6 @@ public class RutaController {
                                     if (Mapa.pedidosDiaDia.get(d).getId() != pedidos.get(xyz).getId()) {
                                         pedidos.add(Mapa.pedidosDiaDia.get(d));
                                     }
-                                }
-                            }
-                            for (int xyz = 0; xyz < pedidos.size(); xyz++) {
-                                if (Mapa.pedidosDiaDia.get(d).getId() != pedidos.get(xyz).getId()) {
-                                    pedidos.add(Mapa.pedidosDiaDia.get(d));
                                 }
                             }
                         }
