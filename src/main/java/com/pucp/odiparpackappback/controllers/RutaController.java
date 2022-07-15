@@ -162,18 +162,17 @@ public class RutaController {
                         for (int d = 0; d < Mapa.pedidosSimulacion.size(); d++) {
                             if (Mapa.rutasSimulacion.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosSimulacion.get(d).getId()) {
                                 Mapa.pedidosSimulacion.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosSimulacion.get(d).getIdCiudadDestino()));
-                                if(pedidos.size() == 0){
+                                if (pedidos.size() == 0) {
                                     pedidos.add(Mapa.pedidosSimulacion.get(d));
-                                }
-                                else{
-                                    for(int xyz = 0; xyz < pedidos.size(); xyz++){
-                                        if(Mapa.pedidosSimulacion.get(d).getId() != pedidos.get(xyz).getId()){
+                                } else {
+                                    for (int xyz = 0; xyz < pedidos.size(); xyz++) {
+                                        if (Mapa.pedidosSimulacion.get(d).getId() != pedidos.get(xyz).getId()) {
                                             pedidos.add(Mapa.pedidosSimulacion.get(d));
                                         }
                                     }
                                 }
-                                for(int xyz = 0; xyz < pedidos.size(); xyz++){
-                                    if(Mapa.pedidosSimulacion.get(d).getId() != pedidos.get(xyz).getId()){
+                                for (int xyz = 0; xyz < pedidos.size(); xyz++) {
+                                    if (Mapa.pedidosSimulacion.get(d).getId() != pedidos.get(xyz).getId()) {
                                         pedidos.add(Mapa.pedidosSimulacion.get(d));
                                     }
                                 }
@@ -224,12 +223,11 @@ public class RutaController {
                     for (int d = 0; d < Mapa.pedidosDiaDia.size(); d++) {
                         if (Mapa.rutasDiaDia.get(i).getPedidosParciales().get(c).getIdPedido() == Mapa.pedidosDiaDia.get(d).getId()) {
                             Mapa.pedidosDiaDia.get(d).setCiudadDestino(oficinas.get(Mapa.pedidosDiaDia.get(d).getIdCiudadDestino()));
-                            if(pedidos.size() == 0){
+                            if (pedidos.size() == 0) {
                                 pedidos.add(Mapa.pedidosDiaDia.get(d));
-                            }
-                            else{
-                                for(int xyz = 0; xyz < pedidos.size(); xyz++){
-                                    if(Mapa.pedidosDiaDia.get(d).getId() != pedidos.get(xyz).getId()){
+                            } else {
+                                for (int xyz = 0; xyz < pedidos.size(); xyz++) {
+                                    if (Mapa.pedidosDiaDia.get(d).getId() != pedidos.get(xyz).getId()) {
                                         pedidos.add(Mapa.pedidosDiaDia.get(d));
                                     }
                                 }

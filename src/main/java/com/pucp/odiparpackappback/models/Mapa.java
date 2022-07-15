@@ -234,8 +234,12 @@ public class Mapa {
         vehiculosDiaDia = (ArrayList<UnidadTransporteModel>) unidadTransporteRepository.findAll();
     }
 
-    public static void cargarPedidosDiaDia() {
-        pedidosDiaDia = (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByEstadoIs(EstadoPedido.NO_ASIGNADO);
+    public static ArrayList<PedidoModel> cargarPedidosDiaDia() {
+        return (ArrayList<PedidoModel>) pedidoRepository.findPedidoModelByEstadoIs(EstadoPedido.NO_ASIGNADO);
+    }
+
+    public static void cargarTodosPedidosDiaDia() {
+        pedidosDiaDia = (ArrayList<PedidoModel>) pedidoRepository.findAll();
     }
 
     public static void cargarPedidosSimulacion(String rutaArchivo, Date fechaInicio, Date fechaFin) {

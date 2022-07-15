@@ -1,27 +1,27 @@
 package com.pucp.odiparpackappback.services.algorithm;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pucp.odiparpackappback.Repositories.PedidoRepository;
-import com.pucp.odiparpackappback.controllers.PedidoController;
 import com.pucp.odiparpackappback.models.*;
 import com.pucp.odiparpackappback.services.utils.DatosUtil;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.Path;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.abstraction.BaseVertex;
 import com.pucp.odiparpackappback.topKshortestpaths.graph.shortestpaths.YenTopKShortestPathsAlg;
 
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ABC {
     Timer timer = new Timer();
+
     class task extends TimerTask {
         private final PedidoModel pedido;
 
-        task ( PedidoModel pedido )
-        {
+        task(PedidoModel pedido) {
             this.pedido = pedido;
         }
 
@@ -29,11 +29,11 @@ public class ABC {
             pedido.setEstado(EstadoPedido.ENTREGADO);
         }
     }
+
     class task2 extends TimerTask {
         private final UnidadTransporteModel vehiculo;
 
-        task2 ( UnidadTransporteModel vehiculo )
-        {
+        task2(UnidadTransporteModel vehiculo) {
             this.vehiculo = vehiculo;
         }
 
@@ -41,6 +41,7 @@ public class ABC {
             vehiculo.setEstado(EstadoUnidadTransporte.DISPONIBLE);
         }
     }
+
     public void algoritmoAbejasVPRTW(int opcion) {
         // Opcion 0 - Simulacion
         // Opcion 1 - DiaDia
@@ -51,8 +52,9 @@ public class ABC {
             pedidos = Mapa.pedidosSimulacion;
         } else {
             // Para las operaciones Día a Día los Pedidos se leen desde la BD
-            Mapa.cargarPedidosDiaDia();
+            Mapa.cargarTodosPedidosDiaDia();
             // "pedidos" se utilizará para el algoritmo
+            //pedidos = Mapa.cargarPedidosDiaDia();
             pedidos = Mapa.pedidosDiaDia;
         }
 
@@ -63,9 +65,9 @@ public class ABC {
         }
 
         ZoneId zoneId = ZoneId.systemDefault();
-        if(opcion == 0){
+        if (opcion == 0) {
             // Actualización de Estado de Rutas
-            for(int a = 0; a < Mapa.rutasSimulacion.size(); a++){
+            for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
                 if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size() - 1) < Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond())) {
                     Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
@@ -84,12 +86,12 @@ public class ABC {
         // Se guardan las rutas en BD y se actualizan los Pedidos
         if (opcion == 0) {
             Mapa.pedidosSimulacion = pedidos;
-            for(int www = 0; www < Mapa.vehiculosSimulacion.size(); www++){
-                if(Mapa.vehiculosSimulacion.get(www).getEstado() == EstadoUnidadTransporte.RESERVADO){
+            for (int www = 0; www < Mapa.vehiculosSimulacion.size(); www++) {
+                if (Mapa.vehiculosSimulacion.get(www).getEstado() == EstadoUnidadTransporte.RESERVADO) {
                     Mapa.vehiculosSimulacion.get(www).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                 }
             }
-            for(int yyy = 0; yyy < Mapa.rutasSimulacion.size(); yyy++){
+            for (int yyy = 0; yyy < Mapa.rutasSimulacion.size(); yyy++) {
                 Mapa.rutasSimulacion.get(yyy).setFlagTerminado(true);
             }
         } else {
@@ -292,7 +294,7 @@ public class ABC {
                 } else {
                     rutas.get(iMenor).setFlagTerminado(true);
                     vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
-                    timer.schedule(new task2(vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte()))), horasLlegadaLong.get(horasLlegada.size()-1) - fin.atZone(zoneId).toEpochSecond() );
+                    timer.schedule(new task2(vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte()))), horasLlegadaLong.get(horasLlegada.size() - 1) - fin.atZone(zoneId).toEpochSecond());
                 }
 
                 ArrayList<Integer> auxAI = new ArrayList<>();
@@ -309,25 +311,23 @@ public class ABC {
                 }
 
                 pedido.setEstado(EstadoPedido.EN_PROCESO);
-                if(vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).getCapacidadTotal() < pedido.getCantPaquetesNoAsignado()){
+                if (vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).getCapacidadTotal() < pedido.getCantPaquetesNoAsignado()) {
                     PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).getCapacidadTotal(), horasLlegadaLong.get(indiceAux), idRuta);
                     pedido.setCantPaquetesNoAsignado(0);
                     pedidosParciales.add(pedidoParcial);
-                }
-                else{
+                } else {
                     PedidoParcialModel pedidoParcial = new PedidoParcialModel(0L, pedido.getId(), -1, pedido.getCantPaquetesNoAsignado(), horasLlegadaLong.get(indiceAux), idRuta);
                     pedido.setCantPaquetesNoAsignado(0);
                     pedidosParciales.add(pedidoParcial);
                 }
-                if(opcion == 1)timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
 
                 // SE CREA UNA NUEVA RUTA
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
-                if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
+                if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes() != 0)) {
                     rutas.add(rutaAux);
-                }
-                else{
-                    if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                } else {
+                    if (pedidosParciales.get(0).getCantPaquetes() != 0) {
                         rutas.add(rutaAux);
                     }
                 }
@@ -371,10 +371,9 @@ public class ABC {
         // si k es 0, es la mejor ruta, si es 1, la segunda mejor ruta...
         ArrayList<Path> rutasPath = YenTopKShortestPathsAlg.getKShortestPaths(k + 1, pedido.getIdCiudadDestino(), null);
         Long idRuta;
-        if(opcion == 0){
+        if (opcion == 0) {
             idRuta = Long.valueOf(Mapa.rutasSimulacion.size());
-        }
-        else{
+        } else {
             idRuta = Long.valueOf(Mapa.rutasDiaDia.size());
         }
 
@@ -407,11 +406,10 @@ public class ABC {
         // Para cada Oficina...
         for (int i = 0; i < oficinas.size(); i++) {
             if (i == 0) {
-                if(opcion == 0){
+                if (opcion == 0) {
                     horasLlegadaLong.add(Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond());
                     horasLlegada.add(Mapa.inicioSimulacion);
-                }
-                else{
+                } else {
                     horasLlegadaLong.add(Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
                     horasLlegada.add(Mapa.finDiaDia);
                 }
@@ -434,7 +432,7 @@ public class ABC {
         }
 
         // Para cada Vehículo...
-        if(opcion == 0){
+        if (opcion == 0) {
             for (int i = 0; i < Mapa.vehiculosSimulacion.size(); i++) {
                 // Sí el vehículo está disponible...
                 // ACTUAL, SIN CONFIRMAR QUE EL VEHICULO LLEGUE AL ALMACEN
@@ -450,7 +448,7 @@ public class ABC {
                             Mapa.vehiculosDiaDia.get(i).setEstado(EstadoUnidadTransporte.RESERVADO);
                             Mapa.vehiculosDiaDia.get(i).setIdRuta(idRuta);
                             Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(i).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
-                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size()-1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
+                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size() - 1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
                         }
                         // Asignación Ruta
                         Long idUnidadTransporte = Mapa.vehiculosSimulacion.get(i).getId();
@@ -472,7 +470,7 @@ public class ABC {
                         // Actualización en Pedido
                         pedido.setCantPaquetesNoAsignado(0);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if(opcion ==1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
 
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
@@ -480,11 +478,10 @@ public class ABC {
                             tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                         }
                         Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
+                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes() != 0)) {
                             Mapa.rutasSimulacion.add(auxRuta);
-                        }
-                        else{
-                            if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                        } else {
+                            if (pedidosParciales.get(0).getCantPaquetes() != 0) {
                                 Mapa.rutasDiaDia.add(auxRuta);
                             }
                         }
@@ -499,7 +496,7 @@ public class ABC {
                         } else {
                             Mapa.vehiculosDiaDia.get(i).setEstado(EstadoUnidadTransporte.RESERVADO);
                             Mapa.vehiculosDiaDia.get(i).setIdRuta(idRuta);
-                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size()-1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
+                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size() - 1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
                         }
 
                         // Asignación Ruta
@@ -524,18 +521,17 @@ public class ABC {
                         else Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(0);
                         pedido.setCantPaquetesNoAsignado(faltante);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if(opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                         for (int a = 0; a < tramos.size(); a++) {
                             tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                         }
                         Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
+                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes() != 0)) {
                             Mapa.rutasSimulacion.add(auxRuta);
-                        }
-                        else{
-                            if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                        } else {
+                            if (pedidosParciales.get(0).getCantPaquetes() != 0) {
                                 Mapa.rutasDiaDia.add(auxRuta);
                             }
                         }
@@ -543,8 +539,7 @@ public class ABC {
                     }
                 }
             }
-        }
-        else{
+        } else {
             for (int i = 0; i < Mapa.vehiculosDiaDia.size(); i++) {
                 // Sí el vehículo está disponible...
                 if (Mapa.vehiculosDiaDia.get(i).getEstado() == EstadoUnidadTransporte.DISPONIBLE && Mapa.vehiculosDiaDia.get(i).getOficinaActual() == rutasPath.get(k).getVertexList().get(0).getId()) {
@@ -559,7 +554,7 @@ public class ABC {
                             Mapa.vehiculosDiaDia.get(i).setEstado(EstadoUnidadTransporte.RESERVADO);
                             Mapa.vehiculosDiaDia.get(i).setIdRuta(idRuta);
                             Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(Mapa.vehiculosDiaDia.get(i).getCapacidadDisponible() - pedido.getCantPaquetesNoAsignado());
-                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size()-1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
+                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size() - 1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
                         }
                         // Asignación Ruta
                         Long idUnidadTransporte = Mapa.vehiculosDiaDia.get(i).getId();
@@ -581,7 +576,7 @@ public class ABC {
                         // Actualización en Pedido
                         pedido.setCantPaquetesNoAsignado(0);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if(opcion ==1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
 
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
@@ -589,11 +584,10 @@ public class ABC {
                             tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                         }
                         Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
+                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes() != 0)) {
                             Mapa.rutasSimulacion.add(auxRuta);
-                        }
-                        else{
-                            if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                        } else {
+                            if (pedidosParciales.get(0).getCantPaquetes() != 0) {
                                 Mapa.rutasDiaDia.add(auxRuta);
                             }
                         }
@@ -608,7 +602,7 @@ public class ABC {
                         } else {
                             Mapa.vehiculosDiaDia.get(i).setEstado(EstadoUnidadTransporte.RESERVADO);
                             Mapa.vehiculosDiaDia.get(i).setIdRuta(idRuta);
-                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size()-1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
+                            timer.schedule(new task2(Mapa.vehiculosDiaDia.get(i)), horasLlegadaLong.get(horasLlegada.size() - 1) - Mapa.finDiaDia.atZone(zoneId).toEpochSecond());
                         }
 
                         // Asignación Ruta
@@ -633,18 +627,17 @@ public class ABC {
                         else Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(0);
                         pedido.setCantPaquetesNoAsignado(faltante);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if(opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                         for (int a = 0; a < tramos.size(); a++) {
                             tramos.get(a).setTiempoDeViaje(DatosUtil.calcularTiempoViajeEntreTramos(tramos.get(a).getIdCiudadI(), tramos.get(a).getIdCiudadJ()) * 3600);
                         }
                         Ruta auxRuta = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idUnidadTransporte, tramos, horasLlegadaLong);
-                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes()!=0)){
+                        if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes() != 0)) {
                             Mapa.rutasSimulacion.add(auxRuta);
-                        }
-                        else{
-                            if(pedidosParciales.get(0).getCantPaquetes()!=0){
+                        } else {
+                            if (pedidosParciales.get(0).getCantPaquetes() != 0) {
                                 Mapa.rutasDiaDia.add(auxRuta);
                             }
                         }
@@ -709,7 +702,7 @@ public class ABC {
                 // Se actualiza la cantidad de paquetes no asignados
                 pedido.setCantPaquetesNoAsignado(0);
                 pedido.setEstado(EstadoPedido.EN_PROCESO);
-                if(opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
 
                 if (opcion == 0) {
                     Mapa.vehiculosSimulacion = vehiculos;
