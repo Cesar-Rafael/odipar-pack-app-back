@@ -232,6 +232,11 @@ public class RutaController {
                                     }
                                 }
                             }
+                            for (int xyz = 0; xyz < pedidos.size(); xyz++) {
+                                if (Mapa.pedidosDiaDia.get(d).getId() != pedidos.get(xyz).getId()) {
+                                    pedidos.add(Mapa.pedidosDiaDia.get(d));
+                                }
+                            }
                         }
                     }
                 }
