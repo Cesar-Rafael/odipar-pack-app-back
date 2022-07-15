@@ -27,6 +27,7 @@ public class ABC {
 
         public void run() {
             pedido.setEstado(EstadoPedido.ENTREGADO);
+
         }
     }
 
@@ -294,7 +295,7 @@ public class ABC {
                 } else {
                     rutas.get(iMenor).setFlagTerminado(true);
                     vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
-                    timer.schedule(new task2(vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte()))), horasLlegadaLong.get(horasLlegada.size() - 1) - fin.atZone(zoneId).toEpochSecond());
+                    timer.schedule(new task2(vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte()))), horasLlegadaLong.get(horasLlegada.size() - oficinasRegreso.size() - 1) - fin.atZone(zoneId).toEpochSecond());
                 }
 
                 ArrayList<Integer> auxAI = new ArrayList<>();
@@ -320,7 +321,11 @@ public class ABC {
                     pedido.setCantPaquetesNoAsignado(0);
                     pedidosParciales.add(pedidoParcial);
                 }
-                if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                if (opcion == 1) {
+                    timer.schedule(new task(pedido), (horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                    System.out.println((horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                }
+
 
                 // SE CREA UNA NUEVA RUTA
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
@@ -470,7 +475,10 @@ public class ABC {
                         // Actualización en Pedido
                         pedido.setCantPaquetesNoAsignado(0);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) {
+                            timer.schedule(new task(pedido), (horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                            System.out.println((horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                        }
 
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
@@ -521,7 +529,10 @@ public class ABC {
                         else Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(0);
                         pedido.setCantPaquetesNoAsignado(faltante);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) {
+                            timer.schedule(new task(pedido), (horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                            System.out.println((horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                        }
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                         for (int a = 0; a < tramos.size(); a++) {
@@ -576,7 +587,10 @@ public class ABC {
                         // Actualización en Pedido
                         pedido.setCantPaquetesNoAsignado(0);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) {
+                            timer.schedule(new task(pedido), (horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                            System.out.println((horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                        }
 
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
@@ -627,7 +641,10 @@ public class ABC {
                         else Mapa.vehiculosDiaDia.get(i).setCapacidadDisponible(0);
                         pedido.setCantPaquetesNoAsignado(faltante);
                         pedido.setEstado(EstadoPedido.EN_PROCESO);
-                        if (opcion == 1) timer.schedule(new task(pedido), horasLlegadaLong.get(indiceAux));
+                        if (opcion == 1) {
+                            timer.schedule(new task(pedido), (horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                            System.out.println((horasLlegadaLong.get(indiceAux) - horasLlegadaLong.get(0))*1000);
+                        }
                         // Asignación
                         ArrayList<TramoModel> tramos = Mapa.listarTramos(seguimiento);
                         for (int a = 0; a < tramos.size(); a++) {
