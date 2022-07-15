@@ -192,16 +192,6 @@ public class PedidoController {
         return true;
     }
 
-    @PostMapping("/PararDiaDia")
-    @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
-    boolean pararDiaDia() {
-        Mapa.setFlag(false);
-        Mapa.pedidosSimulacion.clear();
-        Mapa.rutasSimulacion.clear();
-        Mapa.vehiculosDiaDia.clear();
-        return true;
-    }
-
     @GetMapping("/Pedido/ListarRutasSimulacionxIdPedido/{idPedido}")
     @ResponseBody
     @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
