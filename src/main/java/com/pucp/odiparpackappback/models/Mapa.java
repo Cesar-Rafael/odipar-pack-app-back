@@ -239,7 +239,7 @@ public class Mapa {
     }
 
     public static void cargarTodosPedidosDiaDia() {
-        pedidosDiaDia = (ArrayList<PedidoModel>) pedidoRepository.findAll();
+        pedidosDiaDia.addAll((ArrayList<PedidoModel>) pedidoRepository.findAll());
     }
 
     public static void cargarPedidosSimulacion(String rutaArchivo, Date fechaInicio, Date fechaFin) {
