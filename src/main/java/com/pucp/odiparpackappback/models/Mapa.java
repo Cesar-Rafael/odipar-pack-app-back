@@ -341,4 +341,8 @@ public class Mapa {
     public static void cargarBloqueosDiaDia() {
         bloqueosDiaDia = (ArrayList<BloqueoModel>) bloqueoRepository.findAll();
     }
+
+    public static void actualizarEstadoPedido(long idPedido){
+        pedidoRepository.actualizarEstadoEntregado(idPedido);
+    }
 }

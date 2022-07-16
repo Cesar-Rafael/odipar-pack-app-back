@@ -305,4 +305,9 @@ public class PedidoController {
         }
         return null;
     }
+
+    @CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
+    public void actualizarEstado(long idPedido) {
+        pedidoRepository.actualizarEstadoEntregado(idPedido);
+    }
 }

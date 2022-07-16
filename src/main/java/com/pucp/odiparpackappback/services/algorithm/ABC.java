@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.pucp.odiparpackappback.models.Mapa.actualizarEstadoPedido;
+
 public class ABC {
     Timer timer = new Timer();
 
@@ -27,7 +29,9 @@ public class ABC {
 
         public void run() {
             pedido.setEstado(EstadoPedido.ENTREGADO);
-
+            // Trigger
+            actualizarEstadoPedido(pedido.getId());
+            System.out.println("Pedido Entregado: " + pedido.getId());
         }
     }
 

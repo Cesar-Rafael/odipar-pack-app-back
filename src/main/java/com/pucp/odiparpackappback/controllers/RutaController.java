@@ -2,10 +2,12 @@ package com.pucp.odiparpackappback.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pucp.odiparpackappback.Repositories.RutaRepository;
+import com.pucp.odiparpackappback.dto.BloqueoBody;
 import com.pucp.odiparpackappback.models.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -251,5 +253,4 @@ public class RutaController {
         }
         return true;
     }
-
 }
