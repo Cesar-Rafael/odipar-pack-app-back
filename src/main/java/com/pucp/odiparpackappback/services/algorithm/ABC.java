@@ -31,6 +31,11 @@ public class ABC {
             pedido.setEstado(EstadoPedido.ENTREGADO);
             // Trigger
             actualizarEstadoPedido(pedido.getId());
+            for(int i = 0; i < Mapa.pedidosDiaDia.size(); i++){
+                if(Mapa.pedidosDiaDia.get(i).getId().equals(pedido.getId())){
+                    Mapa.pedidosDiaDia.get(i).setEstado(EstadoPedido.ENTREGADO);
+                }
+            }
             System.out.println("Pedido Entregado: " + pedido.getId());
         }
     }
