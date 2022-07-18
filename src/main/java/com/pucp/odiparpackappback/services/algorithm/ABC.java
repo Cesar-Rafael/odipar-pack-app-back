@@ -78,7 +78,7 @@ public class ABC {
         if (opcion == 0) {
             // Actualización de Estado de Rutas
             for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
-                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size() - 1) < Mapa.inicioSimulacion.atZone(zoneId).toEpochSecond())) {
+                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).isAfter(Mapa.inicioSimulacion.plusDays(1)))) {
                     Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getCapacidadTotal());
