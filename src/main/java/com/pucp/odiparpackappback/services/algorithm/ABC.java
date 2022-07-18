@@ -78,7 +78,7 @@ public class ABC {
         if (opcion == 0) {
             // Actualización de Estado de Rutas
             for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
-                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).isAfter(Mapa.inicioSimulacion.plusDays(1)))) {
+                if (!(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.DISPONIBLE) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(2)))) {
                     Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getCapacidadTotal());
@@ -193,7 +193,7 @@ public class ABC {
 
         if (!bool && pedido.getCantPaquetesNoAsignado() > 0) {
             // Si el PEDIDO puede llegar aún a tiempo...
-            if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode()))) {
+            if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode()+1))) {
                 // Se obtiene el nombre de la región
                 for (int z = 0; z < Mapa.oficinas.size(); z++) {
                     if (Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()) {
@@ -219,7 +219,7 @@ public class ABC {
                     }
 
                     // Si el último UBIGEO del seguimiento es igual al origen de la ruta del pedido y ... el Vehiculo puede ser asignado: NO ESTÁ RESERVADO
-                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado().getCode() == 0) && (LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId).isAfter(Mapa.inicioSimulacion.plusDays(1)))) {
+                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado().getCode() == 0) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId).plusHours(2)))) {
                         if (iPrimero == false) {
                             iMenor = i;
                         } else {
