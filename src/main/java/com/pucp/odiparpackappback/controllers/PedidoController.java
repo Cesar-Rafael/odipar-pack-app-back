@@ -151,7 +151,7 @@ public class PedidoController {
         //System.out.println("INICIO PEDIDOS");
         //System.out.println(simulation.pedidos);
         //System.out.println("FIN PEDIDOS");
-        System.out.println("INICIO SIMULACION: " + LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault()));
+        //System.out.println("INICIO SIMULACION: " + LocalDateTime.ofInstant(simulation.inicioSimulacion.toInstant(), ZoneId.systemDefault()));
         //System.out.println("");
         // Carga de Pedidos
         Mapa.pedidosSimulacion.addAll(simulation.pedidos);

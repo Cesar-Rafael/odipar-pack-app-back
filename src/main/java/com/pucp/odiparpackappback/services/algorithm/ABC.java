@@ -190,7 +190,7 @@ public class ABC {
 
         if (!bool && pedido.getCantPaquetesNoAsignado() > 0) {
             // Si el PEDIDO puede llegar aún a tiempo...
-            if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode()+1))) {
+            if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode()+2))) {
                 // Se obtiene el nombre de la región
                 for (int z = 0; z < Mapa.oficinas.size(); z++) {
                     if (Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()) {
@@ -229,12 +229,8 @@ public class ABC {
 
                 //
                 if (iMenor == -1) {
-                    System.out.println();
-                    System.out.println();
-                    System.out.println("HAY PEDIDOS PENDIENTES DE ENTREGA..." + pedido.getId());
+                    //System.out.println("HAY PEDIDOS PENDIENTES DE ENTREGA..." + pedido.getId());
                     pedido.setEstado(EstadoPedido.NO_ASIGNADO);
-                    System.out.println();
-                    System.out.println();
                     if (opcion == 0) {
                         Mapa.rutasSimulacion = rutas;
                         Mapa.vehiculosSimulacion = vehiculos;
