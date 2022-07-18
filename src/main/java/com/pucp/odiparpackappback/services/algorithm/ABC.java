@@ -78,19 +78,7 @@ public class ABC {
         if (opcion == 0) {
             // Actualización de Estado de Rutas
             for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
-                if (!(Mapa.rutasSimulacion.get(a).isFlagTerminado()) &&(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(24)))) {
-                    if(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId() == 0){
-                        System.out.println("-----");
-                        System.out.println("-----");
-                        System.out.println("-----");
-                        System.out.println("idRuta" + Mapa.rutasSimulacion.get(a).getIdRuta());
-                        System.out.println("idVehiculo: " +  Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId());
-                        System.out.println("Mapa.inicioSimulacion" + Mapa.inicioSimulacion);
-                        System.out.println("Última Hora de Llegada" + LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(36));
-                        System.out.println("-----");
-                        System.out.println("-----");
-                        System.out.println("-----");
-                    }
+                if (!(Mapa.rutasSimulacion.get(a).isFlagTerminado()) &&(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId)))) {
                     Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getCapacidadTotal());
@@ -228,7 +216,7 @@ public class ABC {
                     }
 
                     // Si el último UBIGEO del seguimiento es igual al origen de la ruta del pedido y ... el Vehiculo puede ser asignado: NO ESTÁ RESERVADO
-                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.DISPONIBLE) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId).plusHours(24)))) {
+                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.DISPONIBLE) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId)))) {
                         if (iPrimero == false) {
                             iMenor = i;
                         } else {
