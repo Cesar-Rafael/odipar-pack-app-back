@@ -340,11 +340,19 @@ public class ABC {
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
                 if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes() != 0)) {
                     rutas.add(rutaAux);
+                    System.out.println("-----------------");
+                    System.out.println("-----------------");
                     System.out.println("Se ha agregado la Ruta por Método Plus: " + idRuta);
+                    System.out.println("-----------------");
+                    System.out.println("-----------------");
                 } else {
                     if (pedidosParciales.get(0).getCantPaquetes() != 0) {
                         rutas.add(rutaAux);
+                        System.out.println("-----------------");
+                        System.out.println("-----------------");
                         System.out.println("Se ha agregado la Ruta por Método Plus: " + idRuta);
+                        System.out.println("-----------------");
+                        System.out.println("-----------------");
                     }
                 }
 
