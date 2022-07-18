@@ -78,7 +78,7 @@ public class ABC {
         if (opcion == 0) {
             // Actualización de Estado de Rutas
             for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
-                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(36)))) {
+                if (!(Mapa.rutasSimulacion.get(a).isFlagTerminado()) &&(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(24)))) {
                     if(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId() == 0){
                         System.out.println("-----");
                         System.out.println("-----");
@@ -231,7 +231,7 @@ public class ABC {
                     }
 
                     // Si el último UBIGEO del seguimiento es igual al origen de la ruta del pedido y ... el Vehiculo puede ser asignado: NO ESTÁ RESERVADO
-                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.DISPONIBLE) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId).plusHours(36)))) {
+                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.DISPONIBLE) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId).plusHours(24)))) {
                         if (iPrimero == false) {
                             iMenor = i;
                         } else {
