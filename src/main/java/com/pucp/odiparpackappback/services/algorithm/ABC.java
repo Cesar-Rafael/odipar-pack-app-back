@@ -78,7 +78,7 @@ public class ABC {
         if (opcion == 0) {
             // Actualización de Estado de Rutas
             for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
-                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(2)))) {
+                if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(36)))) {
                     Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getCapacidadTotal());
@@ -219,7 +219,7 @@ public class ABC {
                     }
 
                     // Si el último UBIGEO del seguimiento es igual al origen de la ruta del pedido y ... el Vehiculo puede ser asignado: NO ESTÁ RESERVADO
-                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado().getCode() == 0) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId).plusHours(2)))) {
+                    if (listaSeg.get(0).equals(listaSeg2.get(0)) && (vehiculos.get(Math.toIntExact(rutas.get(i).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.DISPONIBLE) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(rutas.get(i).getHorasDeLlegada().get(rutas.get(i).getHorasDeLlegada().size()-1)), zoneId).plusHours(36)))) {
                         if (iPrimero == false) {
                             iMenor = i;
                         } else {
@@ -340,21 +340,23 @@ public class ABC {
                 Ruta rutaAux = new Ruta(idRuta, seguimiento, pedidosParciales, fitness, idVehiculoEscogido, tramos, horasLlegadaLong);
                 if (opcion == 0 && (pedidosParciales.get(0).getCantPaquetes() != 0)) {
                     rutas.add(rutaAux);
+                    System.out.println("Se ha agregado la Ruta por Método Plus: " + idRuta);
                 } else {
                     if (pedidosParciales.get(0).getCantPaquetes() != 0) {
                         rutas.add(rutaAux);
+                        System.out.println("Se ha agregado la Ruta por Método Plus: " + idRuta);
                     }
                 }
 
                 // Actualización
                 if (opcion == 0) {
                     Mapa.rutasSimulacion = rutas;
-                    Mapa.vehiculosSimulacion.get(Math.toIntExact(idVehiculoEscogido)).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
+                    //Mapa.vehiculosSimulacion.get(Math.toIntExact(idVehiculoEscogido)).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                     Mapa.vehiculosSimulacion = vehiculos;
                     Mapa.inicioSimulacion = fin;
                 } else {
                     Mapa.rutasDiaDia = rutas;
-                    Mapa.vehiculosDiaDia.get(Math.toIntExact(idVehiculoEscogido)).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
+                    //Mapa.vehiculosDiaDia.get(Math.toIntExact(idVehiculoEscogido)).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                     Mapa.vehiculosDiaDia = vehiculos;
                     Mapa.finDiaDia = fin;
                 }
