@@ -113,9 +113,6 @@ public class ABC {
                     Mapa.vehiculosSimulacion.get(www).setEstado(EstadoUnidadTransporte.EN_TRANSITO);
                 }
             }
-            for (int yyy = 0; yyy < Mapa.rutasSimulacion.size(); yyy++) {
-                Mapa.rutasSimulacion.get(yyy).setFlagTerminado(true);
-            }
         } else {
             ArrayList<RutaModel> rutasAux = new ArrayList<>();
             for (int rm = 0; rm < Mapa.rutasDiaDia.size(); rm++) {
@@ -311,10 +308,8 @@ public class ABC {
                     }
                 }
                 if (opcion == 0) {
-                    rutas.get(iMenor).setFlagTerminado(true);
                     vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
                 } else {
-                    rutas.get(iMenor).setFlagTerminado(true);
                     vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.RESERVADO);
                     timer.schedule(new task2(vehiculos.get(Math.toIntExact(rutas.get(iMenor).getIdUnidadTransporte()))), horasLlegadaLong.get(horasLlegada.size() - oficinasRegreso.size() - 1) - fin.atZone(zoneId).toEpochSecond());
                 }
