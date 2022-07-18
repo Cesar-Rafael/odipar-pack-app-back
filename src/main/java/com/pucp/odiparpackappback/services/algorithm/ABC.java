@@ -190,7 +190,7 @@ public class ABC {
 
         if (!bool && pedido.getCantPaquetesNoAsignado() > 0) {
             // Si el PEDIDO puede llegar aún a tiempo...
-            if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode()+5))) {
+            if (fin.isBefore(LocalDateTime.ofInstant(pedido.getFechaHoraCreacion().toInstant(), zoneId).plusDays(auxRegion.getCode()+7))) {
                 // Se obtiene el nombre de la región
                 for (int z = 0; z < Mapa.oficinas.size(); z++) {
                     if (Mapa.oficinas.get(z).getUbigeo() == pedido.getIdCiudadDestino()) {
