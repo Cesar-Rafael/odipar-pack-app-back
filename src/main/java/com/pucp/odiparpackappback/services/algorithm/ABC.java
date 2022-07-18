@@ -79,12 +79,18 @@ public class ABC {
             // Actualización de Estado de Rutas
             for (int a = 0; a < Mapa.rutasSimulacion.size(); a++) {
                 if ((Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getEstado() == EstadoUnidadTransporte.EN_TRANSITO) && (Mapa.inicioSimulacion.isAfter(LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(36)))) {
-                    System.out.println("-----");
-                    System.out.println("idRuta" + Mapa.rutasSimulacion.get(a).getIdRuta());
-                    System.out.println("idVehiculo: " +  Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId());
-                    System.out.println("Mapa.inicioSimulacion" + Mapa.inicioSimulacion);
-                    System.out.println("Última Hora de Llegada" + LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(36));
-                    System.out.println("-----");
+                    if(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId() == 0){
+                        System.out.println("-----");
+                        System.out.println("-----");
+                        System.out.println("-----");
+                        System.out.println("idRuta" + Mapa.rutasSimulacion.get(a).getIdRuta());
+                        System.out.println("idVehiculo: " +  Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getId());
+                        System.out.println("Mapa.inicioSimulacion" + Mapa.inicioSimulacion);
+                        System.out.println("Última Hora de Llegada" + LocalDateTime.ofInstant(Instant.ofEpochSecond(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().get(Mapa.rutasSimulacion.get(a).getHorasDeLlegada().size()-1)), zoneId).plusHours(36));
+                        System.out.println("-----");
+                        System.out.println("-----");
+                        System.out.println("-----");
+                    }
                     Mapa.rutasSimulacion.get(a).setFlagTerminado(true);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setEstado(EstadoUnidadTransporte.DISPONIBLE);
                     Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).setCapacidadDisponible(Mapa.vehiculosSimulacion.get(Math.toIntExact(Mapa.rutasSimulacion.get(a).getIdUnidadTransporte())).getCapacidadTotal());
